@@ -1,10 +1,10 @@
-package com.raponi.blog.controller;
+package com.raponi.blog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.raponi.blog.application.service.AccountServiceImpl;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.service.AccountService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class SignUpController {
 
   @Autowired
-  private AccountService accountService;
+  private AccountServiceImpl accountServiceImpl;
 
   @PostMapping(value = "/req/signup", consumes = "application/json")
   public Account postMethodName(@RequestBody Account account) {
-    return this.accountService.createNewAccount(account);
+    return this.accountServiceImpl.createNewAccount(account);
   }
 
 }

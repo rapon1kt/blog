@@ -1,4 +1,4 @@
-package com.raponi.blog.controller;
+package com.raponi.blog.presentation.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,34 +12,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.raponi.blog.application.service.AccountServiceImpl;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.service.AccountService;
 
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
 
   @Autowired
-  public AccountService accountService;
+  public AccountServiceImpl accountServiceImpl;
 
   @GetMapping("/")
   public List<Account> getAllAccounts() {
-    return this.accountService.getAllAccounts();
+    return this.accountServiceImpl.getAllAccounts();
   }
 
   @GetMapping("/{id}")
   public Optional<Account> getAccountById(@PathVariable("id") String accountId) {
-    return this.accountService.getAccountById(accountId);
+    return this.accountServiceImpl.getAccountById(accountId);
   }
 
   @PutMapping("/{id}")
-  public Account updateAccountById(@PathVariable("id") String accountId, @RequestBody Account newAccountInfos) {
-    return this.accountService.updateAccountById(accountId, newAccountInfos);
+  public Account updateAccountById(@PathVariable("id") String accountId,
+      @RequestBody Account newAccountInfos) {
+    return this.accountServiceImpl.updateAccountById(accountId, newAccountInfos);
   }
 
   @DeleteMapping("/{id}")
   public String deleteAccountById(@PathVariable("id") String accountId) {
-    return this.accountService.deleteAccountById(accountId);
+    return this.accountServiceImpl.deleteAccountById(accountId);
   }
 
 }
