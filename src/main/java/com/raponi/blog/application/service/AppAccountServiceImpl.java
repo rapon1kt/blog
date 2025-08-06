@@ -1,4 +1,4 @@
-package com.raponi.blog.service;
+package com.raponi.blog.application.service;
 
 import java.util.Optional;
 
@@ -10,27 +10,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.repository.AccountRepository;
+import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 
 @Service
-public class AppAccountService implements UserDetailsService {
+public class AppAccountServiceImpl implements UserDetailsService {
 
   @Autowired
   private AccountRepository accountRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
     Optional<Account> account = this.accountRepository.findByUsername(username);
 
     if (account.isPresent()) {
-
       var accountObj = account.get();
       return User.builder()
-          .username(accountObj.getUsername())
-          .password(accountObj.getPassword())
+          .username(accountObj.username())
+          .password(accountObj.password())
           .build();
     } else {
       throw new UsernameNotFoundException(username);
     }
+
   }
+
 }
