@@ -1,4 +1,4 @@
-package com.raponi.blog.config;
+package com.raponi.blog.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.raponi.blog.config;
+package com.raponi.blog.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,17 +14,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.raponi.blog.service.AppAccountService;
+import com.raponi.blog.application.service.AppAccountServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
   @Autowired
-  private final AppAccountService appAccountService;
+  private final AppAccountServiceImpl appAccountServiceImpl;
 
-  public SecurityConfig(AppAccountService appAccountService) {
-    this.appAccountService = appAccountService;
+  public SecurityConfig(AppAccountServiceImpl appAccountServiceImpl) {
+    this.appAccountServiceImpl = appAccountServiceImpl;
   }
 
   public @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,11 +48,11 @@ public class SecurityConfig {
   }
 
   public @Bean UserDetailsService userDetailsService() {
-    return appAccountService;
+    return appAccountServiceImpl;
   }
 
   public @Bean AuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(appAccountService);
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(appAccountServiceImpl);
     provider.setPasswordEncoder(passwordEncoder());
     return provider;
   }
