@@ -47,7 +47,7 @@ public class AccountController {
   @PutMapping("/{id}")
   public Account updateAccountById(@PathVariable("id") String accountId,
       @RequestBody Account newAccountInfos) {
-    return this.updateAccountService.handle(accountId, newAccountInfos);
+    return this.updateAccountService.handle(accountId, newAccountInfos.username());
   }
 
   @DeleteMapping("/{id}")
