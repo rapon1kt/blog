@@ -1,6 +1,5 @@
 package com.raponi.blog.application.service.account;
 
-import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -19,19 +18,11 @@ public class UpdateAccountService implements UpdateAccountUseCase {
   }
 
   @Override
-  public Account handle(String accountId, Account newAccountInfos) {
+  public Account handle(String accountId, String newUsername) {
     Optional<Account> accountToUpdate = this.accountRepository.findById(accountId);
     if (accountToUpdate.isPresent()) {
-      Account updated = new Account(
-          accountToUpdate.get().id(),
-          newAccountInfos.email(),
-          newAccountInfos.username(),
-          accountToUpdate.get().password(),
-          accountToUpdate.get().createdAt(),
-          Instant.now());
-      return this.accountRepository.save(updated);
+      return this.accountRepository.save(accountToUpdate.get().update(newUsername));
     }
     return null;
   }
-
 }
