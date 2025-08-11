@@ -21,6 +21,10 @@ public record Account(
         instNow);
   }
 
+  public Account changePassword(String newPassword) {
+    return new Account(id, email, username, newPassword, createdAt, Instant.now());
+  }
+
   public Account update(String newUsername) {
     return new Account(
         id,
