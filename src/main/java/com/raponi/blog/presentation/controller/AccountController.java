@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.raponi.blog.application.service.account.ChangeAccountPasswordService;
 import com.raponi.blog.application.service.account.DeleteAccountService;
 import com.raponi.blog.application.service.account.FindAccountByIdService;
 import com.raponi.blog.application.service.account.FindAllAccountsService;
@@ -25,13 +26,16 @@ public class AccountController {
   public FindAccountByIdService findAccountService;
   public UpdateAccountService updateAccountService;
   public DeleteAccountService deleteAccountService;
+  public ChangeAccountPasswordService changeAccountPasswordService;
 
   public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountService,
-      UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService) {
+      UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
+      ChangeAccountPasswordService changeAccountPasswordService) {
     this.findAllService = findAllService;
     this.findAccountService = findAccountService;
     this.updateAccountService = updateAccountService;
     this.deleteAccountService = deleteAccountService;
+    this.changeAccountPasswordService = changeAccountPasswordService;
   }
 
   @GetMapping("/")
@@ -48,6 +52,11 @@ public class AccountController {
   public Account updateAccountById(@PathVariable("id") String accountId,
       @RequestBody Account newAccountInfos) {
     return this.updateAccountService.handle(accountId, newAccountInfos.username());
+  }
+
+  @PutMapping("/newpassword/{id}")
+  public Account changeAccountPassword(@PathVariable("id") String accountId, @RequestBody Account accountInfos) {
+    return this.changeAccountPasswordService.handle(accountId, accountInfos.password());
   }
 
   @DeleteMapping("/{id}")
