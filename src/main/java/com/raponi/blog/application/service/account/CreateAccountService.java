@@ -1,13 +1,13 @@
 package com.raponi.blog.application.service.account;
 
-import java.time.Instant;
-
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.port.PasswordEncoderService;
 import com.raponi.blog.domain.usecase.account.CreateAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.MissingParamError;
+import com.raponi.blog.presentation.protocols.Http;
 
 @Service
 public class CreateAccountService implements CreateAccountUseCase {
@@ -21,17 +21,30 @@ public class CreateAccountService implements CreateAccountUseCase {
   }
 
   @Override
-  public Account handle(Account newAccount) {
-    String hashedPassword = passwordEncoderService.encode(newAccount.password());
+  public Account handle(Http.Body bodyRequest) {
+    String[] requiredFields = { "email", "username", "password" };
+    for (String field : requiredFields) {
+      if (isNullOrEmpty(getFieldValue(bodyRequest, field))) {
+        throw new MissingParamError(field);
+      }
+    }
 
-    Account accountToSave = new Account(
-        newAccount.id(),
-        newAccount.email(),
-        newAccount.username(),
-        hashedPassword,
-        Instant.now(),
-        Instant.now());
-    return this.accountRepository.save(accountToSave);
+    String hashedPassword = this.passwordEncoderService.encode(bodyRequest.password());
+    Account account = Account.create(bodyRequest.email(), bodyRequest.username(), hashedPassword);
+    return this.accountRepository.save(account);
   }
 
+  private boolean isNullOrEmpty(Object value) {
+    return value == null || value.toString().trim().isEmpty();
+  }
+
+  private Object getFieldValue(Http.Body body, String fieldName) {
+    try {
+      var field = body.getClass().getDeclaredField(fieldName);
+      field.setAccessible(true);
+      return field.get(body);
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+      return null;
+    }
+  }
 }
