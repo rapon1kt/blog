@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.account.ChangeAccountPasswordService;
 import com.raponi.blog.application.service.account.DeleteAccountService;
+import com.raponi.blog.application.service.account.FindAccountByEmailService;
 import com.raponi.blog.application.service.account.FindAccountByIdService;
 import com.raponi.blog.application.service.account.FindAllAccountsService;
 import com.raponi.blog.application.service.account.UpdateAccountService;
@@ -23,16 +24,19 @@ import com.raponi.blog.domain.model.Account;
 public class AccountController {
 
   public FindAllAccountsService findAllService;
-  public FindAccountByIdService findAccountService;
+  public FindAccountByIdService findAccountByIdService;
+  public FindAccountByEmailService findAccountByEmailService;
   public UpdateAccountService updateAccountService;
   public DeleteAccountService deleteAccountService;
   public ChangeAccountPasswordService changeAccountPasswordService;
 
-  public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountService,
+  public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountByIdService,
+      FindAccountByEmailService findAccountByEmailService,
       UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
       ChangeAccountPasswordService changeAccountPasswordService) {
     this.findAllService = findAllService;
-    this.findAccountService = findAccountService;
+    this.findAccountByIdService = findAccountByIdService;
+    this.findAccountByEmailService = findAccountByEmailService;
     this.updateAccountService = updateAccountService;
     this.deleteAccountService = deleteAccountService;
     this.changeAccountPasswordService = changeAccountPasswordService;
@@ -45,7 +49,12 @@ public class AccountController {
 
   @GetMapping("/{id}")
   public Optional<Account> getAccountById(@PathVariable("id") String accountId) {
-    return this.findAccountService.handle(accountId);
+    return this.findAccountByIdService.handle(accountId);
+  }
+
+  @GetMapping("/{email}")
+  public Optional<Account> getAccountByEmai(@PathVariable("email") String email) {
+    return this.findAccountByEmailService.handle(email);
   }
 
   @PutMapping("/{id}")
