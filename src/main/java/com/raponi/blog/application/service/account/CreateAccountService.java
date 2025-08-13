@@ -22,16 +22,44 @@ public class CreateAccountService implements CreateAccountUseCase {
 
   @Override
   public Account handle(Http.Body bodyRequest) {
-    String[] requiredFields = { "email", "username", "password" };
-    for (String field : requiredFields) {
-      if (isNullOrEmpty(getFieldValue(bodyRequest, field))) {
-        throw new MissingParamError(field);
-      }
-    }
-
+    validateRequest(bodyRequest);
     String hashedPassword = this.passwordEncoderService.encode(bodyRequest.password());
     Account account = Account.create(bodyRequest.email(), bodyRequest.username(), hashedPassword);
     return this.accountRepository.save(account);
+  }
+
+  private void validateRequest(Http.Body bodyRequest) {
+    String[] requiredParams = { "email", "username", "password" };
+    for (String param : requiredParams) {
+      if (isNullOrEmpty(getFieldValue(bodyRequest, param))) {
+        throw new MissingParamError(param);
+      }
+    }
+    validateEmail(bodyRequest.email());
+    validateUsername(bodyRequest.username());
+    validatePassword(bodyRequest.password());
+  }
+
+  private void validateUsername(String username) {
+    if (this.accountRepository.existsByUsername(username)) {
+      throw new IllegalArgumentException("Username já cadastrado.");
+    } else if (username.length() < 3) {
+      throw new IllegalArgumentException("O username deve ter pelo menos 3 caracteres.");
+    }
+  }
+
+  private void validateEmail(String email) {
+    if (this.accountRepository.existsByEmail(email)) {
+      throw new IllegalArgumentException("E-mail já cadastrado.");
+    } else if (!email.matches("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$")) {
+      throw new IllegalArgumentException("E-mail inválido.");
+    }
+  }
+
+  private void validatePassword(String password) {
+    if (password.length() < 8) {
+      throw new IllegalArgumentException("A senha deve conter pelo menos 8 caracteres.");
+    }
   }
 
   private boolean isNullOrEmpty(Object value) {
