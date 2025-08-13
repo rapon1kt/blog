@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.UpdateAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.AccountNotFound;
 
 @Service
 public class UpdateAccountService implements UpdateAccountUseCase {
@@ -23,6 +24,6 @@ public class UpdateAccountService implements UpdateAccountUseCase {
     if (accountToUpdate.isPresent()) {
       return this.accountRepository.save(accountToUpdate.get().update(newUsername));
     }
-    return null;
+    throw new AccountNotFound("id equals " + accountId);
   }
 }
