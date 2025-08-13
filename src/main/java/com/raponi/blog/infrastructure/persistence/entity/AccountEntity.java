@@ -17,6 +17,7 @@ public class AccountEntity {
   private String email;
   private String username;
   private String password;
+  private boolean active = true;
   private Instant createdAt;
   private Instant modifiedAt;
 
@@ -30,7 +31,7 @@ public class AccountEntity {
   }
 
   public Account toDomain() {
-    return new Account(id, username, email, password, createdAt, modifiedAt);
+    return new Account(id, username, email, password, active, createdAt, modifiedAt);
   }
 
 }

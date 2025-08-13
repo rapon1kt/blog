@@ -7,6 +7,7 @@ public record Account(
     String email,
     String username,
     String password,
+    boolean active,
     Instant createdAt,
     Instant modifiedAt) {
 
@@ -17,12 +18,13 @@ public record Account(
         email,
         username,
         hashedPassword,
+        true,
         instNow,
         instNow);
   }
 
   public Account changePassword(String newPassword) {
-    return new Account(id, email, username, newPassword, createdAt, Instant.now());
+    return new Account(id, email, username, newPassword, active, createdAt, Instant.now());
   }
 
   public Account update(String newUsername) {
@@ -31,6 +33,7 @@ public record Account(
         email,
         newUsername,
         password,
+        active,
         createdAt,
         Instant.now());
   }
