@@ -1,8 +1,6 @@
 package com.raponi.blog.presentation.controller;
 
-import java.util.List;
-import java.util.Optional;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +17,7 @@ import com.raponi.blog.application.service.account.FindAccountByIdService;
 import com.raponi.blog.application.service.account.FindAllAccountsService;
 import com.raponi.blog.application.service.account.UpdateAccountService;
 import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.presentation.helpers.HttpHelper;
 
 @RestController
 @RequestMapping("/accounts")
@@ -44,34 +43,59 @@ public class AccountController {
   }
 
   @GetMapping("/")
-  public List<Account> getAllAccounts() {
-    return this.findAllService.handle();
+  public ResponseEntity<?> getAllAccounts() {
+    try {
+      return HttpHelper.ok(this.findAllService.handle());
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
   }
 
   @GetMapping("/{id}")
-  public Optional<Account> getAccountById(@PathVariable("id") String accountId) {
-    return this.findAccountByIdService.handle(accountId);
+  public ResponseEntity<?> getAccountById(@PathVariable("id") String accountId) {
+    try {
+      return HttpHelper.ok(this.findAccountByIdService.handle(accountId));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
   }
 
   @GetMapping
-  public Optional<Account> getAccountByEmail(@RequestParam("email") String email) {
-    return this.findAccountByEmailService.handle(email);
+  public ResponseEntity<?> getAccountByEmail(@RequestParam("email") String email) {
+    try {
+      return HttpHelper.ok(this.findAccountByEmailService.handle(email));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
   }
 
   @PutMapping("/{id}")
-  public Account updateAccountById(@PathVariable("id") String accountId,
+  public ResponseEntity<?> updateAccountById(@PathVariable("id") String accountId,
       @RequestBody Account newAccountInfos) {
-    return this.updateAccountService.handle(accountId, newAccountInfos.username());
+    try {
+      return HttpHelper.ok(this.updateAccountService.handle(accountId, newAccountInfos.username()));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
   }
 
   @PutMapping("/newpassword/{id}")
-  public Account changeAccountPassword(@PathVariable("id") String accountId, @RequestBody Account accountInfos) {
-    return this.changeAccountPasswordService.handle(accountId, accountInfos.password());
+  public ResponseEntity<?> changeAccountPassword(@PathVariable("id") String accountId,
+      @RequestBody Account accountInfos) {
+    try {
+      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, accountInfos.password()));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
   }
 
   @DeleteMapping("/{id}")
-  public String deleteAccountById(@PathVariable("id") String accountId) {
-    return this.deleteAccountService.handle(accountId);
+  public ResponseEntity<?> deleteAccountById(@PathVariable("id") String accountId) {
+    try {
+      return HttpHelper.ok(this.deleteAccountService.handle(accountId));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
   }
 
 }
