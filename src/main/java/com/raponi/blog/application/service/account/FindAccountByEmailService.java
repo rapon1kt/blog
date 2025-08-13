@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.FindAccountByEmailUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.AccountNotFound;
 
 @Service
 public class FindAccountByEmailService implements FindAccountByEmailUseCase {
@@ -16,10 +17,14 @@ public class FindAccountByEmailService implements FindAccountByEmailUseCase {
   public FindAccountByEmailService(AccountRepository accountRepository) {
     this.accountRepository = accountRepository;
   }
-  
+
   @Override
   public Optional<Account> handle(String email) {
-    return this.accountRepository.findByEmail(email);
+    Optional<Account> account = this.accountRepository.findByEmail(email);
+    if (account.isPresent()) {
+      return account;
+    }
+    throw new AccountNotFound("email equals " + email);
   }
 
 }
