@@ -12,7 +12,7 @@ import com.raponi.blog.presentation.errors.AccountNotFound;
 @Service
 public class DeleteAccountService implements DeleteAccountUseCase {
 
-  public AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
   public DeleteAccountService(AccountRepository accountRepository) {
     this.accountRepository = accountRepository;
