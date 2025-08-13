@@ -23,13 +23,13 @@ import com.raponi.blog.presentation.helpers.HttpHelper;
 @RequestMapping("/accounts")
 public class AccountController {
 
-  public FindAllAccountsService findAllService;
-  public FindAccountByIdService findAccountByIdService;
-  public FindAccountByEmailService findAccountByEmailService;
-  public FindAccountByUsernameService findAccountByUsernameService;
-  public UpdateAccountService updateAccountService;
-  public DeleteAccountService deleteAccountService;
-  public ChangeAccountPasswordService changeAccountPasswordService;
+  private FindAllAccountsService findAllService;
+  private FindAccountByIdService findAccountByIdService;
+  private FindAccountByEmailService findAccountByEmailService;
+  private FindAccountByUsernameService findAccountByUsernameService;
+  private UpdateAccountService updateAccountService;
+  private DeleteAccountService deleteAccountService;
+  private ChangeAccountPasswordService changeAccountPasswordService;
 
   public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountByIdService,
       FindAccountByEmailService findAccountByEmailService,
