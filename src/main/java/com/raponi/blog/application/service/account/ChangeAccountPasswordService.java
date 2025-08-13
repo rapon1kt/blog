@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.ChangeAccountPasswordUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.AccountNotFound;
 
 @Service
 public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCase {
@@ -29,6 +30,6 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
       User.builder().username(existing.get().username()).password(hashedPassword);
       return this.accountRepository.save(existing.get().changePassword(hashedPassword));
     }
-    return null;
+    throw new AccountNotFound("id equals " + accountId);
   }
 }
