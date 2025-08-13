@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.FindAccountByIdUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.AccountNotFound;
 
 @Service
 public class FindAccountByIdService implements FindAccountByIdUseCase {
@@ -19,7 +20,11 @@ public class FindAccountByIdService implements FindAccountByIdUseCase {
 
   @Override
   public Optional<Account> handle(String accountId) {
-    return this.accountRepository.findById(accountId);
+    Optional<Account> account = this.accountRepository.findById(accountId);
+    if (account.isPresent()) {
+      return account;
+    }
+    throw new AccountNotFound("id equals " + accountId);
   }
 
 }
