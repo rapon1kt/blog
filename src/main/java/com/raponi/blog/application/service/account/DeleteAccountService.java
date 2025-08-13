@@ -23,7 +23,7 @@ public class DeleteAccountService implements DeleteAccountUseCase {
     Optional<Account> account = this.accountRepository.findById(accountId);
     if (account.isPresent()) {
       this.accountRepository.deleteById(accountId);
-      return "Conta deletada com sucesso";
+      return "Account with id equals " + accountId + " deleted with success";
     }
     throw new AccountNotFound("id equals " + accountId);
   }
