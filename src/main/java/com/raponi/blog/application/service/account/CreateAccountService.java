@@ -21,14 +21,14 @@ public class CreateAccountService implements CreateAccountUseCase {
   }
 
   @Override
-  public Account handle(Http.Body bodyRequest) {
+  public Account handle(Http.RegisterBody bodyRequest) {
     validateRequest(bodyRequest);
     String hashedPassword = this.passwordEncoderService.encode(bodyRequest.password());
     Account account = Account.create(bodyRequest.email(), bodyRequest.username(), hashedPassword);
     return this.accountRepository.save(account);
   }
 
-  private void validateRequest(Http.Body bodyRequest) {
+  private void validateRequest(Http.RegisterBody bodyRequest) {
     String[] requiredParams = { "email", "username", "password" };
     for (String param : requiredParams) {
       if (isNullOrEmpty(getFieldValue(bodyRequest, param))) {
@@ -66,7 +66,7 @@ public class CreateAccountService implements CreateAccountUseCase {
     return value == null || value.toString().trim().isEmpty();
   }
 
-  private Object getFieldValue(Http.Body body, String fieldName) {
+  private Object getFieldValue(Http.RegisterBody body, String fieldName) {
     try {
       var field = body.getClass().getDeclaredField(fieldName);
       field.setAccessible(true);
