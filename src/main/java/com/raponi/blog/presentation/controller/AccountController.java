@@ -16,8 +16,9 @@ import com.raponi.blog.application.service.account.FindAccountByIdService;
 import com.raponi.blog.application.service.account.FindAccountByUsernameService;
 import com.raponi.blog.application.service.account.FindAllAccountsService;
 import com.raponi.blog.application.service.account.UpdateAccountService;
-import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.application.service.account.UpdateAccountStatusService;
 import com.raponi.blog.presentation.helpers.HttpHelper;
+import com.raponi.blog.presentation.protocols.Http;
 
 @RestController
 @RequestMapping("/accounts")
@@ -30,12 +31,14 @@ public class AccountController {
   private UpdateAccountService updateAccountService;
   private DeleteAccountService deleteAccountService;
   private ChangeAccountPasswordService changeAccountPasswordService;
+  private UpdateAccountStatusService updateAccountStatusService;
 
   public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountByIdService,
       FindAccountByEmailService findAccountByEmailService,
       FindAccountByUsernameService findAccountByUsernameService,
       UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
-      ChangeAccountPasswordService changeAccountPasswordService) {
+      ChangeAccountPasswordService changeAccountPasswordService,
+      UpdateAccountStatusService updateAccountStatusService) {
     this.findAllService = findAllService;
     this.findAccountByIdService = findAccountByIdService;
     this.findAccountByEmailService = findAccountByEmailService;
@@ -43,6 +46,7 @@ public class AccountController {
     this.updateAccountService = updateAccountService;
     this.deleteAccountService = deleteAccountService;
     this.changeAccountPasswordService = changeAccountPasswordService;
+    this.updateAccountStatusService = updateAccountStatusService;
   }
 
   @GetMapping
@@ -65,9 +69,9 @@ public class AccountController {
 
   @PutMapping("/id")
   public ResponseEntity<?> updateAccountById(@RequestParam("target") String accountId,
-      @RequestBody Account newAccountInfos) {
+      @RequestBody Http.UpdateBody updateBody) {
     try {
-      return HttpHelper.ok(this.updateAccountService.handle(accountId, newAccountInfos.username()));
+      return HttpHelper.ok(this.updateAccountService.handle(accountId, updateBody.username()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -102,9 +106,19 @@ public class AccountController {
 
   @PutMapping("/newpassword")
   public ResponseEntity<?> changeAccountPassword(@RequestParam("target") String accountId,
-      @RequestBody Account accountInfos) {
+      @RequestBody Http.UpdateBody updateBody) {
     try {
-      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, accountInfos.password()));
+      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, updateBody.password()));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
+  }
+
+  @PutMapping("/status")
+  public ResponseEntity<?> updateStatus(@RequestParam("target") String accountId,
+      @RequestBody Http.UpdateBody updateBody) {
+    try {
+      return HttpHelper.ok(this.updateAccountStatusService.handle(accountId, updateBody.active()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
