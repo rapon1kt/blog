@@ -27,6 +27,10 @@ public record Account(
     return new Account(id, email, username, newPassword, active, createdAt, Instant.now());
   }
 
+  public Account changeStatus(boolean activeStatus) {
+    return new Account(id, email, username, password, activeStatus, createdAt, Instant.now());
+  }
+
   public Account update(String newUsername) {
     return new Account(
         id,
