@@ -18,7 +18,7 @@ public class SignUpController {
   private CreateAccountService createAccountService;
 
   @PostMapping(value = "/req/signup", consumes = "application/json")
-  public ResponseEntity<?> signUp(@RequestBody Http.Body requestBody) {
+  public ResponseEntity<?> signUp(@RequestBody Http.RegisterBody requestBody) {
     try {
       return HttpHelper.ok(this.createAccountService.handle(requestBody));
     } catch (Exception e) {
