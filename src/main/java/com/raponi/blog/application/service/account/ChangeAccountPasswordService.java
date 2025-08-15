@@ -24,7 +24,12 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
 
   @Override
   public Account handle(String accountId, String newPassword) {
+
+    if (newPassword.length() < 8)
+      throw new IllegalArgumentException("A nova senha deve conter pelo menos 8 caracteres.");
+
     Optional<Account> existing = this.accountRepository.findById(accountId);
+    
     if (existing.isPresent()) {
       String hashedPassword = passwordEncoder.encode(newPassword);
       User.builder().username(existing.get().username()).password(hashedPassword);
