@@ -1,6 +1,8 @@
 package com.raponi.blog.presentation.protocols;
 
-public record Http(RegisterBody registerBody, LoginBody loginBody, UpdateBody updateBody) {
+import java.time.Instant;
+
+public record Http(RegisterBody registerBody, LoginBody loginBody, UpdateBody updateBody, ResponseBody responseBody) {
   public record RegisterBody(
       String email,
       String username,
@@ -16,5 +18,14 @@ public record Http(RegisterBody registerBody, LoginBody loginBody, UpdateBody up
       String username,
       String password,
       boolean active) {
+  }
+
+  public record ResponseBody(
+      String id,
+      String email,
+      String username,
+      boolean active,
+      Instant createdAt,
+      Instant modifiedAt) {
   }
 }
