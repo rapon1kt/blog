@@ -21,11 +21,12 @@ public class CreateAccountService implements CreateAccountUseCase {
   }
 
   @Override
-  public Account handle(Http.RegisterBody bodyRequest) {
+  public Http.ResponseBody handle(Http.RegisterBody bodyRequest) {
     validateRequest(bodyRequest);
     String hashedPassword = this.passwordEncoderService.encode(bodyRequest.password());
     Account account = Account.create(bodyRequest.email(), bodyRequest.username(), hashedPassword);
-    return this.accountRepository.save(account);
+    this.accountRepository.save(account);
+    return account.toResponseBody();
   }
 
   private void validateRequest(Http.RegisterBody bodyRequest) {

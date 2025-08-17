@@ -8,6 +8,7 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.FindAccountByUsernameUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.errors.AccountNotFound;
+import com.raponi.blog.presentation.protocols.Http;
 
 @Service
 public class FindAccountByUsernameService implements FindAccountByUsernameUseCase {
@@ -19,10 +20,10 @@ public class FindAccountByUsernameService implements FindAccountByUsernameUseCas
   }
 
   @Override
-  public Optional<Account> handle(String username) {
+  public Http.ResponseBody handle(String username) {
     Optional<Account> account = this.accountRepository.findByUsername(username);
     if (account.isPresent()) {
-      return account;
+      return account.get().toResponseBody();
     }
     throw new AccountNotFound("username equals " + username);
   }

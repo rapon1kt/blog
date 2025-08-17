@@ -10,6 +10,7 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.ChangeAccountPasswordUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.errors.AccountNotFound;
+import com.raponi.blog.presentation.protocols.Http;
 
 @Service
 public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCase {
@@ -23,17 +24,18 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
   }
 
   @Override
-  public Account handle(String accountId, String newPassword) {
+  public Http.ResponseBody handle(String accountId, String newPassword) {
 
     if (newPassword.length() < 8)
       throw new IllegalArgumentException("A nova senha deve conter pelo menos 8 caracteres.");
 
     Optional<Account> existing = this.accountRepository.findById(accountId);
-    
+
     if (existing.isPresent()) {
       String hashedPassword = passwordEncoder.encode(newPassword);
       User.builder().username(existing.get().username()).password(hashedPassword);
-      return this.accountRepository.save(existing.get().changePassword(hashedPassword));
+      this.accountRepository.save(existing.get().changePassword(hashedPassword));
+      return existing.get().toResponseBody();
     }
     throw new AccountNotFound("id equals " + accountId);
   }

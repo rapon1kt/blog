@@ -1,7 +1,7 @@
 package com.raponi.blog.domain.usecase.account;
 
-import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.presentation.protocols.Http;
 
 public interface ChangeStatusUseCase {
-  public Account handle(String accountId, boolean newActiveStatus);
+  public Http.ResponseBody handle(String accountId, boolean newActiveStatus);
 }

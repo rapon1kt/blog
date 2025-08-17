@@ -8,6 +8,7 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.UpdateAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.errors.AccountNotFound;
+import com.raponi.blog.presentation.protocols.Http;
 
 @Service
 public class UpdateAccountService implements UpdateAccountUseCase {
@@ -19,10 +20,11 @@ public class UpdateAccountService implements UpdateAccountUseCase {
   }
 
   @Override
-  public Account handle(String accountId, String newUsername) {
+  public Http.ResponseBody handle(String accountId, String newUsername) {
     Optional<Account> accountToUpdate = this.accountRepository.findById(accountId);
     if (accountToUpdate.isPresent()) {
-      return this.accountRepository.save(accountToUpdate.get().update(newUsername));
+      this.accountRepository.save(accountToUpdate.get().update(newUsername));
+      return accountToUpdate.get().toResponseBody();
     }
     throw new AccountNotFound("id equals " + accountId);
   }

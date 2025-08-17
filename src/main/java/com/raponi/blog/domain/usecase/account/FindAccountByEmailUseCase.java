@@ -1,9 +1,7 @@
 package com.raponi.blog.domain.usecase.account;
 
-import java.util.Optional;
-
-import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.presentation.protocols.Http;
 
 public interface FindAccountByEmailUseCase {
-  public Optional<Account> handle(String email);
+  public Http.ResponseBody handle(String email);
 }
