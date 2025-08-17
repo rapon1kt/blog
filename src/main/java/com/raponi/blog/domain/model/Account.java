@@ -2,6 +2,8 @@ package com.raponi.blog.domain.model;
 
 import java.time.Instant;
 
+import com.raponi.blog.presentation.protocols.Http;
+
 public record Account(
     String id,
     String email,
@@ -40,5 +42,15 @@ public record Account(
         active,
         createdAt,
         Instant.now());
+  }
+
+  public Http.ResponseBody toResponseBody() {
+    return new Http.ResponseBody(
+        id,
+        email,
+        username,
+        active,
+        createdAt,
+        modifiedAt);
   }
 }
