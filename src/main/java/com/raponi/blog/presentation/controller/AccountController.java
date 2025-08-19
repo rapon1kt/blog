@@ -15,6 +15,7 @@ import com.raponi.blog.application.service.account.FindAccountByEmailService;
 import com.raponi.blog.application.service.account.FindAccountByIdService;
 import com.raponi.blog.application.service.account.FindAccountByUsernameService;
 import com.raponi.blog.application.service.account.FindAllAccountsService;
+import com.raponi.blog.application.service.account.FindAccountPostsService;
 import com.raponi.blog.application.service.account.UpdateAccountService;
 import com.raponi.blog.application.service.account.UpdateAccountStatusService;
 import com.raponi.blog.presentation.helpers.HttpHelper;
@@ -32,13 +33,14 @@ public class AccountController {
   private DeleteAccountService deleteAccountService;
   private ChangeAccountPasswordService changeAccountPasswordService;
   private UpdateAccountStatusService updateAccountStatusService;
+  private FindAccountPostsService findAccountPostsService;
 
   public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountByIdService,
       FindAccountByEmailService findAccountByEmailService,
       FindAccountByUsernameService findAccountByUsernameService,
       UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
       ChangeAccountPasswordService changeAccountPasswordService,
-      UpdateAccountStatusService updateAccountStatusService) {
+      UpdateAccountStatusService updateAccountStatusService, FindAccountPostsService findAccountPostsService) {
     this.findAllService = findAllService;
     this.findAccountByIdService = findAccountByIdService;
     this.findAccountByEmailService = findAccountByEmailService;
@@ -47,6 +49,7 @@ public class AccountController {
     this.deleteAccountService = deleteAccountService;
     this.changeAccountPasswordService = changeAccountPasswordService;
     this.updateAccountStatusService = updateAccountStatusService;
+    this.findAccountPostsService = findAccountPostsService;
   }
 
   @GetMapping
@@ -119,6 +122,15 @@ public class AccountController {
       @RequestBody Http.UpdateBody updateBody) {
     try {
       return HttpHelper.ok(this.updateAccountStatusService.handle(accountId, updateBody.active()));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
+  }
+
+  @GetMapping("/{accountId}/posts")
+  public ResponseEntity<?> getMethodName(@PathVariable("accountId") String accountId) {
+    try {
+      return HttpHelper.ok(this.findAccountPostsService.handle(accountId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
