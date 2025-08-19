@@ -24,8 +24,9 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
       if (post.get().accountId().equals(accountId)) {
         boolean status = post.get().privateStatus();
         boolean newStatus = status == true ? false : true;
-        this.postRepository.save(post.get().changeStatus(newStatus));
-        return post.get();
+        Post updatedPost = post.get().changeStatus(newStatus);
+        this.postRepository.save(updatedPost);
+        return updatedPost;
       }
       throw new IllegalArgumentException("Você não tem permissão para fazer isso.");
     }
