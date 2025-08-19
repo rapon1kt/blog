@@ -128,7 +128,7 @@ public class AccountController {
   }
 
   @GetMapping("/{accountId}/posts")
-  public ResponseEntity<?> getMethodName(@PathVariable("accountId") String accountId) {
+  public ResponseEntity<?> getAccountPosts(@PathVariable("accountId") String accountId) {
     try {
       return HttpHelper.ok(this.findAccountPostsService.handle(accountId));
     } catch (Exception e) {
