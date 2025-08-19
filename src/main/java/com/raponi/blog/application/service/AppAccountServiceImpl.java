@@ -35,4 +35,12 @@ public class AppAccountServiceImpl implements UserDetailsService {
 
   }
 
+  public String getAccountIdByUsername(String username) {
+    Optional<Account> account = this.accountRepository.findByUsername(username);
+    if (account.isPresent()) {
+      return account.get().id();
+    }
+    throw new IllegalArgumentException("Account cannot be found.");
+  }
+
 }
