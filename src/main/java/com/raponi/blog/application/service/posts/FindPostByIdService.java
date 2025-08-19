@@ -18,10 +18,13 @@ public class FindPostByIdService implements FindPostByIdUseCase {
   }
 
   @Override
-  public Post handle(String postId) {
+  public Post handle(String postId, String accountId) {
     Optional<Post> post = this.postRepository.findById(postId);
     if (post.isPresent()) {
-      return post.get();
+      if (post.get().privateStatus() && post.get().accountId().equals(accountId)) {
+        return this.postRepository.findById(postId).get();
+      }
+      throw new IllegalArgumentException("Você não tem permissão para visualizar esse post.");
     }
     throw new IllegalArgumentException("Post não encontrado ou não existe.");
   }
