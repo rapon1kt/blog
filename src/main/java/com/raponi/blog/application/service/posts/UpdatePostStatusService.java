@@ -18,10 +18,10 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
   }
 
   @Override
-  public Post handle(String accountId, String postId) {
+  public Post handle(String accountId, String postId, String tokenId) {
     Optional<Post> post = this.postRepository.findById(postId);
     if (post.isPresent()) {
-      if (post.get().accountId().equals(accountId)) {
+      if (post.get().accountId().equals(accountId) && accountId.equals(tokenId)) {
         boolean status = post.get().privateStatus();
         boolean newStatus = status == true ? false : true;
         Post updatedPost = post.get().changeStatus(newStatus);
