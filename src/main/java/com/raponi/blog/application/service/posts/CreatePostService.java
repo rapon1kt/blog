@@ -16,8 +16,8 @@ public class CreatePostService implements CreatePostUseCase {
   }
 
   @Override
-  public Post handle(Post newPost) {
-    Post post = Post.create(newPost.accountId(), newPost.title(), newPost.content());
+  public Post handle(Post newPost, String tokenId) {
+    Post post = Post.create(tokenId, newPost.title(), newPost.content());
     this.postRepository.save(post);
     return post;
   }
