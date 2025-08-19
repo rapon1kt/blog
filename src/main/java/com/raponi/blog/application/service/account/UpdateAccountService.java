@@ -23,8 +23,9 @@ public class UpdateAccountService implements UpdateAccountUseCase {
   public Http.ResponseBody handle(String accountId, String newUsername) {
     Optional<Account> accountToUpdate = this.accountRepository.findById(accountId);
     if (accountToUpdate.isPresent()) {
-      this.accountRepository.save(accountToUpdate.get().update(newUsername));
-      return accountToUpdate.get().toResponseBody();
+      Account accountUpdated = accountToUpdate.get().update(newUsername);
+      this.accountRepository.save(accountUpdated);
+      return accountUpdated.toResponseBody();
     }
     throw new AccountNotFound("id equals " + accountId);
   }
