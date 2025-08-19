@@ -8,7 +8,6 @@ import java.util.function.Function;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -22,10 +21,12 @@ public class JWTService {
   @Value("${jwt.secret}")
   private String secretKey;
 
-  public String generateToken(String username) {
+  public String generateToken(String username, String accountId) {
     Map<String, Object> claims = new HashMap<>();
 
-    return Jwts.builder().claims().add(claims).subject(username).issuedAt(new Date(System.currentTimeMillis()))
+    return Jwts.builder().claims().add(claims).subject(accountId)
+        .add("username", username)
+        .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
         .and()
         .signWith(this.getKey())
@@ -38,12 +39,16 @@ public class JWTService {
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public boolean validateToken(String token, UserDetails userDetails) {
-    String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+  public boolean validateToken(String token, String accountId) {
+    String tokenId = extractAccountId(token);
+    return (tokenId.equals(accountId) && !isTokenExpired(token));
   }
 
   public String extractUsername(String token) {
+    return extractClaim(token, claims -> claims.get("username", String.class));
+  }
+
+  public String extractAccountId(String token) {
     return extractClaim(token, Claims::getSubject);
   }
 
