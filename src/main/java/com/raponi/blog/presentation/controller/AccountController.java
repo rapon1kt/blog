@@ -1,6 +1,7 @@
 package com.raponi.blog.presentation.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -128,9 +129,9 @@ public class AccountController {
   }
 
   @GetMapping("/{accountId}/posts")
-  public ResponseEntity<?> getAccountPosts(@PathVariable("accountId") String accountId) {
+  public ResponseEntity<?> getAccountPosts(@PathVariable("accountId") String accountId, Authentication auth) {
     try {
-      return HttpHelper.ok(this.findAccountPostsService.handle(accountId));
+      return HttpHelper.ok(this.findAccountPostsService.handle(accountId, auth.getName()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
