@@ -8,6 +8,7 @@ import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.presentation.helpers.HttpHelper;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,9 +37,9 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody Post postBody) {
+  public ResponseEntity<?> createPost(@RequestBody Post postBody, Authentication auth) {
     try {
-      return HttpHelper.ok(this.createPostService.handle(postBody));
+      return HttpHelper.ok(this.createPostService.handle(postBody, auth.getName()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -54,9 +55,9 @@ public class PostController {
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<?> findPostById(@PathVariable("postId") String postId) {
+  public ResponseEntity<?> findPostById(@PathVariable("postId") String postId, Authentication auth) {
     try {
-      return HttpHelper.ok(this.findPostByIdService.handle(postId));
+      return HttpHelper.ok(this.findPostByIdService.handle(postId, auth.getName()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -64,9 +65,9 @@ public class PostController {
 
   @PutMapping("/{accountId}/{postId}")
   public ResponseEntity<?> updatePostStatus(@PathVariable("accountId") String accountId,
-      @PathVariable("postId") String postId) {
+      @PathVariable("postId") String postId, Authentication auth) {
     try {
-      return HttpHelper.ok(this.updatePostStatusService.handle(accountId, postId));
+      return HttpHelper.ok(this.updatePostStatusService.handle(accountId, postId, auth.getName()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -74,9 +75,9 @@ public class PostController {
 
   @DeleteMapping("/{accountId}/{postId}")
   public ResponseEntity<?> deletePostById(@PathVariable("accountId") String accountId,
-      @PathVariable("postId") String postId) {
+      @PathVariable("postId") String postId, Authentication auth) {
     try {
-      return HttpHelper.ok(this.deletePostService.handle(accountId, postId));
+      return HttpHelper.ok(this.deletePostService.handle(accountId, postId, auth.getName()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
