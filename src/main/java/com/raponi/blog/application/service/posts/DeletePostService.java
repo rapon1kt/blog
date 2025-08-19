@@ -17,11 +17,11 @@ public class DeletePostService implements DeletePostUseCase {
   }
 
   @Override
-  public String handle(String accountId, String postId) {
+  public String handle(String accountId, String postId, String tokenId) {
     Optional<Post> post = this.postRepository.findById(postId);
     if (post.isPresent()) {
-      String accountOwnerId = post.get().accountId();
-      if (accountOwnerId.equals(accountId)) {
+      String accountPostId = post.get().accountId();
+      if (accountPostId.equals(accountId) && accountPostId.equals(tokenId)) {
         this.postRepository.deleteById(postId);
         return "Post foi deletado com sucesso!";
       }
