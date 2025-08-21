@@ -20,11 +20,11 @@ public class UpdateAccountStatusService implements ChangeStatusUseCase {
   }
 
   @Override
-  public Http.ResponseBody handle(String accountId, boolean newActiveStatus) {
+  public Http.ResponseBody handle(String accountId) {
     Optional<Account> account = this.accountRepository.findById(accountId);
     if (account.isPresent()) {
-      this.accountRepository.save(account.get().changeStatus(newActiveStatus));
-      return account.get().toResponseBody();
+      Account updated = this.accountRepository.save(account.get().changeStatus());
+      return updated.toResponseBody();
     }
     throw new AccountNotFound("id equals " + accountId);
   }
