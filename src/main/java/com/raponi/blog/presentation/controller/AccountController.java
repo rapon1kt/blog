@@ -15,6 +15,7 @@ import com.raponi.blog.application.service.account.DeleteAccountService;
 import com.raponi.blog.application.service.account.FindAccountByEmailService;
 import com.raponi.blog.application.service.account.FindAccountByIdService;
 import com.raponi.blog.application.service.account.FindAccountByUsernameService;
+import com.raponi.blog.application.service.account.FindAccountLikesService;
 import com.raponi.blog.application.service.account.FindAllAccountsService;
 import com.raponi.blog.application.service.account.FindAccountPostsService;
 import com.raponi.blog.application.service.account.UpdateAccountService;
@@ -35,13 +36,15 @@ public class AccountController {
   private ChangeAccountPasswordService changeAccountPasswordService;
   private UpdateAccountStatusService updateAccountStatusService;
   private FindAccountPostsService findAccountPostsService;
+  private FindAccountLikesService findAccountLikesService;
 
   public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountByIdService,
       FindAccountByEmailService findAccountByEmailService,
       FindAccountByUsernameService findAccountByUsernameService,
       UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
       ChangeAccountPasswordService changeAccountPasswordService,
-      UpdateAccountStatusService updateAccountStatusService, FindAccountPostsService findAccountPostsService) {
+      UpdateAccountStatusService updateAccountStatusService, FindAccountPostsService findAccountPostsService,
+      FindAccountLikesService findAccountLikesService) {
     this.findAllService = findAllService;
     this.findAccountByIdService = findAccountByIdService;
     this.findAccountByEmailService = findAccountByEmailService;
@@ -51,6 +54,7 @@ public class AccountController {
     this.changeAccountPasswordService = changeAccountPasswordService;
     this.updateAccountStatusService = updateAccountStatusService;
     this.findAccountPostsService = findAccountPostsService;
+    this.findAccountLikesService = findAccountLikesService;
   }
 
   @GetMapping
@@ -132,6 +136,15 @@ public class AccountController {
   public ResponseEntity<?> getAccountPosts(@PathVariable("accountId") String accountId, Authentication auth) {
     try {
       return HttpHelper.ok(this.findAccountPostsService.handle(accountId, auth.getName()));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
+  }
+
+  @GetMapping("/{accountId}/likes")
+  public ResponseEntity<?> getAccountLikes(@PathVariable("accountId") String accountId, Authentication auth) {
+    try {
+      return HttpHelper.ok(this.findAccountLikesService.handle(accountId, auth.getName()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
