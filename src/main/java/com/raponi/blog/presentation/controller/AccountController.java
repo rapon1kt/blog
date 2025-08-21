@@ -10,18 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.raponi.blog.application.service.account.ChangeAccountPasswordService;
-import com.raponi.blog.application.service.account.DeleteAccountService;
-import com.raponi.blog.application.service.account.FindAccountByEmailService;
-import com.raponi.blog.application.service.account.FindAccountByIdService;
-import com.raponi.blog.application.service.account.FindAccountByUsernameService;
-import com.raponi.blog.application.service.account.FindAccountLikesService;
-import com.raponi.blog.application.service.account.FindAllAccountsService;
-import com.raponi.blog.application.service.account.FindAccountPostsService;
-import com.raponi.blog.application.service.account.UpdateAccountService;
-import com.raponi.blog.application.service.account.UpdateAccountStatusService;
+import com.raponi.blog.application.service.account.*;
 import com.raponi.blog.presentation.helpers.HttpHelper;
-import com.raponi.blog.presentation.protocols.Http;
 
 @RestController
 @RequestMapping("/accounts")
@@ -77,9 +67,9 @@ public class AccountController {
 
   @PutMapping("/{accountId}")
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody Http.UpdateBody updateBody) {
+      @RequestBody String newUsername) {
     try {
-      return HttpHelper.ok(this.updateAccountService.handle(accountId, updateBody.username()));
+      return HttpHelper.ok(this.updateAccountService.handle(accountId, newUsername));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -114,19 +104,18 @@ public class AccountController {
 
   @PutMapping("/{accountId}/newpassword")
   public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
-      @RequestBody Http.UpdateBody updateBody) {
+      @RequestBody String newPassword) {
     try {
-      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, updateBody.password()));
+      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, newPassword));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
   }
 
   @PutMapping("/{accountId}/status")
-  public ResponseEntity<?> updateStatus(@PathVariable("accountId") String accountId,
-      @RequestBody Http.UpdateBody updateBody) {
+  public ResponseEntity<?> updateStatus(@PathVariable("accountId") String accountId) {
     try {
-      return HttpHelper.ok(this.updateAccountStatusService.handle(accountId, updateBody.active()));
+      return HttpHelper.ok(this.updateAccountStatusService.handle(accountId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
