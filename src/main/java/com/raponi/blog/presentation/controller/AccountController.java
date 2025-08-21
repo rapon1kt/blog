@@ -27,6 +27,8 @@ public class AccountController {
   private UpdateAccountStatusService updateAccountStatusService;
   private FindAccountPostsService findAccountPostsService;
   private FindAccountLikesService findAccountLikesService;
+  private FindAccountFollowersService findAccountFollowersService;
+  private final FindAccountFollowingService findAccountFollowingService;
 
   public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountByIdService,
       FindAccountByEmailService findAccountByEmailService,
@@ -34,7 +36,8 @@ public class AccountController {
       UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
       ChangeAccountPasswordService changeAccountPasswordService,
       UpdateAccountStatusService updateAccountStatusService, FindAccountPostsService findAccountPostsService,
-      FindAccountLikesService findAccountLikesService) {
+      FindAccountLikesService findAccountLikesService, FindAccountFollowersService findAccountFollowersService,
+      FindAccountFollowingService findAccountFollowingService) {
     this.findAllService = findAllService;
     this.findAccountByIdService = findAccountByIdService;
     this.findAccountByEmailService = findAccountByEmailService;
@@ -45,6 +48,8 @@ public class AccountController {
     this.updateAccountStatusService = updateAccountStatusService;
     this.findAccountPostsService = findAccountPostsService;
     this.findAccountLikesService = findAccountLikesService;
+    this.findAccountFollowersService = findAccountFollowersService;
+    this.findAccountFollowingService = findAccountFollowingService;
   }
 
   @GetMapping
@@ -134,6 +139,24 @@ public class AccountController {
   public ResponseEntity<?> getAccountLikes(@PathVariable("accountId") String accountId, Authentication auth) {
     try {
       return HttpHelper.ok(this.findAccountLikesService.handle(accountId, auth.getName()));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
+  }
+
+  @GetMapping("/{accountId}/followers")
+  public ResponseEntity<?> getAccountFollowers(@PathVariable("accountId") String accountId) {
+    try {
+      return HttpHelper.ok(this.findAccountFollowersService.handle(accountId));
+    } catch (Exception e) {
+      return HttpHelper.badRequest(e);
+    }
+  }
+
+  @GetMapping("/{accountId}/following")
+  public ResponseEntity<?> getAccountFollowing(@PathVariable("accountId") String accountId) {
+    try {
+      return HttpHelper.ok(this.findAccountFollowingService.handle(accountId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
