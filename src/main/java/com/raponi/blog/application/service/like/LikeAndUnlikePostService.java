@@ -19,11 +19,11 @@ public class LikeAndUnlikePostService implements LikeAndUnlikePostUseCase {
   public String handle(String postId, String accountId) {
     if (this.likeRepository.existsByPostIdAndAccountId(postId, accountId)) {
       this.likeRepository.deleteByPostIdAndAccountId(postId, accountId);
-      return "Liked!";
+      return "Unliked!";
     }
     Like like = Like.create(accountId, postId);
     this.likeRepository.save(like);
-    return "Unliked!";
+    return "Liked!";
   };
 
 }
