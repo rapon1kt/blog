@@ -10,6 +10,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.domain.model.Account;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -21,11 +23,12 @@ public class JWTService {
   @Value("${jwt.secret}")
   private String secretKey;
 
-  public String generateToken(String username, String accountId) {
+  public String generateToken(String username, Account account) {
     Map<String, Object> claims = new HashMap<>();
 
-    return Jwts.builder().claims().add(claims).subject(accountId)
+    return Jwts.builder().claims().add(claims).subject(account.id())
         .add("username", username)
+        .add("role", account.role())
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
         .and()
