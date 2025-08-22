@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.JWTService;
+import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.LoginAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.errors.AccountNotFound;
@@ -31,8 +32,8 @@ public class LoginAccountService implements LoginAccountUseCase {
         .authenticate(new UsernamePasswordAuthenticationToken(bodyRequest.username(), bodyRequest.password()));
 
     if (authentication.isAuthenticated()) {
-      String accountId = this.accountRepository.findByUsername(bodyRequest.username()).get().id();
-      return jwtService.generateToken(bodyRequest.username(), accountId);
+      Account account = this.accountRepository.findByUsername(bodyRequest.username()).get();
+      return jwtService.generateToken(bodyRequest.username(), account);
     }
 
     throw new AccountNotFound("this login");
