@@ -18,6 +18,7 @@ public class AccountEntity {
   private String username;
   private String password;
   private boolean active = true;
+  private String role;
   private Instant createdAt;
   private Instant modifiedAt;
 
@@ -26,12 +27,14 @@ public class AccountEntity {
     this.username = account.username();
     this.email = account.email();
     this.password = account.password();
+    this.active = account.active();
+    this.role = account.role();
     this.createdAt = account.createdAt();
     this.modifiedAt = account.modifiedAt();
   }
 
   public Account toDomain() {
-    return new Account(id, username, email, password, active, createdAt, modifiedAt);
+    return new Account(id, username, email, password, active, role, createdAt, modifiedAt);
   }
 
 }

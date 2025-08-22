@@ -10,6 +10,7 @@ public record Account(
     String username,
     String password,
     boolean active,
+    String role,
     Instant createdAt,
     Instant modifiedAt) {
 
@@ -21,16 +22,17 @@ public record Account(
         username,
         hashedPassword,
         true,
+        "USER",
         instNow,
         instNow);
   }
 
   public Account changePassword(String newPassword) {
-    return new Account(id, email, username, newPassword, active, createdAt, Instant.now());
+    return new Account(id, email, username, newPassword, active, role, createdAt, Instant.now());
   }
 
   public Account changeStatus() {
-    return new Account(id, email, username, password, active ? false : true, createdAt, Instant.now());
+    return new Account(id, email, username, password, active ? false : true, role, createdAt, Instant.now());
   }
 
   public Account update(String newUsername) {
@@ -40,6 +42,7 @@ public record Account(
         newUsername,
         password,
         active,
+        role,
         createdAt,
         Instant.now());
   }
