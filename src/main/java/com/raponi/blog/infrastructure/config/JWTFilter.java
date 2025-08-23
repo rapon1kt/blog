@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,19 +38,22 @@ public class JWTFilter extends OncePerRequestFilter {
     String authHeader = request.getHeader("Authorization");
     String token = null;
     String username = null;
+    String role = null;
 
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
       token = authHeader.substring(7);
       username = jwtService.extractUsername(token);
+      role = jwtService.extractRole(token);
     }
 
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
       String userId = context.getBean(AppAccountServiceImpl.class).getAccountIdByUsername(username);
       if (jwtService.validateToken(token, userId)) {
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, null,
-            List.of());
+            authorities);
 
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        authToken.setDetails(username);
         SecurityContextHolder.getContext().setAuthentication(authToken);
       }
     }
