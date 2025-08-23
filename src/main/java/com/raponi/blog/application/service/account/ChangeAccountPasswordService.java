@@ -1,42 +1,47 @@
 package com.raponi.blog.application.service.account;
 
-import java.util.Optional;
-
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.service.AccountValidatorService;
+import com.raponi.blog.application.service.JWTService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.ChangeAccountPasswordUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
-import com.raponi.blog.presentation.errors.AccountNotFound;
-import com.raponi.blog.presentation.protocols.Http;
 
 @Service
 public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCase {
 
   private final AccountRepository accountRepository;
   private final PasswordEncoder passwordEncoder;
+  private final JWTService jwtService;
+  private final AccountValidatorService accountValidatorService;
 
-  public ChangeAccountPasswordService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+  public ChangeAccountPasswordService(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
+      JWTService jwtService, AccountValidatorService accountValidatorService) {
     this.accountRepository = accountRepository;
     this.passwordEncoder = passwordEncoder;
+    this.jwtService = jwtService;
+    this.accountValidatorService = accountValidatorService;
   }
 
   @Override
-  public Http.ResponseBody handle(String accountId, String newPassword) {
+  public String handle(String accountId, String role, String tokenId, String password, String newPassword) {
 
-    if (newPassword.length() < 8)
-      throw new IllegalArgumentException("A nova senha deve conter pelo menos 8 caracteres.");
+    Account acc = this.accountValidatorService.handle(tokenId, accountId, password, role);
+    verifyNewPassword(newPassword, password);
+    Account updatedAcc = acc.changePassword(passwordEncoder.encode(newPassword));
+    this.accountRepository.save(updatedAcc);
+    if (!this.accountValidatorService.isAdmin(role))
+      this.jwtService.generateToken(updatedAcc.username(), updatedAcc);
+    return "A senha foi alterada com sucesso!";
+  }
 
-    Optional<Account> existing = this.accountRepository.findById(accountId);
-
-    if (existing.isPresent()) {
-      String hashedPassword = passwordEncoder.encode(newPassword);
-      User.builder().username(existing.get().username()).password(hashedPassword);
-      this.accountRepository.save(existing.get().changePassword(hashedPassword));
-      return existing.get().toResponseBody();
+  private void verifyNewPassword(String newPassword, String password) {
+    if (newPassword.isBlank() || newPassword.length() < 8) {
+      throw new IllegalArgumentException("Nova senha deve ter pelo menos 8 caracteres.");
+    } else if (newPassword.equals(password)) {
+      throw new IllegalArgumentException("A nova senha deve ser distinta da antiga.");
     }
-    throw new AccountNotFound("id equals " + accountId);
   }
 }
