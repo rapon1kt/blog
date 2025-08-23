@@ -14,4 +14,6 @@ public interface PostRepository extends MongoRepository<Post, String> {
   List<Post> findByPrivateStatus(boolean privateStatus);
 
   List<Post> findByAccountIdAndPrivateStatusFalse(String accountId);
+
+  void deleteByAccountId(String accountId);
 }
