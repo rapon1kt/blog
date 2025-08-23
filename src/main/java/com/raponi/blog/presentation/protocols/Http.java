@@ -17,9 +17,7 @@ public record Http(RegisterBody registerBody, LoginBody loginBody, ResponseBody 
 
   public record ResponseBody(
       String id,
-      String email,
       String username,
-      boolean active,
       Instant createdAt,
       Instant modifiedAt) {
   }
