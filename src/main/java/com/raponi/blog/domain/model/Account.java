@@ -51,7 +51,6 @@ public record Account(
     return new Http.ResponseBody(
         id,
         username,
-        createdAt,
-        modifiedAt);
+        createdAt);
   }
 }
