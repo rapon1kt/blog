@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.account.*;
 import com.raponi.blog.presentation.helpers.HttpHelper;
+import com.raponi.blog.presentation.protocols.Http;
 
 @RestController
 @RequestMapping("/accounts")
@@ -72,9 +73,9 @@ public class AccountController {
 
   @PutMapping("/{accountId}")
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody String newUsername) {
+      @RequestBody Http.UpdateBody body) {
     try {
-      return HttpHelper.ok(this.updateAccountService.handle(accountId, newUsername));
+      return HttpHelper.ok(this.updateAccountService.handle(accountId, body.username()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -109,9 +110,12 @@ public class AccountController {
 
   @PutMapping("/{accountId}/newpassword")
   public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
-      @RequestBody String newPassword) {
+      @RequestBody Http.UpdateBody body, Authentication auth) {
     try {
-      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, newPassword));
+      String role = auth.getAuthorities().iterator().next().getAuthority();
+      String tokenId = auth.getName();
+      return HttpHelper
+          .ok(this.changeAccountPasswordService.handle(accountId, role, tokenId, body.password(), body.newPassword()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
