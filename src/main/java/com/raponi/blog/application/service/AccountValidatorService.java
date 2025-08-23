@@ -25,11 +25,18 @@ public class AccountValidatorService implements AccountValidatorUseCase {
 
     if (!accountId.equals(tokenId) && !isAdmin(role)) {
       throw new IllegalArgumentException("Você não tem permissão para fazer isso.");
-    } else if (!account.active()) {
-      throw new IllegalArgumentException("Essa conta está desativada");
-    } else if (!passwordMatches(password, account.password())) {
+    }
+
+    Account requestAccount = this.accountRepository.findById(tokenId).get();
+
+    if (!passwordMatches(password, requestAccount.password())) {
       throw new IllegalArgumentException("Sua senha está incorreta.");
     }
+
+    if (!account.active()) {
+      throw new IllegalArgumentException("Essa conta está desativada");
+    }
+
     return account;
   }
 
