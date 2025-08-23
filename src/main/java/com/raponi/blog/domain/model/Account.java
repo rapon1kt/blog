@@ -50,9 +50,7 @@ public record Account(
   public Http.ResponseBody toResponseBody() {
     return new Http.ResponseBody(
         id,
-        email,
         username,
-        active,
         createdAt,
         modifiedAt);
   }
