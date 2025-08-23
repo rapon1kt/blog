@@ -82,9 +82,12 @@ public class AccountController {
   }
 
   @DeleteMapping("/{accountId}")
-  public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId) {
+  public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId,
+      @RequestBody Http.AuthBody body, Authentication auth) {
     try {
-      return HttpHelper.ok(this.deleteAccountService.handle(accountId));
+      String role = auth.getAuthorities().iterator().next().getAuthority();
+      String tokenId = auth.getName();
+      return HttpHelper.ok(this.deleteAccountService.handle(tokenId, accountId, role, body.password()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
