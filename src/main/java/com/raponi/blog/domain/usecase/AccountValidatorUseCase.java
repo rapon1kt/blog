@@ -3,7 +3,10 @@ package com.raponi.blog.domain.usecase;
 import com.raponi.blog.domain.model.Account;
 
 public interface AccountValidatorUseCase {
+
   Account handle(String tokenId, String accountId, String password, String role);
+
+  Account verifyAccount(String accountId, String email);
 
   boolean isAdmin(String role);
 
