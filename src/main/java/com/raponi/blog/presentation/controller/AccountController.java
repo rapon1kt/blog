@@ -83,11 +83,9 @@ public class AccountController {
 
   @DeleteMapping("/{accountId}")
   public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody Http.AuthBody body, Authentication auth) {
+      @RequestBody Http.AuthBody body) {
     try {
-      String role = auth.getAuthorities().iterator().next().getAuthority();
-      String tokenId = auth.getName();
-      return HttpHelper.ok(this.deleteAccountService.handle(tokenId, accountId, role, body.password()));
+      return HttpHelper.ok(this.deleteAccountService.handle(accountId, body.password()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -113,12 +111,9 @@ public class AccountController {
 
   @PutMapping("/{accountId}/newpassword")
   public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
-      @RequestBody Http.UpdateBody body, Authentication auth) {
+      @RequestBody Http.UpdateBody body) {
     try {
-      String role = auth.getAuthorities().iterator().next().getAuthority();
-      String tokenId = auth.getName();
-      return HttpHelper
-          .ok(this.changeAccountPasswordService.handle(accountId, role, tokenId, body.password(), body.newPassword()));
+      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, body.password(), body.newPassword()));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
