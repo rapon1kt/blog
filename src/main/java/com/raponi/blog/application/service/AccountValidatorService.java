@@ -1,12 +1,14 @@
 package com.raponi.blog.application.service;
 
+import java.util.Optional;
+
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.AccountValidatorUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
-import com.raponi.blog.presentation.errors.AccountNotFound;
 
 @Service
 public class AccountValidatorService implements AccountValidatorUseCase {
@@ -19,49 +21,61 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     this.passwordEncoder = passwordEncoder;
   }
 
-  public Account verifyWithPasswordInRequest(String tokenId, String accountId, String password, String role) {
-    Account account = this.accountRepository.findById(accountId)
-        .orElseThrow(() -> new AccountNotFound("id equals " + accountId));
-    verifyAuthority(accountId, tokenId, role);
+  public Account getAccountWithPasswordConfirmation(String tokenId, String accountId, String password, String role) {
+    Optional<Account> acc = this.accountRepository.findById(accountId);
+    Boolean authorized = verifyAuthority(accountId, tokenId, role);
     Account requestAccount = this.accountRepository.findById(tokenId).get();
-    if (!passwordMatches(password, requestAccount.password())) {
-      throw new IllegalArgumentException("Sua senha está incorreta.");
+    if (authorized) {
+      Account verifiedAccount = verifyPresenceAndActive(acc, role);
+      Boolean passwordConfirmation = passwordMatches(password, requestAccount.password());
+      if (passwordConfirmation) {
+        return verifiedAccount;
+      }
+      throw new IllegalArgumentException("A sua senha está incorreta!");
     }
-    verifyActive(account);
-    return account;
+    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
-  public Account verifyWithEmailOrAccountId(String accountId, String tokenId, String role, String email) {
-    if (email != null && accountId == null) {
-      Account account = this.accountRepository.findByEmail(email)
-          .orElseThrow(() -> new AccountNotFound("email equals" + email));
-      verifyActive(account);
-      return account;
+  public Account getAccountByEmailOrAccountId(String accountId, String tokenId, String role, String email) {
+    Optional<Account> acc = this.accountRepository.findByEmailOrId(email, accountId);
+    Boolean authorized = verifyAuthority(accountId, tokenId, role);
+    if (authorized) {
+      Account verifiedAccount = verifyPresenceAndActive(acc, role);
+      return verifiedAccount;
     }
-    verifyAuthority(accountId, tokenId, role);
-    Account account = this.accountRepository.findById(accountId)
-        .orElseThrow(() -> new AccountNotFound("id equals " + accountId));
-    verifyActive(account);
-    return account;
+    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
-  public boolean isAdmin(String role) {
+  private boolean isAdmin(String role) {
     return role.equals("ROLE_ADMIN");
   }
 
-  public void verifyAuthority(String accountId, String tokenId, String role) {
-    if (!accountId.equals(tokenId) && !isAdmin(role)) {
-      throw new IllegalArgumentException("Você não tem permissão para fazer isso.");
+  private boolean verifyAuthority(String accountId, String tokenId, String role) {
+    if (!accountId.equals(tokenId)) {
+      if (!isAdmin(role)) {
+        return false;
+      }
+      return true;
     }
+    return true;
   }
 
-  public void verifyActive(Account account) {
-    if (!account.active()) {
-      throw new IllegalArgumentException("Essa conta está desativada");
+  private Account verifyPresenceAndActive(Optional<Account> acc, String role) {
+    if (acc.isPresent()) {
+      if (isAdmin(role)) {
+        return acc.get();
+      }
+
+      if (!acc.get().active()) {
+        throw new IllegalArgumentException("Você precisa reativar sua conta para fazer isso.");
+      }
+
+      return acc.get();
     }
+    throw new IllegalArgumentException("O usuário em questão não existe.");
   }
 
-  public boolean passwordMatches(String password, String hashedPassword) {
+  private boolean passwordMatches(String password, String hashedPassword) {
     return this.passwordEncoder.matches(password, hashedPassword);
   }
 
