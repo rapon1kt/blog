@@ -22,26 +22,42 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   public Account handle(String tokenId, String accountId, String password, String role) {
     Account account = this.accountRepository.findById(accountId)
         .orElseThrow(() -> new AccountNotFound("id equals " + accountId));
-
-    if (!accountId.equals(tokenId) && !isAdmin(role)) {
-      throw new IllegalArgumentException("Você não tem permissão para fazer isso.");
-    }
-
+    verifyAuthority(accountId, tokenId, role);
     Account requestAccount = this.accountRepository.findById(tokenId).get();
-
     if (!passwordMatches(password, requestAccount.password())) {
       throw new IllegalArgumentException("Sua senha está incorreta.");
     }
+    verifyActive(account);
+    return account;
+  }
 
-    if (!account.active()) {
-      throw new IllegalArgumentException("Essa conta está desativada");
+  public Account verifyAccount(String accountId, String email) {
+    if (!email.isBlank() && accountId == null) {
+      Account account = this.accountRepository.findByEmail(email)
+          .orElseThrow(() -> new AccountNotFound("email equals" + email));
+      verifyActive(account);
+      return account;
     }
-
+    Account account = this.accountRepository.findById(accountId)
+        .orElseThrow(() -> new AccountNotFound("id equals " + accountId));
+    verifyActive(account);
     return account;
   }
 
   public boolean isAdmin(String role) {
     return role.equals("ROLE_ADMIN");
+  }
+
+  public void verifyAuthority(String accountId, String tokenId, String role) {
+    if (!accountId.equals(tokenId) && !isAdmin(role)) {
+      throw new IllegalArgumentException("Você não tem permissão para fazer isso.");
+    }
+  }
+
+  public void verifyActive(Account account) {
+    if (!account.active()) {
+      throw new IllegalArgumentException("Essa conta está desativada");
+    }
   }
 
   public boolean passwordMatches(String password, String hashedPassword) {
