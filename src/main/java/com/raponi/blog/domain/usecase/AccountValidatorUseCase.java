@@ -4,11 +4,8 @@ import com.raponi.blog.domain.model.Account;
 
 public interface AccountValidatorUseCase {
 
-  Account verifyWithPasswordInRequest(String tokenId, String accountId, String password, String role);
+  Account getAccountWithPasswordConfirmation(String accountId, String tokenId, String password, String role);
 
-  Account verifyWithEmailOrAccountId(String accountId, String tokenId, String role, String email);
+  Account getAccountByEmailOrAccountId(String accountId, String tokenId, String email, String role);
 
-  boolean isAdmin(String role);
-
-  boolean passwordMatches(String password, String hashedPassword);
 }
