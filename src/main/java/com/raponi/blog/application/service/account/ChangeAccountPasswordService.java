@@ -1,5 +1,7 @@
 package com.raponi.blog.application.service.account;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +28,16 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
   }
 
   @Override
-  public String handle(String accountId, String role, String tokenId, String password, String newPassword) {
+  public String handle(String accountId, String password, String newPassword) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String tokenId = auth.getName();
+    String role = auth.getAuthorities().iterator().next().getAuthority();
 
-    Account acc = this.accountValidatorService.verifyWithPasswordInRequest(tokenId, accountId, password, role);
+    Account acc = this.accountValidatorService.getAccountWithPasswordConfirmation(tokenId, accountId, password, role);
     verifyNewPassword(newPassword, password);
     Account updatedAcc = acc.changePassword(passwordEncoder.encode(newPassword));
     this.accountRepository.save(updatedAcc);
-    if (!this.accountValidatorService.isAdmin(role))
+    if (!role.equals("ROLE_ADMIN"))
       this.jwtService.generateToken(updatedAcc.username(), updatedAcc);
     return "A senha foi alterada com sucesso!";
   }
