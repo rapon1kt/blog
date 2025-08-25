@@ -31,7 +31,7 @@ public class DeleteAccountService implements DeleteAccountUseCase {
 
   @Override
   public String handle(String tokenId, String accountId, String role, String password) {
-    Account account = this.accountValidatorService.handle(tokenId, accountId, password, role);
+    Account account = this.accountValidatorService.verifyWithPasswordInRequest(tokenId, accountId, password, role);
     this.accountRepository.deleteById(account.id());
     this.postRepository.deleteByAccountId(account.id());
     this.likeRepository.deleteByAccountId(account.id());
