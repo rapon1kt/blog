@@ -19,7 +19,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     this.passwordEncoder = passwordEncoder;
   }
 
-  public Account handle(String tokenId, String accountId, String password, String role) {
+  public Account verifyWithPasswordInRequest(String tokenId, String accountId, String password, String role) {
     Account account = this.accountRepository.findById(accountId)
         .orElseThrow(() -> new AccountNotFound("id equals " + accountId));
     verifyAuthority(accountId, tokenId, role);
@@ -31,13 +31,14 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     return account;
   }
 
-  public Account verifyAccount(String accountId, String email) {
-    if (!email.isBlank() && accountId == null) {
+  public Account verifyWithEmailOrAccountId(String accountId, String tokenId, String role, String email) {
+    if (email != null && accountId == null) {
       Account account = this.accountRepository.findByEmail(email)
           .orElseThrow(() -> new AccountNotFound("email equals" + email));
       verifyActive(account);
       return account;
     }
+    verifyAuthority(accountId, tokenId, role);
     Account account = this.accountRepository.findById(accountId)
         .orElseThrow(() -> new AccountNotFound("id equals " + accountId));
     verifyActive(account);
