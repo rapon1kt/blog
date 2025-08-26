@@ -23,7 +23,7 @@ public class FindAccountByIdService implements FindAccountByIdUseCase {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String tokenId = auth.getName();
     String role = auth.getAuthorities().iterator().next().getAuthority();
-    Account account = this.accountValidatorService.getAccountByEmailOrAccountId(accountId, tokenId, role, null);
+    Account account = this.accountValidatorService.getAccountByAccountId(accountId, tokenId, role);
     return account.toResponseBody();
   }
 

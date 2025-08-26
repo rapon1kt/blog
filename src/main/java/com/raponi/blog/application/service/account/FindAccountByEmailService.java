@@ -23,7 +23,7 @@ public class FindAccountByEmailService implements FindAccountByEmailUseCase {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String tokenId = auth.getName();
     String role = auth.getAuthorities().iterator().next().getAuthority();
-    Account acc = this.accountValidatorService.getAccountByEmailOrAccountId(null, tokenId, role, email);
+    Account acc = this.accountValidatorService.getAccountByEmail(tokenId, role, email);
     return acc.toResponseBody();
   }
 
