@@ -36,9 +36,29 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
-  public Account getAccountByEmailOrAccountId(String accountId, String tokenId, String role, String email) {
-    Optional<Account> acc = this.accountRepository.findByEmailOrId(email, accountId);
+  public Account getAccountByAccountId(String accountId, String tokenId, String role) {
+    Optional<Account> acc = this.accountRepository.findById(accountId);
     Boolean authorized = verifyAuthority(accountId, tokenId, role);
+    if (authorized) {
+      Account verifiedAccount = verifyPresenceAndActive(acc, role);
+      return verifiedAccount;
+    }
+    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+  }
+
+  public Account getAccountByEmail(String tokenId, String role, String email) {
+    Optional<Account> acc = this.accountRepository.findByEmail(email);
+    Boolean authorized = verifyAuthority(acc.get().id(), tokenId, role);
+    if (authorized) {
+      Account verifiedAccount = verifyPresenceAndActive(acc, role);
+      return verifiedAccount;
+    }
+    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+  }
+
+  public Account getAccountByUsername(String tokenId, String role, String username) {
+    Optional<Account> acc = this.accountRepository.findByUsername(username);
+    Boolean authorized = verifyAuthority(acc.get().id(), tokenId, role);
     if (authorized) {
       Account verifiedAccount = verifyPresenceAndActive(acc, role);
       return verifiedAccount;
