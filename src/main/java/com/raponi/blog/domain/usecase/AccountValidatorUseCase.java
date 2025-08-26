@@ -6,6 +6,10 @@ public interface AccountValidatorUseCase {
 
   Account getAccountWithPasswordConfirmation(String accountId, String tokenId, String password, String role);
 
-  Account getAccountByEmailOrAccountId(String accountId, String tokenId, String email, String role);
+  Account getAccountByAccountId(String accountId, String tokenId, String role);
+
+  Account getAccountByEmail(String tokenId, String email, String role);
+
+  Account getAccountByUsername(String tokenId, String role, String username);
 
 }
