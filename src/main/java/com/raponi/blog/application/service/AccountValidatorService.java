@@ -80,7 +80,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     return true;
   }
 
-  private Account verifyPresenceAndActive(Optional<Account> acc, String role) {
+  public Account verifyPresenceAndActive(Optional<Account> acc, String role) {
     if (acc.isPresent()) {
       if (isAdmin(role)) {
         return acc.get();
