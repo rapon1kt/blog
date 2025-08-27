@@ -87,7 +87,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
       }
 
       if (!acc.get().active()) {
-        throw new IllegalArgumentException("Você precisa reativar sua conta para fazer isso.");
+        throw new AccessDeniedException("Você não tem permissão para fazer isso.");
       }
 
       return acc.get();
