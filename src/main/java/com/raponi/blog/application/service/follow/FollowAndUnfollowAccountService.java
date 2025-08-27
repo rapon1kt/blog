@@ -1,7 +1,5 @@
 package com.raponi.blog.application.service.follow;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
@@ -25,22 +23,20 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
   public String handle(String followerId, String followingId) {
     if (followerId.equals(followingId))
       throw new IllegalArgumentException("Não é possível realizar essa ação.");
-    Optional<Account> originAcc = this.accountRepository.findById(followerId);
-    Optional<Account> destinyAcc = this.accountRepository.findById(followingId);
+    Account destinyAcc = this.accountRepository.findById(followingId)
+        .orElseThrow(() -> new IllegalArgumentException("A conta não pode ser encontrada"));
 
-    if (originAcc.isPresent() && destinyAcc.isPresent()) {
-      if (destinyAcc.get().active()) {
-        if (this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId)) {
-          this.followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
-          return ("Unfollowed " + destinyAcc.get().username());
-        }
-        Follow follow = Follow.create(followerId, followingId);
-        this.followRepository.save(follow);
-        return ("Followed " + destinyAcc.get().username());
+    if (destinyAcc.active()) {
+      Boolean exists = this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId);
+      if (exists) {
+        this.followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
+        return ("Unfollowed " + destinyAcc.username());
       }
-      throw new IllegalArgumentException("A conta que você está tentando seguir está desativada.");
+      Follow follow = Follow.create(followerId, followingId);
+      this.followRepository.save(follow);
+      return ("Followed " + destinyAcc.username());
     }
-    throw new IllegalArgumentException("A usuário em questão não existe.");
+    throw new IllegalArgumentException("Esse usuário está com a conta desativada.");
   }
 
 }
