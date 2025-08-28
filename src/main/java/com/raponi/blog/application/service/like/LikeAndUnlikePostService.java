@@ -2,6 +2,7 @@ package com.raponi.blog.application.service.like;
 
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,10 @@ public class LikeAndUnlikePostService implements LikeAndUnlikePostUseCase {
   }
 
   @Override
-  public String handle(String postId, String accountId) {
-    String role = SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next()
-        .getAuthority();
+  public String handle(String postId) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String role = auth.getAuthorities().iterator().next().getAuthority();
+    String accountId = auth.getName();
 
     Optional<Account> acc = this.accountRepository.findById(accountId);
     Account validatedAcc = this.accountValidatorService.verifyPresenceAndActive(acc, role);
