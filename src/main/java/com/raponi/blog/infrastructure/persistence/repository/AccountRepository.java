@@ -1,5 +1,6 @@
 package com.raponi.blog.infrastructure.persistence.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -21,5 +22,7 @@ public interface AccountRepository extends MongoRepository<Account, String> {
 
   @Query("{ '$or': [{ 'email': ?0 }, { '_id': ?1 }]}")
   public Optional<Account> findByEmailOrId(String email, String id);
+
+  public List<Account> findAllByActiveIsTrue();
 
 }
