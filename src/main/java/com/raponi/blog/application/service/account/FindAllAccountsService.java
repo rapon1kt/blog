@@ -3,6 +3,8 @@ package com.raponi.blog.application.service.account;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
@@ -21,7 +23,13 @@ public class FindAllAccountsService implements FindAllAccountsUseCase {
 
   @Override
   public List<Http.ResponseBody> handle() {
-    return this.accountRepository.findAll().stream().map(Account::toResponseBody).collect(Collectors.toList());
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String role = auth.getAuthorities().iterator().next().getAuthority();
+    if (role.equals("ROLE_ADMIN"))
+      return this.accountRepository.findAll().stream().map(Account::toResponseBody).collect(Collectors.toList());
+    else
+      return this.accountRepository.findAllByActiveIsTrue().stream().map(Account::toResponseBody)
+          .collect(Collectors.toList());
   }
 
 }
