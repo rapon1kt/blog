@@ -1,7 +1,6 @@
 package com.raponi.blog.presentation.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -129,18 +128,18 @@ public class AccountController {
   }
 
   @GetMapping("/{accountId}/posts")
-  public ResponseEntity<?> getAccountPosts(@PathVariable("accountId") String accountId, Authentication auth) {
+  public ResponseEntity<?> getAccountPosts(@PathVariable("accountId") String accountId) {
     try {
-      return HttpHelper.ok(this.findAccountPostsService.handle(accountId, auth.getName()));
+      return HttpHelper.ok(this.findAccountPostsService.handle(accountId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
   }
 
   @GetMapping("/{accountId}/likes")
-  public ResponseEntity<?> getAccountLikes(@PathVariable("accountId") String accountId, Authentication auth) {
+  public ResponseEntity<?> getAccountLikes(@PathVariable("accountId") String accountId) {
     try {
-      return HttpHelper.ok(this.findAccountLikesService.handle(accountId, auth.getName()));
+      return HttpHelper.ok(this.findAccountLikesService.handle(accountId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
