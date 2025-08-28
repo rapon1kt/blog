@@ -70,7 +70,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     return role.equals("ROLE_ADMIN");
   }
 
-  private boolean verifyAuthority(String accountId, String tokenId, String role) {
+  public boolean verifyAuthority(String accountId, String tokenId, String role) {
     if (!accountId.equals(tokenId)) {
       if (!isAdmin(role)) {
         return false;
