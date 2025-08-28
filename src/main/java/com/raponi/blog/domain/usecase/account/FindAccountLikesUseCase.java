@@ -5,5 +5,5 @@ import java.util.List;
 import com.raponi.blog.domain.model.Like;
 
 public interface FindAccountLikesUseCase {
-  List<Like> handle(String accountId, String tokenId);
+  List<Like> handle(String accountId);
 }
