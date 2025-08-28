@@ -8,7 +8,6 @@ import com.raponi.blog.application.service.like.LikeAndUnlikePostService;
 import com.raponi.blog.presentation.helpers.HttpHelper;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +25,9 @@ public class LikeController {
   }
 
   @PostMapping
-  public ResponseEntity<?> likePost(@PathVariable("postId") String postId, Authentication auth) {
+  public ResponseEntity<?> likePost(@PathVariable("postId") String postId) {
     try {
-      return HttpHelper.ok(this.likeAndUnlikePostService.handle(postId, auth.getName()));
+      return HttpHelper.ok(this.likeAndUnlikePostService.handle(postId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
