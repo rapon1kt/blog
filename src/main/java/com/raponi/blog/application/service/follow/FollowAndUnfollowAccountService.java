@@ -1,5 +1,6 @@
 package com.raponi.blog.application.service.follow;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
@@ -23,8 +24,15 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
   public String handle(String followerId, String followingId) {
     if (followerId.equals(followingId))
       throw new IllegalArgumentException("Não é possível realizar essa ação.");
+
+    Account originAcc = this.accountRepository.findById(followerId)
+        .orElseThrow(() -> new IllegalArgumentException("A conta não pode ser encontrada"));
+
     Account destinyAcc = this.accountRepository.findById(followingId)
         .orElseThrow(() -> new IllegalArgumentException("A conta não pode ser encontrada"));
+
+    if (!originAcc.active())
+      throw new AccessDeniedException("Você deve reativer sua conta para realizar essa ação.");
 
     if (destinyAcc.active()) {
       Boolean exists = this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId);
