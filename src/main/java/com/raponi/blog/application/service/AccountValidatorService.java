@@ -3,6 +3,8 @@ package com.raponi.blog.application.service;
 import java.util.Optional;
 
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,58 +23,66 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     this.passwordEncoder = passwordEncoder;
   }
 
-  public Account getAccountWithPasswordConfirmation(String tokenId, String accountId, String password, String role) {
+  private Authentication getAuth() {
+    return SecurityContextHolder.getContext().getAuthentication();
+  }
+
+  public Account getAccountWithPasswordConfirmation(String accountId, String password) {
+
+    String tokenId = this.getAuth().getName();
+
     Optional<Account> acc = this.accountRepository.findById(accountId);
-    Boolean authorized = verifyAuthority(accountId, tokenId, role);
+    Boolean verifiedAccount = verifyPresenceAndActive(acc);
+    Boolean authorized = verifyAuthority(accountId);
     Account requestAccount = this.accountRepository.findById(tokenId).get();
-    if (authorized) {
-      Account verifiedAccount = verifyPresenceAndActive(acc, role);
+    if (authorized && verifiedAccount) {
       Boolean passwordConfirmation = passwordMatches(password, requestAccount.password());
       if (passwordConfirmation) {
-        return verifiedAccount;
+        return acc.get();
       }
       throw new IllegalArgumentException("A sua senha está incorreta!");
     }
     throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
-  public Account getAccountByAccountId(String accountId, String tokenId, String role) {
+  public Account getAccountByAccountId(String accountId) {
     Optional<Account> acc = this.accountRepository.findById(accountId);
-    Boolean authorized = verifyAuthority(accountId, tokenId, role);
-    if (authorized) {
-      Account verifiedAccount = verifyPresenceAndActive(acc, role);
-      return verifiedAccount;
+    Boolean verifiedAccount = verifyPresenceAndActive(acc);
+    Boolean authorized = verifyAuthority(accountId);
+    if (authorized && verifiedAccount) {
+      return acc.get();
     }
     throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
-  public Account getAccountByEmail(String tokenId, String role, String email) {
+  public Account getAccountByEmail(String email) {
     Optional<Account> acc = this.accountRepository.findByEmail(email);
-    Boolean authorized = verifyAuthority(acc.get().id(), tokenId, role);
-    if (authorized) {
-      Account verifiedAccount = verifyPresenceAndActive(acc, role);
-      return verifiedAccount;
+    Boolean verifiedAccount = verifyPresenceAndActive(acc);
+    Boolean authorized = verifyAuthority(acc.get().id());
+    if (authorized && verifiedAccount) {
+      return acc.get();
     }
     throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
-  public Account getAccountByUsername(String tokenId, String role, String username) {
+  public Account getAccountByUsername(String username) {
     Optional<Account> acc = this.accountRepository.findByUsername(username);
-    Boolean authorized = verifyAuthority(acc.get().id(), tokenId, role);
-    if (authorized) {
-      Account verifiedAccount = verifyPresenceAndActive(acc, role);
-      return verifiedAccount;
+    Boolean verifiedAccount = verifyPresenceAndActive(acc);
+    Boolean authorized = verifyAuthority(acc.get().id());
+    if (authorized && verifiedAccount) {
+      return acc.get();
     }
     throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
-  private boolean isAdmin(String role) {
+  public boolean isAdmin() {
+    String role = this.getAuth().getAuthorities().iterator().next().getAuthority();
     return role.equals("ROLE_ADMIN");
   }
 
-  public boolean verifyAuthority(String accountId, String tokenId, String role) {
-    if (!accountId.equals(tokenId)) {
-      if (!isAdmin(role)) {
+  public boolean verifyAuthority(String accountId) {
+    if (!accountId.equals(this.getAuth().getName())) {
+      if (!isAdmin()) {
         return false;
       }
       return true;
@@ -80,19 +90,17 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     return true;
   }
 
-  public Account verifyPresenceAndActive(Optional<Account> acc, String role) {
+  public boolean verifyPresenceAndActive(Optional<Account> acc) {
     if (acc.isPresent()) {
-      if (isAdmin(role)) {
-        return acc.get();
+      if (isAdmin()) {
+        return true;
       }
-
       if (!acc.get().active()) {
-        throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+        return false;
       }
-
-      return acc.get();
+      return true;
     }
-    throw new IllegalArgumentException("O usuário em questão não existe.");
+    return false;
   }
 
   private boolean passwordMatches(String password, String hashedPassword) {
