@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.usecase.post.FindAllPostsUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.presentation.protocols.Http;
 
 @Service
 public class FindAllPostsService implements FindAllPostsUseCase {
@@ -17,8 +18,8 @@ public class FindAllPostsService implements FindAllPostsUseCase {
   }
 
   @Override
-  public List<Post> handle() {
-    return this.postRepository.findByPrivateStatus(false);
+  public List<Http.PostResponseBody> handle() {
+    return this.postRepository.findByPrivateStatus(false).stream().map(Post::toResponseBody).toList();
   };
 
 }
