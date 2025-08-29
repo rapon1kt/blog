@@ -4,12 +4,12 @@ import com.raponi.blog.domain.model.Account;
 
 public interface AccountValidatorUseCase {
 
-  Account getAccountWithPasswordConfirmation(String accountId, String tokenId, String password, String role);
+  Account getAccountWithPasswordConfirmation(String accountId, String password);
 
-  Account getAccountByAccountId(String accountId, String tokenId, String role);
+  Account getAccountByAccountId(String accountId);
 
-  Account getAccountByEmail(String tokenId, String email, String role);
+  Account getAccountByEmail(String email);
 
-  Account getAccountByUsername(String tokenId, String role, String username);
+  Account getAccountByUsername(String username);
 
 }
