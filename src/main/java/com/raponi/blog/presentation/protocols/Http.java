@@ -3,7 +3,7 @@ package com.raponi.blog.presentation.protocols;
 import java.time.Instant;
 
 public record Http(RegisterBody registerBody, LoginBody loginBody, ResponseBody responseBody,
-    UpdateBody updateBody, AuthBody authBody) {
+    UpdateBody updateBody, AuthBody authBody, PostResponseBody postResponseBody) {
   public record RegisterBody(
       String email,
       String username,
@@ -30,6 +30,15 @@ public record Http(RegisterBody registerBody, LoginBody loginBody, ResponseBody 
 
   public record AuthBody(
       String password) {
+
+  }
+
+  public record PostResponseBody(
+      String postId,
+      String title,
+      String content,
+      String accountId,
+      Instant createdAt) {
 
   }
 }
