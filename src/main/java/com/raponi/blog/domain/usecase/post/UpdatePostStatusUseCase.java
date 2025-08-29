@@ -1,7 +1,7 @@
 package com.raponi.blog.domain.usecase.post;
 
-import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.presentation.protocols.Http;
 
 public interface UpdatePostStatusUseCase {
-  public Post handle(String accountId, String postId, String tokenId);
+  public Http.PostResponseBody handle(String accountId, String postId);
 }
