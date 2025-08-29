@@ -55,9 +55,9 @@ public class PostController {
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<?> findPostById(@PathVariable("postId") String postId, Authentication auth) {
+  public ResponseEntity<?> findPostById(@PathVariable("postId") String postId) {
     try {
-      return HttpHelper.ok(this.findPostByIdService.handle(postId, auth.getName()));
+      return HttpHelper.ok(this.findPostByIdService.handle(postId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -65,9 +65,9 @@ public class PostController {
 
   @PutMapping("/{accountId}/{postId}")
   public ResponseEntity<?> updatePostStatus(@PathVariable("accountId") String accountId,
-      @PathVariable("postId") String postId, Authentication auth) {
+      @PathVariable("postId") String postId) {
     try {
-      return HttpHelper.ok(this.updatePostStatusService.handle(accountId, postId, auth.getName()));
+      return HttpHelper.ok(this.updatePostStatusService.handle(accountId, postId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
@@ -75,9 +75,9 @@ public class PostController {
 
   @DeleteMapping("/{accountId}/{postId}")
   public ResponseEntity<?> deletePostById(@PathVariable("accountId") String accountId,
-      @PathVariable("postId") String postId, Authentication auth) {
+      @PathVariable("postId") String postId) {
     try {
-      return HttpHelper.ok(this.deletePostService.handle(accountId, postId, auth.getName()));
+      return HttpHelper.ok(this.deletePostService.handle(accountId, postId));
     } catch (Exception e) {
       return HttpHelper.badRequest(e);
     }
