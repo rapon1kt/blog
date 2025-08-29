@@ -2,7 +2,7 @@ package com.raponi.blog.application.service.account;
 
 import java.util.Optional;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -26,10 +26,11 @@ public class FindAccountByUsernameService implements FindAccountByUsernameUseCas
   @Override
   public Http.ResponseBody handle(String username) {
     Optional<Account> acc = this.accountRepository.findByUsername(username);
-    String role = SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next()
-        .getAuthority();
-    Account account = this.accountValidatorService.verifyPresenceAndActive(acc, role);
-    return account.toResponseBody();
+    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
+    if (verifiedAccount)
+      return acc.get().toResponseBody();
+    else
+      throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
 }

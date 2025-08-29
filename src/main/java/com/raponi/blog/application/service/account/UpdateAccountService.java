@@ -1,7 +1,5 @@
 package com.raponi.blog.application.service.account;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -23,11 +21,7 @@ public class UpdateAccountService implements UpdateAccountUseCase {
 
   @Override
   public Http.ResponseBody handle(String accountId, String newUsername) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String role = auth.getAuthorities().iterator().next().getAuthority();
-    String tokenId = auth.getName();
-
-    Account accountToUpdate = this.accountValidatorService.getAccountByAccountId(accountId, tokenId, role);
+    Account accountToUpdate = this.accountValidatorService.getAccountByAccountId(accountId);
     Account accountUpdated = accountToUpdate.update(newUsername);
 
     this.accountRepository.save(accountUpdated);

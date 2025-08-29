@@ -1,8 +1,6 @@
 package com.raponi.blog.application.service.account;
 
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -25,10 +23,7 @@ public class UpdateAccountStatusService implements ChangeStatusUseCase {
 
   @Override
   public Http.ResponseBody handle(String accountId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String role = auth.getAuthorities().iterator().next().getAuthority();
-    String tokenId = auth.getName();
-    Boolean authorized = this.accountValidatorService.verifyAuthority(accountId, tokenId, role);
+    Boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
     if (authorized) {
       Account account = this.accountRepository.findById(accountId).get();
       return this.accountRepository.save(account.changeStatus()).toResponseBody();

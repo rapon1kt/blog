@@ -1,7 +1,5 @@
 package com.raponi.blog.application.service.account;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -20,10 +18,7 @@ public class FindAccountByIdService implements FindAccountByIdUseCase {
 
   @Override
   public Http.ResponseBody handle(String accountId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String tokenId = auth.getName();
-    String role = auth.getAuthorities().iterator().next().getAuthority();
-    Account account = this.accountValidatorService.getAccountByAccountId(accountId, tokenId, role);
+    Account account = this.accountValidatorService.getAccountByAccountId(accountId);
     return account.toResponseBody();
   }
 

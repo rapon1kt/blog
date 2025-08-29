@@ -3,8 +3,7 @@ package com.raponi.blog.application.service.account;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -30,11 +29,12 @@ public class FindAccountFollowersService implements FindAccountFollowersUseCase 
 
   @Override
   public List<String> handle(String accountId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String role = auth.getAuthorities().iterator().next().getAuthority();
     Optional<Account> acc = this.accountRepository.findById(accountId);
-    this.accountValidatorService.verifyPresenceAndActive(acc, role);
-    return this.followRepository.findByFollowingId(accountId).stream().map(Follow::followerId).toList();
+    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
+    if (verifiedAccount)
+      return this.followRepository.findByFollowingId(accountId).stream().map(Follow::followerId).toList();
+    else
+      throw new AccessDeniedException("Você não tem permissão para fazer isso.");
   }
 
 }

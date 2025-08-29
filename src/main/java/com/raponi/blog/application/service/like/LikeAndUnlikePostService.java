@@ -2,6 +2,7 @@ package com.raponi.blog.application.service.like;
 
 import java.util.Optional;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,17 +31,19 @@ public class LikeAndUnlikePostService implements LikeAndUnlikePostUseCase {
   @Override
   public String handle(String postId) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String role = auth.getAuthorities().iterator().next().getAuthority();
     String accountId = auth.getName();
 
     Optional<Account> acc = this.accountRepository.findById(accountId);
-    Account validatedAcc = this.accountValidatorService.verifyPresenceAndActive(acc, role);
+    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
 
-    if (this.likeRepository.existsByPostIdAndAccountId(postId, validatedAcc.id())) {
-      this.likeRepository.deleteByPostIdAndAccountId(postId, validatedAcc.id());
+    if (!verifiedAccount)
+      throw new AccessDeniedException("Você deve reativar sua conta para fazer isso.");
+
+    if (this.likeRepository.existsByPostIdAndAccountId(postId, acc.get().id())) {
+      this.likeRepository.deleteByPostIdAndAccountId(postId, acc.get().id());
       return "Unliked!";
     }
-    Like like = Like.create(validatedAcc.id(), postId);
+    Like like = Like.create(acc.get().id(), postId);
     this.likeRepository.save(like);
     return "Liked!";
   };

@@ -3,8 +3,7 @@ package com.raponi.blog.application.service.account;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -30,14 +29,17 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
 
   @Override
   public List<Post> handle(String accountId) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String role = auth.getAuthorities().iterator().next().getAuthority();
-    String tokenId = auth.getName();
     Optional<Account> acc = this.accountRepository.findById(accountId);
-    this.accountValidatorService.verifyPresenceAndActive(acc, role);
-    if (this.accountValidatorService.verifyAuthority(accountId, tokenId, role)) {
+    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
+    Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority(accountId);
+
+    if (!verifiedAccount)
+      throw new AccessDeniedException("Você não tem permissão para fazer isso, reative sua conta.");
+
+    if (verifiedAuthority) {
       return this.postRepository.findByAccountId(accountId);
     }
+
     return this.postRepository.findByAccountIdAndPrivateStatusFalse(accountId);
   }
 

@@ -1,7 +1,5 @@
 package com.raponi.blog.application.service.account;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -33,12 +31,9 @@ public class DeleteAccountService implements DeleteAccountUseCase {
 
   @Override
   public String handle(String accountId, String password) {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     Account account = this.accountValidatorService.getAccountWithPasswordConfirmation(
-        auth.getName(),
         accountId,
-        password,
-        auth.getAuthorities().iterator().next().getAuthority());
+        password);
     this.accountRepository.deleteById(account.id());
     this.postRepository.deleteByAccountId(account.id());
     this.likeRepository.deleteByAccountId(account.id());
