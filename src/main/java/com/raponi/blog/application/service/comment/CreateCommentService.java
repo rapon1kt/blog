@@ -37,8 +37,8 @@ public class CreateCommentService implements CreateCommentUseCase {
 
   @Override
   public Http.CommentResponseBody handle(String accountId, String postId, Comment comment) {
-    boolean isValidPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
-    Post post = isValidPost ? this.postRepository.findById(postId).get() : null;
+    this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    Post post = this.postRepository.findById(postId).get();
 
     Optional<Account> author = this.accountRepository.findById(post.accountId());
     boolean validAuthorAccount = this.accountValidatorService.verifyPresenceAndActive(author);

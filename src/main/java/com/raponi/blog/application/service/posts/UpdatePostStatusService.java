@@ -25,8 +25,8 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
 
   @Override
   public Http.PostResponseBody handle(String accountId, String postId) {
-    Boolean isValidPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
-    Post post = isValidPost ? this.postRepository.findById(postId).get() : null;
+    this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    Post post = this.postRepository.findById(postId).get();
     if (!post.accountId().equals(accountId)) {
       throw new IllegalArgumentException("Esse usuário não é o autor desse post!");
     }

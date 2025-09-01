@@ -21,8 +21,8 @@ public class FindPostByIdService implements FindPostByIdUseCase {
 
   @Override
   public Http.PostResponseBody handle(String postId) {
-    Boolean isValidPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
-    Post post = isValidPost ? this.postRepository.findById(postId).get() : null;
+    this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    Post post = this.postRepository.findById(postId).get();
     return post.toResponseBody();
   }
 }
