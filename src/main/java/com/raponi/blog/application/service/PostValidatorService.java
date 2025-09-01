@@ -22,16 +22,16 @@ public class PostValidatorService implements PostValidatorUseCase {
   }
 
   @Override
-  public Post validatePostPresenceAndPrivate(String postId) {
+  public boolean validatePostPresenceAndPrivate(String postId) {
     Optional<Post> post = this.postRepository.findById(postId);
     if (post.isPresent()) {
       if (post.get().privateStatus()) {
         if (this.accountValidatorService.verifyAuthority(post.get().accountId())) {
-          return post.get();
+          return true;
         }
         throw new AccessDeniedException("Você não tem permissão para ver esse post.");
       }
-      return post.get();
+      return true;
     }
     throw new IllegalArgumentException("O post em questão não pode ser encontrado.");
   }
