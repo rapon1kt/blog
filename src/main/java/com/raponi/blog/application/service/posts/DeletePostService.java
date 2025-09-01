@@ -24,7 +24,8 @@ public class DeletePostService implements DeletePostUseCase {
 
   @Override
   public String handle(String accountId, String postId) {
-    Post post = this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    Boolean isValidPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    Post post = isValidPost ? this.postRepository.findById(postId).get() : null;
     if (!post.accountId().equals(accountId)) {
       throw new IllegalArgumentException("Esse usuário não é o autor desse post!");
     }
