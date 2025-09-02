@@ -7,6 +7,7 @@ import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.ChangeAccountPasswordUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.dto.UpdateAccountPasswordRequestDTO;
 import com.raponi.blog.presentation.errors.InvalidParamException;
 
 @Service
@@ -24,10 +25,10 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
   }
 
   @Override
-  public String handle(String accountId, String password, String newPassword) {
-    Account acc = this.accountValidatorService.getAccountWithPasswordConfirmation(accountId, password);
-    verifyNewPassword(newPassword, password);
-    Account updatedAcc = acc.changePassword(passwordEncoder.encode(newPassword));
+  public String handle(String accountId, UpdateAccountPasswordRequestDTO requestDTO) {
+    Account acc = this.accountValidatorService.getAccountWithPasswordConfirmation(accountId, requestDTO.getPassword());
+    verifyNewPassword(requestDTO.getNewPassword(), requestDTO.getPassword());
+    Account updatedAcc = acc.changePassword(passwordEncoder.encode(requestDTO.getNewPassword()));
     this.accountRepository.save(updatedAcc);
     return "Password changed with success!";
   }
