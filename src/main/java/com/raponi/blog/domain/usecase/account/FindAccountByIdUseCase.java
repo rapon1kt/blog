@@ -1,7 +1,7 @@
 package com.raponi.blog.domain.usecase.account;
 
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.AccountResponseDTO;
 
 public interface FindAccountByIdUseCase {
-  public Http.ResponseBody handle(String accountId);
+  public AccountResponseDTO handle(String accountId);
 }

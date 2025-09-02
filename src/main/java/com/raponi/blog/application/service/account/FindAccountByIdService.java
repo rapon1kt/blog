@@ -5,21 +5,25 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.FindAccountByIdUseCase;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.AccountResponseDTO;
+import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
 public class FindAccountByIdService implements FindAccountByIdUseCase {
 
   private final AccountValidatorService accountValidatorService;
+  private final AccountMapper mapper;
 
-  public FindAccountByIdService(AccountValidatorService accountValidatorService) {
+  public FindAccountByIdService(AccountValidatorService accountValidatorService, AccountMapper mapper) {
     this.accountValidatorService = accountValidatorService;
+    this.mapper = mapper;
   }
 
   @Override
-  public Http.ResponseBody handle(String accountId) {
+  public AccountResponseDTO handle(String accountId) {
     Account account = this.accountValidatorService.getAccountByAccountId(accountId);
-    return account.toResponseBody();
+    AccountResponseDTO responseAccount = mapper.toResponse(account);
+    return responseAccount;
   }
 
 }
