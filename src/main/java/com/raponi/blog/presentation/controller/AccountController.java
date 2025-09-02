@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.account.*;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.UpdateAccountPasswordRequestDTO;
+import com.raponi.blog.presentation.dto.DeleteAccountRequestDTO;
+import com.raponi.blog.presentation.dto.UpdateAccountUsernameRequestDTO;
 
 @RestController
 @RequestMapping("/accounts")
@@ -63,14 +65,14 @@ public class AccountController {
 
   @PutMapping("/{accountId}")
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody Http.UpdateBody body) {
-    return ResponseEntity.ok(this.updateAccountService.handle(accountId, body.username()));
+      @RequestBody UpdateAccountUsernameRequestDTO requestDTO) {
+    return ResponseEntity.ok(this.updateAccountService.handle(accountId, requestDTO));
   }
 
   @DeleteMapping("/{accountId}")
   public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody Http.AuthBody body) {
-    return ResponseEntity.ok(this.deleteAccountService.handle(accountId, body.password()));
+      @RequestBody DeleteAccountRequestDTO requestDTO) {
+    return ResponseEntity.ok(this.deleteAccountService.handle(accountId, requestDTO));
   }
 
   @GetMapping("/email/{email}")
@@ -85,8 +87,8 @@ public class AccountController {
 
   @PutMapping("/{accountId}/newpassword")
   public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
-      @RequestBody Http.UpdateBody body) {
-    return ResponseEntity.ok(this.changeAccountPasswordService.handle(accountId, body.password(), body.newPassword()));
+      @RequestBody UpdateAccountPasswordRequestDTO requestDTO) {
+    return ResponseEntity.ok(this.changeAccountPasswordService.handle(accountId, requestDTO));
   }
 
   @PutMapping("/{accountId}/status")
