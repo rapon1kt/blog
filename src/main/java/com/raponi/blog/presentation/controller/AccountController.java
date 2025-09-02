@@ -14,6 +14,8 @@ import com.raponi.blog.presentation.dto.UpdateAccountPasswordRequestDTO;
 import com.raponi.blog.presentation.dto.DeleteAccountRequestDTO;
 import com.raponi.blog.presentation.dto.UpdateAccountUsernameRequestDTO;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -65,13 +67,13 @@ public class AccountController {
 
   @PutMapping("/{accountId}")
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody UpdateAccountUsernameRequestDTO requestDTO) {
+      @RequestBody @Valid UpdateAccountUsernameRequestDTO requestDTO) {
     return ResponseEntity.ok(this.updateAccountUsernameService.handle(accountId, requestDTO));
   }
 
   @DeleteMapping("/{accountId}")
   public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody DeleteAccountRequestDTO requestDTO) {
+      @RequestBody @Valid DeleteAccountRequestDTO requestDTO) {
     return ResponseEntity.ok(this.deleteAccountService.handle(accountId, requestDTO));
   }
 
@@ -87,7 +89,7 @@ public class AccountController {
 
   @PutMapping("/{accountId}/newpassword")
   public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
-      @RequestBody UpdateAccountPasswordRequestDTO requestDTO) {
+      @RequestBody @Valid UpdateAccountPasswordRequestDTO requestDTO) {
     return ResponseEntity.ok(this.changeAccountPasswordService.handle(accountId, requestDTO));
   }
 
