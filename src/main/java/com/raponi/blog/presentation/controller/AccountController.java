@@ -22,7 +22,7 @@ public class AccountController {
   private FindAccountByIdService findAccountByIdService;
   private FindAccountByEmailService findAccountByEmailService;
   private FindAccountByUsernameService findAccountByUsernameService;
-  private UpdateAccountService updateAccountService;
+  private UpdateAccountUsernameService updateAccountUsernameService;
   private DeleteAccountService deleteAccountService;
   private ChangeAccountPasswordService changeAccountPasswordService;
   private UpdateAccountStatusService updateAccountStatusService;
@@ -34,7 +34,7 @@ public class AccountController {
   public AccountController(FindAllAccountsService findAllService, FindAccountByIdService findAccountByIdService,
       FindAccountByEmailService findAccountByEmailService,
       FindAccountByUsernameService findAccountByUsernameService,
-      UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
+      UpdateAccountUsernameService updateAccountUsernameService, DeleteAccountService deleteAccountService,
       ChangeAccountPasswordService changeAccountPasswordService,
       UpdateAccountStatusService updateAccountStatusService, FindAccountPostsService findAccountPostsService,
       FindAccountLikesService findAccountLikesService, FindAccountFollowersService findAccountFollowersService,
@@ -43,7 +43,7 @@ public class AccountController {
     this.findAccountByIdService = findAccountByIdService;
     this.findAccountByEmailService = findAccountByEmailService;
     this.findAccountByUsernameService = findAccountByUsernameService;
-    this.updateAccountService = updateAccountService;
+    this.updateAccountUsernameService = updateAccountUsernameService;
     this.deleteAccountService = deleteAccountService;
     this.changeAccountPasswordService = changeAccountPasswordService;
     this.updateAccountStatusService = updateAccountStatusService;
@@ -66,7 +66,7 @@ public class AccountController {
   @PutMapping("/{accountId}")
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
       @RequestBody UpdateAccountUsernameRequestDTO requestDTO) {
-    return ResponseEntity.ok(this.updateAccountService.handle(accountId, requestDTO));
+    return ResponseEntity.ok(this.updateAccountUsernameService.handle(accountId, requestDTO));
   }
 
   @DeleteMapping("/{accountId}")
