@@ -6,6 +6,7 @@ import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.DeleteAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.*;
+import com.raponi.blog.presentation.dto.DeleteAccountRequestDTO;
 
 @Service
 public class DeleteAccountService implements DeleteAccountUseCase {
@@ -29,10 +30,10 @@ public class DeleteAccountService implements DeleteAccountUseCase {
   }
 
   @Override
-  public String handle(String accountId, String password) {
+  public String handle(String accountId, DeleteAccountRequestDTO request) {
     Account account = this.accountValidatorService.getAccountWithPasswordConfirmation(
         accountId,
-        password);
+        request.getPassword());
     this.accountRepository.deleteById(account.id());
     this.postRepository.deleteByAccountId(account.id());
     this.likeRepository.deleteByAccountId(account.id());
