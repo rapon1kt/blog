@@ -6,27 +6,32 @@ import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.ChangeStatusUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
 public class UpdateAccountStatusService implements ChangeStatusUseCase {
 
   private AccountRepository accountRepository;
   private AccountValidatorService accountValidatorService;
+  private AccountMapper accountMapper;
 
   public UpdateAccountStatusService(AccountRepository accountRepository,
-      AccountValidatorService accountValidatorService) {
+      AccountValidatorService accountValidatorService, AccountMapper accountMapper) {
     this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
+    this.accountMapper = accountMapper;
   }
 
   @Override
-  public Http.ResponseBody handle(String accountId) {
+  public AccountResponseDTO handle(String accountId) {
     Boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
-    Account account = this.accountRepository.findById(accountId).get();
-    return this.accountRepository.save(account.changeStatus()).toResponseBody();
+    Account account = this.accountRepository.findById(accountId).get().changeStatus();
+    AccountResponseDTO responseAccount = this.accountMapper.toResponse(account);
+    this.accountRepository.save(account);
+    return responseAccount;
   }
 }
