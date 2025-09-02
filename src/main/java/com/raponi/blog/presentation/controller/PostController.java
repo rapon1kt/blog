@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.posts.*;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.presentation.helpers.HttpHelper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,49 +37,29 @@ public class PostController {
 
   @PostMapping
   public ResponseEntity<?> createPost(@RequestBody Post postBody, Authentication auth) {
-    try {
-      return HttpHelper.ok(this.createPostService.handle(postBody, auth.getName()));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.createPostService.handle(postBody, auth.getName()));
   }
 
   @GetMapping
   public ResponseEntity<?> getAllPosts() {
-    try {
-      return HttpHelper.ok(this.findAllPostsService.handle());
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAllPostsService.handle());
   }
 
   @GetMapping("/{postId}")
   public ResponseEntity<?> findPostById(@PathVariable("postId") String postId) {
-    try {
-      return HttpHelper.ok(this.findPostByIdService.handle(postId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findPostByIdService.handle(postId));
   }
 
   @PutMapping("/{accountId}/{postId}")
   public ResponseEntity<?> updatePostStatus(@PathVariable("accountId") String accountId,
       @PathVariable("postId") String postId) {
-    try {
-      return HttpHelper.ok(this.updatePostStatusService.handle(accountId, postId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.updatePostStatusService.handle(accountId, postId));
   }
 
   @DeleteMapping("/{accountId}/{postId}")
   public ResponseEntity<?> deletePostById(@PathVariable("accountId") String accountId,
       @PathVariable("postId") String postId) {
-    try {
-      return HttpHelper.ok(this.deletePostService.handle(accountId, postId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.deletePostService.handle(accountId, postId));
   }
 
 }

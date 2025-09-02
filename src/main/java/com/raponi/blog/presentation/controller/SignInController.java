@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.account.LoginAccountService;
-import com.raponi.blog.presentation.helpers.HttpHelper;
 import com.raponi.blog.presentation.protocols.Http;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +18,7 @@ public class SignInController {
 
   @PostMapping(value = "/req/login", consumes = "application/json")
   public ResponseEntity<?> signIn(@RequestBody Http.LoginBody bodyRequest) {
-    try {
-      return HttpHelper.ok(this.loginAccountService.handle(bodyRequest));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.loginAccountService.handle(bodyRequest));
   }
 
 }

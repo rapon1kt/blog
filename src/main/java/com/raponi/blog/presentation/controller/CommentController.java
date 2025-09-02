@@ -7,7 +7,6 @@ import com.raponi.blog.application.service.comment.CreateCommentService;
 import com.raponi.blog.application.service.comment.DeleteCommentService;
 import com.raponi.blog.application.service.comment.FindPostCommentsService;
 import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.presentation.helpers.HttpHelper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,30 +34,18 @@ public class CommentController {
   @PostMapping
   public ResponseEntity<?> commentPost(@PathVariable("postId") String postId, @RequestBody Comment comment,
       Authentication auth) {
-    try {
-      return HttpHelper.ok(this.createCommentService.handle(auth.getName(), postId, comment));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.createCommentService.handle(auth.getName(), postId, comment));
   }
 
   @GetMapping
   public ResponseEntity<?> getPostComments(@PathVariable("postId") String postId) {
-    try {
-      return HttpHelper.ok(this.findAllCommentsService.handle(postId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAllCommentsService.handle(postId));
   }
 
   @DeleteMapping("/{commentId}")
   public ResponseEntity<?> deletePost(@PathVariable("commentId") String commentId,
       @PathVariable("postId") String postId) {
-    try {
-      return HttpHelper.ok(this.deleteCommentService.handle(commentId, postId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.deleteCommentService.handle(commentId, postId));
   }
 
 }

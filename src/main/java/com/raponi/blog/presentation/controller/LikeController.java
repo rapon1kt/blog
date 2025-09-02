@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.like.CountPostLikeService;
 import com.raponi.blog.application.service.like.LikeAndUnlikePostService;
-import com.raponi.blog.presentation.helpers.HttpHelper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,20 +25,12 @@ public class LikeController {
 
   @PostMapping
   public ResponseEntity<?> likePost(@PathVariable("postId") String postId) {
-    try {
-      return HttpHelper.ok(this.likeAndUnlikePostService.handle(postId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.likeAndUnlikePostService.handle(postId));
   }
 
   @GetMapping
   public ResponseEntity<?> countPostLikes(@PathVariable("postId") String postId) {
-    try {
-      return HttpHelper.ok(this.countPostLikeService.handle(postId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.countPostLikeService.handle(postId));
   }
 
 }

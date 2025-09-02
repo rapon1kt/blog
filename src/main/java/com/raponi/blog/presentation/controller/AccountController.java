@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.account.*;
-import com.raponi.blog.presentation.helpers.HttpHelper;
 import com.raponi.blog.presentation.protocols.Http;
 
 @RestController
@@ -54,113 +53,65 @@ public class AccountController {
 
   @GetMapping
   public ResponseEntity<?> getAllAccounts() {
-    try {
-      return HttpHelper.ok(this.findAllService.handle());
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAllService.handle());
   }
 
   @GetMapping("/{accountId}")
   public ResponseEntity<?> getAccountById(@PathVariable("accountId") String accountId) {
-    try {
-      return HttpHelper.ok(this.findAccountByIdService.handle(accountId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAccountByIdService.handle(accountId));
   }
 
   @PutMapping("/{accountId}")
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
       @RequestBody Http.UpdateBody body) {
-    try {
-      return HttpHelper.ok(this.updateAccountService.handle(accountId, body.username()));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.updateAccountService.handle(accountId, body.username()));
   }
 
   @DeleteMapping("/{accountId}")
   public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId,
       @RequestBody Http.AuthBody body) {
-    try {
-      return HttpHelper.ok(this.deleteAccountService.handle(accountId, body.password()));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.deleteAccountService.handle(accountId, body.password()));
   }
 
   @GetMapping("/email/{email}")
   public ResponseEntity<?> getAccountByEmail(@PathVariable("email") String email) {
-    try {
-      return HttpHelper.ok(this.findAccountByEmailService.handle(email));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAccountByEmailService.handle(email));
   }
 
   @GetMapping("/username/{username}")
   public ResponseEntity<?> getAccountByUsername(@PathVariable("username") String username) {
-    try {
-      return HttpHelper.ok(this.findAccountByUsernameService.handle(username));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAccountByUsernameService.handle(username));
   }
 
   @PutMapping("/{accountId}/newpassword")
   public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
       @RequestBody Http.UpdateBody body) {
-    try {
-      return HttpHelper.ok(this.changeAccountPasswordService.handle(accountId, body.password(), body.newPassword()));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.changeAccountPasswordService.handle(accountId, body.password(), body.newPassword()));
   }
 
   @PutMapping("/{accountId}/status")
   public ResponseEntity<?> updateStatus(@PathVariable("accountId") String accountId) {
-    try {
-      return HttpHelper.ok(this.updateAccountStatusService.handle(accountId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.updateAccountStatusService.handle(accountId));
   }
 
   @GetMapping("/{accountId}/posts")
   public ResponseEntity<?> getAccountPosts(@PathVariable("accountId") String accountId) {
-    try {
-      return HttpHelper.ok(this.findAccountPostsService.handle(accountId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAccountPostsService.handle(accountId));
   }
 
   @GetMapping("/{accountId}/likes")
   public ResponseEntity<?> getAccountLikes(@PathVariable("accountId") String accountId) {
-    try {
-      return HttpHelper.ok(this.findAccountLikesService.handle(accountId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAccountLikesService.handle(accountId));
   }
 
   @GetMapping("/{accountId}/followers")
   public ResponseEntity<?> getAccountFollowers(@PathVariable("accountId") String accountId) {
-    try {
-      return HttpHelper.ok(this.findAccountFollowersService.handle(accountId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAccountFollowersService.handle(accountId));
   }
 
   @GetMapping("/{accountId}/following")
   public ResponseEntity<?> getAccountFollowing(@PathVariable("accountId") String accountId) {
-    try {
-      return HttpHelper.ok(this.findAccountFollowingService.handle(accountId));
-    } catch (Exception e) {
-      return HttpHelper.badRequest(e);
-    }
+    return ResponseEntity.ok(this.findAccountFollowingService.handle(accountId));
   }
 
 }
