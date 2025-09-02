@@ -3,7 +3,6 @@ package com.raponi.blog.application.service.account;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.service.AccountValidatorService;
@@ -12,6 +11,7 @@ import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.usecase.account.FindAccountPostsUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 
 @Service
 public class FindAccountPostsService implements FindAccountPostsUseCase {
@@ -34,7 +34,7 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
     Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority(accountId);
 
     if (!verifiedAccount)
-      throw new AccessDeniedException("Você não tem permissão para fazer isso, reative sua conta.");
+      throw new AccessDeniedException("You don't have permission to do this.");
 
     if (verifiedAuthority) {
       return this.postRepository.findByAccountId(accountId);

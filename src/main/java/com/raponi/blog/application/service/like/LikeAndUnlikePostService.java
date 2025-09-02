@@ -2,7 +2,6 @@ package com.raponi.blog.application.service.like;
 
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import com.raponi.blog.domain.model.Like;
 import com.raponi.blog.domain.usecase.like.LikeAndUnlikePostUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.LikeRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 
 @Service
 public class LikeAndUnlikePostService implements LikeAndUnlikePostUseCase {
@@ -37,7 +37,7 @@ public class LikeAndUnlikePostService implements LikeAndUnlikePostUseCase {
     Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
 
     if (!verifiedAccount)
-      throw new AccessDeniedException("Você deve reativar sua conta para fazer isso.");
+      throw new AccessDeniedException("You must active your account to do this.");
 
     if (this.likeRepository.existsByPostIdAndAccountId(postId, acc.get().id())) {
       this.likeRepository.deleteByPostIdAndAccountId(postId, acc.get().id());

@@ -2,7 +2,6 @@ package com.raponi.blog.application.service;
 
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.AccountValidatorUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.presentation.errors.InvalidParamException;
 
 @Service
 public class AccountValidatorService implements AccountValidatorUseCase {
@@ -40,9 +41,9 @@ public class AccountValidatorService implements AccountValidatorUseCase {
       if (passwordConfirmation) {
         return acc.get();
       }
-      throw new IllegalArgumentException("A sua senha está incorreta!");
+      throw new InvalidParamException("Your password is incorrect.");
     }
-    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+    throw new AccessDeniedException("You don't have permission to do this.");
   }
 
   public Account getAccountByAccountId(String accountId) {
@@ -52,7 +53,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     if (authorized && verifiedAccount) {
       return acc.get();
     }
-    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+    throw new AccessDeniedException("You don't have permission to do this.");
   }
 
   public Account getAccountByEmail(String email) {
@@ -62,7 +63,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     if (authorized && verifiedAccount) {
       return acc.get();
     }
-    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+    throw new AccessDeniedException("You don't have permission to do this.");
   }
 
   public Account getAccountByUsername(String username) {
@@ -72,7 +73,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     if (authorized && verifiedAccount) {
       return acc.get();
     }
-    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+    throw new AccessDeniedException("You don't have permission to do this.");
   }
 
   public boolean isAdmin() {

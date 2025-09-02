@@ -2,7 +2,6 @@ package com.raponi.blog.application.service.comment;
 
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.application.service.PostValidatorService;
@@ -13,6 +12,7 @@ import com.raponi.blog.domain.usecase.comment.CreateCommentUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.protocols.Http;
 
 @Service
@@ -50,9 +50,9 @@ public class CreateCommentService implements CreateCommentUseCase {
         Comment cmmnt = Comment.create(comment.content(), accountId, post.id());
         return this.commentRepository.save(cmmnt).toResponseBody();
       }
-      throw new AccessDeniedException("Você não pode fazer isso, reative sua conta!");
+      throw new AccessDeniedException("You can't release this action please active your account.");
     }
-    throw new IllegalArgumentException("Parece que esse post pertence a uma conta desativada.");
+    throw new AccessDeniedException("The owner of this post has has their account disabled.");
   }
 
 }

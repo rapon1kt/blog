@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.service.PostValidatorService;
 import com.raponi.blog.domain.usecase.like.CountPostLikeUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.LikeRepository;
+import com.raponi.blog.presentation.errors.InternalServerException;
 
 @Service
 public class CountPostLikeService implements CountPostLikeUseCase {
@@ -20,10 +21,9 @@ public class CountPostLikeService implements CountPostLikeUseCase {
   @Override
   public long handle(String postId) {
     Boolean isValidPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
-    if (isValidPost)
-      return this.likeRepository.countByPostId(postId);
-    else
-      throw new IllegalArgumentException("Algo deu errado ao acessar esse post.");
+    if (!isValidPost)
+      throw new InternalServerException("Something went wrong.");
+    return this.likeRepository.countByPostId(postId);
   }
 
 }

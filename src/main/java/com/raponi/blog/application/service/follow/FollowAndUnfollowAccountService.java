@@ -1,6 +1,5 @@
 package com.raponi.blog.application.service.follow;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
@@ -8,6 +7,9 @@ import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.usecase.follow.FollowAndUnfollowAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.FollowRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.presentation.errors.BusinessRuleException;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccountUseCase {
@@ -23,16 +25,16 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
   @Override
   public String handle(String followerId, String followingId) {
     if (followerId.equals(followingId))
-      throw new IllegalArgumentException("Não é possível realizar essa ação.");
+      throw new BusinessRuleException("You can't follow yourself.");
 
     Account originAcc = this.accountRepository.findById(followerId)
-        .orElseThrow(() -> new IllegalArgumentException("A conta não pode ser encontrada"));
+        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
 
     Account destinyAcc = this.accountRepository.findById(followingId)
-        .orElseThrow(() -> new IllegalArgumentException("A conta não pode ser encontrada"));
+        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
 
     if (!originAcc.active())
-      throw new AccessDeniedException("Você deve reativer sua conta para realizar essa ação.");
+      throw new AccessDeniedException("You must active your account to do this.");
 
     if (destinyAcc.active()) {
       Boolean exists = this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId);
@@ -44,7 +46,7 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
       this.followRepository.save(follow);
       return ("Followed " + destinyAcc.username());
     }
-    throw new IllegalArgumentException("Esse usuário está com a conta desativada.");
+    throw new AccessDeniedException("This account is desactivated.");
   }
 
 }

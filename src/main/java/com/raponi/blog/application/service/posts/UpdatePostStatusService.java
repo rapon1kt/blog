@@ -1,12 +1,13 @@
 package com.raponi.blog.application.service.posts;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.application.service.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.usecase.post.UpdatePostStatusUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 import com.raponi.blog.presentation.protocols.Http;
 
 @Service
@@ -28,16 +29,15 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
     this.postValidatorService.validatePostPresenceAndPrivate(postId);
     Post post = this.postRepository.findById(postId).get();
     if (!post.accountId().equals(accountId)) {
-      throw new IllegalArgumentException("Esse usuário não é o autor desse post!");
+      throw new ResourceNotFoundException("This post does not belong to this user.");
     }
     Boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
-    if (authorized) {
-      boolean newStatus = post.privateStatus() == true ? false : true;
-      Post updatedPost = post.changeStatus(newStatus);
-      this.postRepository.save(updatedPost);
-      return updatedPost.toResponseBody();
-    }
-    throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+    if (!authorized)
+      throw new AccessDeniedException("You don't have permission to do this.");
+    boolean newStatus = post.privateStatus() == true ? false : true;
+    Post updatedPost = post.changeStatus(newStatus);
+    this.postRepository.save(updatedPost);
+    return updatedPost.toResponseBody();
   }
 
 }

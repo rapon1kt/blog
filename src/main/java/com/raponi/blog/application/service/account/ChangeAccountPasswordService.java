@@ -7,6 +7,7 @@ import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.ChangeAccountPasswordUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.InvalidParamException;
 
 @Service
 public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCase {
@@ -28,14 +29,14 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
     verifyNewPassword(newPassword, password);
     Account updatedAcc = acc.changePassword(passwordEncoder.encode(newPassword));
     this.accountRepository.save(updatedAcc);
-    return "A senha foi alterada com sucesso!";
+    return "Password changed with success!";
   }
 
   private void verifyNewPassword(String newPassword, String password) {
     if (newPassword.isBlank() || newPassword.length() < 8) {
-      throw new IllegalArgumentException("Nova senha deve ter pelo menos 8 caracteres.");
+      throw new InvalidParamException("The new password must be at least 8 characters long.");
     } else if (newPassword.equals(password)) {
-      throw new IllegalArgumentException("A nova senha deve ser distinta da antiga.");
+      throw new InvalidParamException("The new password must be different from the old one.");
     }
   }
 }

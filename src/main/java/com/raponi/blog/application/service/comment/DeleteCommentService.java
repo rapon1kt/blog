@@ -8,6 +8,7 @@ import com.raponi.blog.application.service.CommentValidatorService;
 import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.usecase.comment.DeleteCommentUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class DeleteCommentService implements DeleteCommentUseCase {
@@ -31,10 +32,10 @@ public class DeleteCommentService implements DeleteCommentUseCase {
       Comment comment = this.commentRepository.findById(commentId).get();
       if (comment.accountId().equals(accountId) || role.equals("ROLE_ADMIN")) {
         this.commentRepository.deleteById(commentId);
-        return "Comentário deletado com sucesso!";
+        return "Comment deleted with success!";
       }
     }
-    throw new IllegalArgumentException("Não é possível");
+    throw new ResourceNotFoundException("This comment cannot be found.");
   }
 
 }

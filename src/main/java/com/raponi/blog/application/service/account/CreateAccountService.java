@@ -6,7 +6,8 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.port.PasswordEncoderService;
 import com.raponi.blog.domain.usecase.account.CreateAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
-import com.raponi.blog.presentation.errors.MissingParamError;
+import com.raponi.blog.presentation.errors.InvalidParamException;
+import com.raponi.blog.presentation.errors.MissingParamException;
 import com.raponi.blog.presentation.protocols.Http;
 
 @Service
@@ -33,7 +34,7 @@ public class CreateAccountService implements CreateAccountUseCase {
     String[] requiredParams = { "email", "username", "password" };
     for (String param : requiredParams) {
       if (isNullOrEmpty(getFieldValue(bodyRequest, param))) {
-        throw new MissingParamError(param);
+        throw new MissingParamException(param);
       }
     }
     validateEmail(bodyRequest.email());
@@ -43,23 +44,23 @@ public class CreateAccountService implements CreateAccountUseCase {
 
   private void validateUsername(String username) {
     if (this.accountRepository.existsByUsername(username)) {
-      throw new IllegalArgumentException("Username já cadastrado.");
+      throw new InvalidParamException("Username already registred.");
     } else if (username.length() < 3) {
-      throw new IllegalArgumentException("O username deve ter pelo menos 3 caracteres.");
+      throw new InvalidParamException("The username must be at least 3 characters long.");
     }
   }
 
   private void validateEmail(String email) {
     if (this.accountRepository.existsByEmail(email)) {
-      throw new IllegalArgumentException("E-mail já cadastrado.");
+      throw new InvalidParamException("E-mail already registred.");
     } else if (!email.matches("^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$")) {
-      throw new IllegalArgumentException("E-mail inválido.");
+      throw new InvalidParamException("E-mail invalid.");
     }
   }
 
   private void validatePassword(String password) {
     if (password.length() < 8) {
-      throw new IllegalArgumentException("A senha deve conter pelo menos 8 caracteres.");
+      throw new InvalidParamException("The password must be at least 8 characters long.");
     }
   }
 

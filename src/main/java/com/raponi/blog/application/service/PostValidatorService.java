@@ -2,7 +2,6 @@ package com.raponi.blog.application.service;
 
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Post;
@@ -29,10 +28,10 @@ public class PostValidatorService implements PostValidatorUseCase {
         if (this.accountValidatorService.verifyAuthority(post.get().accountId())) {
           return true;
         }
-        throw new AccessDeniedException("Você não tem permissão para ver esse post.");
+        return false;
       }
       return true;
     }
-    throw new IllegalArgumentException("O post em questão não pode ser encontrado.");
+    return false;
   }
 }

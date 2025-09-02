@@ -3,7 +3,6 @@ package com.raponi.blog.application.service.account;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
@@ -11,6 +10,7 @@ import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.usecase.follow.FindAccountFollowingUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.FollowRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 
 @Service
 public class FindAccountFollowingService implements FindAccountFollowingUseCase {
@@ -30,10 +30,9 @@ public class FindAccountFollowingService implements FindAccountFollowingUseCase 
   public List<String> handle(String accountId) {
     Optional<Account> account = this.accountRepository.findById(accountId);
     Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
-    if (verifiedAccount)
-      return this.followRepository.findByFollowerId(accountId).stream().map(Follow::followingId).toList();
-    else
-      throw new AccessDeniedException("Você não tem permissão para fazer isso.");
+    if (!verifiedAccount)
+      throw new AccessDeniedException("You don't have permission to do this.");
+    return this.followRepository.findByFollowerId(accountId).stream().map(Follow::followingId).toList();
   }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class AppAccountServiceImpl implements UserDetailsService {
@@ -32,15 +33,13 @@ public class AppAccountServiceImpl implements UserDetailsService {
     } else {
       throw new UsernameNotFoundException(username);
     }
-
   }
 
   public String getAccountIdByUsername(String username) {
     Optional<Account> account = this.accountRepository.findByUsername(username);
-    if (account.isPresent()) {
-      return account.get().id();
-    }
-    throw new IllegalArgumentException("Account cannot be found.");
+    if (!account.isPresent())
+      throw new ResourceNotFoundException("Account cannot be found.");
+    return account.get().id();
   }
 
 }
