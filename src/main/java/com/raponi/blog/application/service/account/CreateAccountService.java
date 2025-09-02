@@ -6,40 +6,46 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.port.PasswordEncoderService;
 import com.raponi.blog.domain.usecase.account.CreateAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.dto.AccountResponseDTO;
+import com.raponi.blog.presentation.dto.CreateAccountRequestDTO;
 import com.raponi.blog.presentation.errors.InvalidParamException;
 import com.raponi.blog.presentation.errors.MissingParamException;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
 public class CreateAccountService implements CreateAccountUseCase {
 
   private final AccountRepository accountRepository;
   private final PasswordEncoderService passwordEncoderService;
+  private final AccountMapper accountMapper;
 
-  public CreateAccountService(AccountRepository accountRepository, PasswordEncoderService passwordEncoderService) {
+  public CreateAccountService(AccountRepository accountRepository, PasswordEncoderService passwordEncoderService,
+      AccountMapper accountMapper) {
     this.accountRepository = accountRepository;
     this.passwordEncoderService = passwordEncoderService;
+    this.accountMapper = accountMapper;
   }
 
   @Override
-  public Http.ResponseBody handle(Http.RegisterBody bodyRequest) {
-    validateRequest(bodyRequest);
-    String hashedPassword = this.passwordEncoderService.encode(bodyRequest.password());
-    Account account = Account.create(bodyRequest.email(), bodyRequest.username(), hashedPassword);
+  public AccountResponseDTO handle(CreateAccountRequestDTO requestDTO) {
+    validateRequest(requestDTO);
+    String hashedPassword = this.passwordEncoderService.encode(requestDTO.getPassword());
+    Account account = Account.create(requestDTO.getEmail(), requestDTO.getUsername(), hashedPassword);
+    AccountResponseDTO responseAccount = this.accountMapper.toResponse(account);
     this.accountRepository.save(account);
-    return account.toResponseBody();
+    return responseAccount;
   }
 
-  private void validateRequest(Http.RegisterBody bodyRequest) {
+  private void validateRequest(CreateAccountRequestDTO requestDTO) {
     String[] requiredParams = { "email", "username", "password" };
     for (String param : requiredParams) {
-      if (isNullOrEmpty(getFieldValue(bodyRequest, param))) {
+      if (isNullOrEmpty(getFieldValue(requestDTO, param))) {
         throw new MissingParamException(param);
       }
     }
-    validateEmail(bodyRequest.email());
-    validateUsername(bodyRequest.username());
-    validatePassword(bodyRequest.password());
+    validateEmail(requestDTO.getEmail());
+    validateUsername(requestDTO.getUsername());
+    validatePassword(requestDTO.getPassword());
   }
 
   private void validateUsername(String username) {
@@ -68,7 +74,7 @@ public class CreateAccountService implements CreateAccountUseCase {
     return value == null || value.toString().trim().isEmpty();
   }
 
-  private Object getFieldValue(Http.RegisterBody body, String fieldName) {
+  private Object getFieldValue(CreateAccountRequestDTO body, String fieldName) {
     try {
       var field = body.getClass().getDeclaredField(fieldName);
       field.setAccessible(true);

@@ -1,7 +1,8 @@
 package com.raponi.blog.domain.usecase.account;
 
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.AccountResponseDTO;
+import com.raponi.blog.presentation.dto.CreateAccountRequestDTO;
 
 public interface CreateAccountUseCase {
-  public Http.ResponseBody handle(Http.RegisterBody bodyRequest);
+  public AccountResponseDTO handle(CreateAccountRequestDTO bodyRequest);
 }
