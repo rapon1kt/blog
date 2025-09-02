@@ -8,28 +8,32 @@ import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.FindAccountByUsernameUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
 public class FindAccountByUsernameService implements FindAccountByUsernameUseCase {
 
   private final AccountRepository accountRepository;
   private final AccountValidatorService accountValidatorService;
+  private final AccountMapper mapper;
 
   public FindAccountByUsernameService(AccountRepository accountRepository,
-      AccountValidatorService accountValidatorService) {
+      AccountValidatorService accountValidatorService, AccountMapper mapper) {
     this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
+    this.mapper = mapper;
   }
 
   @Override
-  public Http.ResponseBody handle(String username) {
-    Optional<Account> acc = this.accountRepository.findByUsername(username);
-    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
+  public AccountResponseDTO handle(String username) {
+    Optional<Account> account = this.accountRepository.findByUsername(username);
+    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-    return acc.get().toResponseBody();
+    AccountResponseDTO responseAccount = mapper.toResponse(account.get());
+    return responseAccount;
   }
 
 }
