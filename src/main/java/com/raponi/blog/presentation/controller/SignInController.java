@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.account.LoginAccountService;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.LoginAccountRequestDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +17,8 @@ public class SignInController {
   private LoginAccountService loginAccountService;
 
   @PostMapping(value = "/req/login", consumes = "application/json")
-  public ResponseEntity<?> signIn(@RequestBody Http.LoginBody bodyRequest) {
-    return ResponseEntity.ok(this.loginAccountService.handle(bodyRequest));
+  public ResponseEntity<?> signIn(@RequestBody LoginAccountRequestDTO requestDTO) {
+    return ResponseEntity.ok(this.loginAccountService.handle(requestDTO));
   }
 
 }
