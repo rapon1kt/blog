@@ -2,8 +2,6 @@ package com.raponi.blog.domain.model;
 
 import java.time.Instant;
 
-import com.raponi.blog.presentation.protocols.Http;
-
 public record Post(
     String id,
     String title,
@@ -28,9 +26,4 @@ public record Post(
         createdAt,
         Instant.now());
   }
-
-  public Http.PostResponseBody toResponseBody() {
-    return new Http.PostResponseBody(id, title, content, accountId, createdAt);
-  }
-
 }
