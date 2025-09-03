@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.posts.*;
-import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.presentation.dto.CreatePostRequestDTO;
+
+import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,8 +38,8 @@ public class PostController {
   }
 
   @PostMapping
-  public ResponseEntity<?> createPost(@RequestBody Post postBody, Authentication auth) {
-    return ResponseEntity.ok(this.createPostService.handle(postBody, auth.getName()));
+  public ResponseEntity<?> createPost(@RequestBody @Valid CreatePostRequestDTO requestDTO, Authentication auth) {
+    return ResponseEntity.ok(this.createPostService.handle(requestDTO, auth.getName()));
   }
 
   @GetMapping
