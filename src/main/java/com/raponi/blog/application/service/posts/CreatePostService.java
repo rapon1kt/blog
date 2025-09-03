@@ -7,25 +7,31 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.usecase.post.CreatePostUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.CreatePostRequestDTO;
+import com.raponi.blog.presentation.dto.PostResponseDTO;
+import com.raponi.blog.presentation.mapper.PostMapper;
 
 @Service
 public class CreatePostService implements CreatePostUseCase {
 
   private final PostRepository postRepository;
   private final AccountValidatorService accountValidatorService;
+  private final PostMapper postMapper;
 
-  public CreatePostService(PostRepository postRepository, AccountValidatorService accountValidatorService) {
+  public CreatePostService(PostRepository postRepository, AccountValidatorService accountValidatorService,
+      PostMapper postMapper) {
     this.postRepository = postRepository;
     this.accountValidatorService = accountValidatorService;
+    this.postMapper = postMapper;
   }
 
   @Override
-  public Http.PostResponseBody handle(Post newPost, String tokenId) {
+  public PostResponseDTO handle(CreatePostRequestDTO requestDTO, String tokenId) {
     Account account = this.accountValidatorService.getAccountByAccountId(tokenId);
-    Post post = Post.create(account.id(), newPost.title(), newPost.content());
+    Post post = Post.create(account.id(), requestDTO.getTitle(), requestDTO.getContent());
     this.postRepository.save(post);
-    return post.toResponseBody();
+    PostResponseDTO responsePost = this.postMapper.toResponse(post);
+    return responsePost;
   }
 
 }
