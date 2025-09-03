@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(InternalServerException.class)
   public ResponseEntity<ErrorResponse> handleInternalServer(InternalServerException ex, WebRequest request) {
-    return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
   }
 
   @ExceptionHandler(MissingParamException.class)
