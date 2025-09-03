@@ -66,12 +66,12 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException ex, WebRequest request) {
-    return buildResponse(HttpStatus.UNAUTHORIZED, "Not authenticated.", request);
+    return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
-    return buildResponse(HttpStatus.UNAUTHORIZED, "Access denied.", request);
+    return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
   }
 
   @ExceptionHandler(InternalServerException.class)
