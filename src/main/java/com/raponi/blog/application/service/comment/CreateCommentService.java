@@ -12,8 +12,10 @@ import com.raponi.blog.domain.usecase.comment.CreateCommentUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.presentation.dto.CommentResponseDTO;
+import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.mapper.CommentMapper;
 
 @Service
 public class CreateCommentService implements CreateCommentUseCase {
@@ -23,20 +25,22 @@ public class CreateCommentService implements CreateCommentUseCase {
   private final PostRepository postRepository;
   private final AccountValidatorService accountValidatorService;
   private final PostValidatorService postValidatorService;
+  private final CommentMapper commentMapper;
 
   public CreateCommentService(CommentRepository commentRepository, AccountRepository accountRepository,
       PostRepository postRepository,
       AccountValidatorService accountValidatorService,
-      PostValidatorService postValidatorService) {
+      PostValidatorService postValidatorService, CommentMapper commentMapper) {
     this.commentRepository = commentRepository;
     this.accountRepository = accountRepository;
     this.postRepository = postRepository;
     this.accountValidatorService = accountValidatorService;
     this.postValidatorService = postValidatorService;
+    this.commentMapper = commentMapper;
   }
 
   @Override
-  public Http.CommentResponseBody handle(String accountId, String postId, Comment comment) {
+  public CommentResponseDTO handle(String accountId, String postId, CreateCommentRequestDTO requestDTO) {
     this.postValidatorService.validatePostPresenceAndPrivate(postId);
     Post post = this.postRepository.findById(postId).get();
 
@@ -47,8 +51,9 @@ public class CreateCommentService implements CreateCommentUseCase {
     boolean validAccount = this.accountValidatorService.verifyPresenceAndActive(account);
     if (validAuthorAccount) {
       if (validAccount) {
-        Comment cmmnt = Comment.create(comment.content(), accountId, post.id());
-        return this.commentRepository.save(cmmnt).toResponseBody();
+        Comment createdComment = Comment.create(requestDTO.getContent(), accountId, post.id());
+        Comment savedComment = this.commentRepository.save(createdComment);
+        return this.commentMapper.toResponse(savedComment);
       }
       throw new AccessDeniedException("You can't release this action please active your account.");
     }
