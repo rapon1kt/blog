@@ -1,7 +1,7 @@
 package com.raponi.blog.domain.usecase.post;
 
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.PostResponseDTO;
 
 public interface FindPostByIdUseCase {
-  public Http.PostResponseBody handle(String postId);
+  public PostResponseDTO handle(String postId);
 }

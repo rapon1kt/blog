@@ -2,8 +2,8 @@ package com.raponi.blog.domain.usecase.account;
 
 import java.util.List;
 
-import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.presentation.dto.PostResponseDTO;
 
 public interface FindAccountPostsUseCase {
-  public List<Post> handle(String accountId);
+  public List<PostResponseDTO> handle(String accountId);
 }
