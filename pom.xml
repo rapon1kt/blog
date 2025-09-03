@@ -12,13 +12,16 @@
 	<artifactId>blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>blog</name>
-	<description>Demo project for Spring Boot</description>
+	<description>An Blog made with Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
 	</licenses>
 	<developers>
-		<developer/>
+    <developer>
+      <name>Gustavo Raponi Silva</name>
+      <url>https://www.github.com/rapon1kt</url>
+    </developer>
 	</developers>
 	<scm>
 		<connection/>
