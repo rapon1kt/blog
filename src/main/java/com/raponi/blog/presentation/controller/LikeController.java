@@ -25,7 +25,7 @@ public class LikeController {
 
   @PostMapping
   public ResponseEntity<?> likePost(@PathVariable("postId") String postId) {
-    return ResponseEntity.ok(this.likeAndUnlikePostService.handle(postId));
+    return ResponseEntity.status(201).body(this.likeAndUnlikePostService.handle(postId));
   }
 
   @GetMapping

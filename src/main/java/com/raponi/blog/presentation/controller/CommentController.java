@@ -37,7 +37,7 @@ public class CommentController {
   public ResponseEntity<?> commentPost(@PathVariable("postId") String postId,
       @RequestBody @Valid CreateCommentRequestDTO requestDTO,
       Authentication auth) {
-    return ResponseEntity.ok(this.createCommentService.handle(auth.getName(), postId, requestDTO));
+    return ResponseEntity.status(201).body(this.createCommentService.handle(auth.getName(), postId, requestDTO));
   }
 
   @GetMapping

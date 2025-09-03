@@ -39,7 +39,7 @@ public class PostController {
 
   @PostMapping
   public ResponseEntity<?> createPost(@RequestBody @Valid CreatePostRequestDTO requestDTO, Authentication auth) {
-    return ResponseEntity.ok(this.createPostService.handle(requestDTO, auth.getName()));
+    return ResponseEntity.status(201).body(this.createPostService.handle(requestDTO, auth.getName()));
   }
 
   @GetMapping
