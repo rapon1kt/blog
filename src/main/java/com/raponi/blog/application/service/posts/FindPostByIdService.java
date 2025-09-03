@@ -7,6 +7,7 @@ import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.usecase.post.FindPostByIdUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
 import com.raponi.blog.presentation.dto.PostResponseDTO;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 import com.raponi.blog.presentation.mapper.PostMapper;
 
 @Service
@@ -25,7 +26,9 @@ public class FindPostByIdService implements FindPostByIdUseCase {
 
   @Override
   public PostResponseDTO handle(String postId) {
-    this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    boolean verifiedPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    if (!verifiedPost)
+      throw new ResourceNotFoundException("This post cannot be found.");
     Post post = this.postRepository.findById(postId).get();
     PostResponseDTO responsePost = this.postMapper.toResponse(post);
     return responsePost;

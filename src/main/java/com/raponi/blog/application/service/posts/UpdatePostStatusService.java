@@ -29,7 +29,9 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
 
   @Override
   public PostResponseDTO handle(String accountId, String postId) {
-    this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    boolean validatedPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
+    if (!validatedPost)
+      throw new ResourceNotFoundException("This post cannot be found.");
     Post post = this.postRepository.findById(postId).get();
     if (!post.accountId().equals(accountId)) {
       throw new ResourceNotFoundException("This post does not belong to this user.");
