@@ -80,7 +80,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MissingParamException.class)
-  public ResponseEntity<ErrorResponse> handleInternalServer(MissingParamException ex, WebRequest request) {
+  public ResponseEntity<ErrorResponse> handleMissingParam(MissingParamException ex, WebRequest request) {
     return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 
