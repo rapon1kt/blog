@@ -31,8 +31,8 @@ public class CreateAccountService implements CreateAccountUseCase {
     validateRequest(requestDTO);
     String hashedPassword = this.passwordEncoderService.encode(requestDTO.getPassword());
     Account account = Account.create(requestDTO.getEmail(), requestDTO.getUsername(), hashedPassword);
-    AccountResponseDTO responseAccount = this.accountMapper.toResponse(account);
-    this.accountRepository.save(account);
+    Account savedAccount = this.accountRepository.save(account);
+    AccountResponseDTO responseAccount = this.accountMapper.toResponse(savedAccount);
     return responseAccount;
   }
 
