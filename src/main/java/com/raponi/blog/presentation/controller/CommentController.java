@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.raponi.blog.application.service.comment.CreateCommentService;
 import com.raponi.blog.application.service.comment.DeleteCommentService;
 import com.raponi.blog.application.service.comment.FindPostCommentsService;
-import com.raponi.blog.domain.model.Comment;
+import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
+
+import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,9 +34,10 @@ public class CommentController {
   }
 
   @PostMapping
-  public ResponseEntity<?> commentPost(@PathVariable("postId") String postId, @RequestBody Comment comment,
+  public ResponseEntity<?> commentPost(@PathVariable("postId") String postId,
+      @RequestBody @Valid CreateCommentRequestDTO requestDTO,
       Authentication auth) {
-    return ResponseEntity.ok(this.createCommentService.handle(auth.getName(), postId, comment));
+    return ResponseEntity.ok(this.createCommentService.handle(auth.getName(), postId, requestDTO));
   }
 
   @GetMapping
