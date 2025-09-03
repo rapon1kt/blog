@@ -84,6 +84,11 @@ public class GlobalExceptionHandler {
     return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 
+  @ExceptionHandler(InvalidParamException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidParam(InvalidParamException ex, WebRequest request) {
+    return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+  }
+
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, WebRequest request) {
     return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
