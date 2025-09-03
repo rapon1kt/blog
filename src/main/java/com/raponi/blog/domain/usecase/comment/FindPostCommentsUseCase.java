@@ -2,8 +2,8 @@ package com.raponi.blog.domain.usecase.comment;
 
 import java.util.List;
 
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.CommentResponseDTO;
 
 public interface FindPostCommentsUseCase {
-  List<Http.CommentResponseBody> handle(String postId);
+  List<CommentResponseDTO> handle(String postId);
 }

@@ -1,8 +1,8 @@
 package com.raponi.blog.domain.usecase.comment;
 
-import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.presentation.protocols.Http;
+import com.raponi.blog.presentation.dto.CommentResponseDTO;
+import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
 
 public interface CreateCommentUseCase {
-  Http.CommentResponseBody handle(String accountId, String postId, Comment comment);
+  CommentResponseDTO handle(String accountId, String postId, CreateCommentRequestDTO requestDTO);
 }
