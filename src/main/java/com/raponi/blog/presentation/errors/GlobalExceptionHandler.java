@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ErrorResponse> handleInvalidJson(HttpMessageNotReadableException ex, WebRequest request) {
-    return buildResponse(HttpStatus.BAD_REQUEST, "JSON inválido ou mal formatado.", request);
+    return buildResponse(HttpStatus.BAD_REQUEST, "JSON invalid or poorly formatted.", request);
   }
 
   @ExceptionHandler({ ResourceNotFoundException.class, NoHandlerFoundException.class })
@@ -66,12 +66,12 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException ex, WebRequest request) {
-    return buildResponse(HttpStatus.UNAUTHORIZED, "Não Autenticado.", request);
+    return buildResponse(HttpStatus.UNAUTHORIZED, "Not authenticated.", request);
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
-    return buildResponse(HttpStatus.UNAUTHORIZED, "Acesso Negado.", request);
+    return buildResponse(HttpStatus.UNAUTHORIZED, "Access denied.", request);
   }
 
   @ExceptionHandler(InternalServerException.class)
