@@ -1,8 +1,8 @@
 package com.raponi.blog.domain.usecase.account;
 
-import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.dto.CreateAccountRequestDTO;
+import com.raponi.blog.presentation.dto.CreatedAccountResponseDTO;
 
 public interface CreateAccountUseCase {
-  public AccountResponseDTO handle(CreateAccountRequestDTO bodyRequest);
+  public CreatedAccountResponseDTO handle(CreateAccountRequestDTO requestDTO);
 }

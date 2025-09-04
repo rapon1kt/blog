@@ -6,8 +6,8 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.port.PasswordEncoderService;
 import com.raponi.blog.domain.usecase.account.CreateAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
-import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.dto.CreateAccountRequestDTO;
+import com.raponi.blog.presentation.dto.CreatedAccountResponseDTO;
 import com.raponi.blog.presentation.errors.InvalidParamException;
 import com.raponi.blog.presentation.errors.MissingParamException;
 import com.raponi.blog.presentation.mapper.AccountMapper;
@@ -27,12 +27,12 @@ public class CreateAccountService implements CreateAccountUseCase {
   }
 
   @Override
-  public AccountResponseDTO handle(CreateAccountRequestDTO requestDTO) {
+  public CreatedAccountResponseDTO handle(CreateAccountRequestDTO requestDTO) {
     validateRequest(requestDTO);
     String hashedPassword = this.passwordEncoderService.encode(requestDTO.getPassword());
     Account account = Account.create(requestDTO.getEmail(), requestDTO.getUsername(), hashedPassword);
     Account savedAccount = this.accountRepository.save(account);
-    AccountResponseDTO responseAccount = this.accountMapper.toResponse(savedAccount);
+    CreatedAccountResponseDTO responseAccount = this.accountMapper.toCreatedResponse(savedAccount);
     return responseAccount;
   }
 
