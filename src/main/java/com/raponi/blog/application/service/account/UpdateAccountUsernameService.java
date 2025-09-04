@@ -28,7 +28,7 @@ public class UpdateAccountUsernameService implements UpdateAccountUsernameUseCas
   @Override
   public AccountResponseDTO handle(String accountId, UpdateAccountUsernameRequestDTO requestDTO) {
     Account accountToUpdate = this.accountValidatorService.getAccountByAccountId(accountId);
-    Account accountUpdated = accountToUpdate.update(requestDTO.getUsername());
+    Account accountUpdated = accountToUpdate.updateAccountUsername(requestDTO.getUsername());
     AccountResponseDTO responseAccount = this.accountMapper.toResponse(accountUpdated);
     this.accountRepository.save(accountUpdated);
     return responseAccount;
