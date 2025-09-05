@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import com.raponi.blog.application.service.AccountValidatorService;
+
+import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.usecase.follow.FindAccountFollowingUseCase;
