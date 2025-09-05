@@ -3,8 +3,9 @@ package com.raponi.blog.application.service.comment;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import com.raponi.blog.application.service.AccountValidatorService;
-import com.raponi.blog.application.service.PostValidatorService;
+
+import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.model.Post;
