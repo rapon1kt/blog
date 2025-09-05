@@ -8,7 +8,7 @@ import com.raponi.blog.application.service.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.FindAccountByUsernameUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
-import com.raponi.blog.presentation.dto.AccountResponseDTO;
+import com.raponi.blog.presentation.dto.PublicAccountResponseDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.mapper.AccountMapper;
 
@@ -27,12 +27,12 @@ public class FindAccountByUsernameService implements FindAccountByUsernameUseCas
   }
 
   @Override
-  public AccountResponseDTO handle(String username) {
+  public PublicAccountResponseDTO handle(String username) {
     Optional<Account> account = this.accountRepository.findByUsername(username);
     Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-    AccountResponseDTO responseAccount = mapper.toResponse(account.get());
+    PublicAccountResponseDTO responseAccount = mapper.toPublicAccountResponseDTO(account.get());
     return responseAccount;
   }
 
