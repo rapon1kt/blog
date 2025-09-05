@@ -1,4 +1,4 @@
-package com.raponi.blog.application.service;
+package com.raponi.blog.application.validators;
 
 import java.util.Optional;
 
