@@ -1,8 +1,9 @@
 package com.raponi.blog.application.service.posts;
 
 import org.springframework.stereotype.Service;
-import com.raponi.blog.application.service.AccountValidatorService;
-import com.raponi.blog.application.service.PostValidatorService;
+
+import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.usecase.post.DeletePostUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
