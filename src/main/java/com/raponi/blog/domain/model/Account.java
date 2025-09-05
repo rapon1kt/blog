@@ -6,6 +6,8 @@ public record Account(
     String id,
     String email,
     String username,
+    String picture,
+    String description,
     String password,
     boolean active,
     String role,
@@ -18,6 +20,8 @@ public record Account(
         null,
         email,
         username,
+        null,
+        null,
         hashedPassword,
         true,
         "USER",
@@ -26,18 +30,22 @@ public record Account(
   }
 
   public Account changePassword(String newPassword) {
-    return new Account(id, email, username, newPassword, active, role, createdAt, Instant.now());
+    return new Account(id, email, username, picture, description, newPassword, active,
+        role, createdAt, Instant.now());
   }
 
   public Account changeStatus() {
-    return new Account(id, email, username, password, active ? false : true, role, createdAt, Instant.now());
+    return new Account(id, email, username, picture, description, password,
+        active ? false : true, role, createdAt, Instant.now());
   }
 
-  public Account update(String newUsername) {
+  public Account updateAccountInfos(String newUsername, String newPicture, String newDescription) {
     return new Account(
         id,
         email,
         newUsername,
+        newPicture,
+        newDescription,
         password,
         active,
         role,
