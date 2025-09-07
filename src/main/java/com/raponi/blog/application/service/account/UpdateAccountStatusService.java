@@ -1,5 +1,7 @@
 package com.raponi.blog.application.service.account;
 
+import java.time.Instant;
+
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.validators.AccountValidatorService;
@@ -31,6 +33,7 @@ public class UpdateAccountStatusService implements ChangeStatusUseCase {
       throw new AccessDeniedException("You don't have permission to do this.");
     Account account = this.accountRepository.findById(accountId).get();
     account.setActive(account.isActive() ? false : true);
+    account.setModifiedAt(Instant.now());
     AccountResponseDTO responseAccount = this.accountMapper.toResponse(account);
     this.accountRepository.save(account);
     return responseAccount;
