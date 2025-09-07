@@ -27,8 +27,8 @@ public class AppAccountServiceImpl implements UserDetailsService {
     if (account.isPresent()) {
       var accountObj = account.get();
       return User.builder()
-          .username(accountObj.username())
-          .password(accountObj.password())
+          .username(accountObj.getUsername())
+          .password(accountObj.getPassword())
           .build();
     } else {
       throw new UsernameNotFoundException(username);
@@ -39,7 +39,7 @@ public class AppAccountServiceImpl implements UserDetailsService {
     Optional<Account> account = this.accountRepository.findByUsername(username);
     if (!account.isPresent())
       throw new ResourceNotFoundException("Account cannot be found.");
-    return account.get().id();
+    return account.get().getId();
   }
 
 }

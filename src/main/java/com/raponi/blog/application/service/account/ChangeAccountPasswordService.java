@@ -28,8 +28,8 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
   public String handle(String accountId, UpdateAccountPasswordRequestDTO requestDTO) {
     Account acc = this.accountValidatorService.getAccountWithPasswordConfirmation(accountId, requestDTO.getPassword());
     verifyNewPassword(requestDTO.getNewPassword(), requestDTO.getPassword());
-    Account updatedAcc = acc.changePassword(passwordEncoder.encode(requestDTO.getNewPassword()));
-    this.accountRepository.save(updatedAcc);
+    acc.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
+    this.accountRepository.save(acc);
     return "Password changed with success!";
   }
 

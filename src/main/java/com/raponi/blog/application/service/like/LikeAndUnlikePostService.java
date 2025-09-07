@@ -39,11 +39,11 @@ public class LikeAndUnlikePostService implements LikeAndUnlikePostUseCase {
     if (!verifiedAccount)
       throw new AccessDeniedException("You must active your account to do this.");
 
-    if (this.likeRepository.existsByPostIdAndAccountId(postId, acc.get().id())) {
-      this.likeRepository.deleteByPostIdAndAccountId(postId, acc.get().id());
+    if (this.likeRepository.existsByPostIdAndAccountId(postId, acc.get().getId())) {
+      this.likeRepository.deleteByPostIdAndAccountId(postId, acc.get().getId());
       return "Unliked!";
     }
-    Like like = Like.create(acc.get().id(), postId);
+    Like like = Like.create(acc.get().getId(), postId);
     this.likeRepository.save(like);
     return "Liked!";
   };

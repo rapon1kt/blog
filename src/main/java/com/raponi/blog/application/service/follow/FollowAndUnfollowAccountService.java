@@ -33,18 +33,18 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
     Account destinyAcc = this.accountRepository.findById(followingId)
         .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
 
-    if (!originAcc.active())
+    if (!originAcc.isActive())
       throw new AccessDeniedException("You must active your account to do this.");
 
-    if (destinyAcc.active()) {
+    if (destinyAcc.isActive()) {
       Boolean exists = this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId);
       if (exists) {
         this.followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
-        return ("Unfollowed " + destinyAcc.username());
+        return ("Unfollowed " + destinyAcc.getUsername());
       }
       Follow follow = Follow.create(followerId, followingId);
       this.followRepository.save(follow);
-      return ("Followed " + destinyAcc.username());
+      return ("Followed " + destinyAcc.getUsername());
     }
     throw new AccessDeniedException("This account is desactivated.");
   }

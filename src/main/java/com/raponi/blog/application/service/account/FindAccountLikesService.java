@@ -24,7 +24,7 @@ public class FindAccountLikesService implements FindAccountLikesUseCase {
   @Override
   public List<Like> handle(String accountId) {
     Account account = this.accountValidatorService.getAccountByAccountId(accountId);
-    return this.likeRepository.findByAccountId(account.id());
+    return this.likeRepository.findByAccountId(account.getId());
   }
 
 }

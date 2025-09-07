@@ -29,7 +29,8 @@ public class UpdateAccountStatusService implements ChangeStatusUseCase {
     Boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
-    Account account = this.accountRepository.findById(accountId).get().changeStatus();
+    Account account = this.accountRepository.findById(accountId).get();
+    account.setActive(account.isActive() ? false : true);
     AccountResponseDTO responseAccount = this.accountMapper.toResponse(account);
     this.accountRepository.save(account);
     return responseAccount;

@@ -34,13 +34,13 @@ public class DeleteAccountService implements DeleteAccountUseCase {
     Account account = this.accountValidatorService.getAccountWithPasswordConfirmation(
         accountId,
         request.getPassword());
-    this.accountRepository.deleteById(account.id());
-    this.postRepository.deleteByAccountId(account.id());
-    this.likeRepository.deleteByAccountId(account.id());
-    this.followRepository.deleteByFollowerId(account.id());
-    this.followRepository.deleteByFollowingId(account.id());
-    this.commentRepository.deleteByAccountId(account.id());
-    return "Account with id equals " + account.id() + " deleted with success";
+    this.accountRepository.deleteById(account.getId());
+    this.postRepository.deleteByAccountId(account.getId());
+    this.likeRepository.deleteByAccountId(account.getId());
+    this.followRepository.deleteByFollowerId(account.getId());
+    this.followRepository.deleteByFollowingId(account.getId());
+    this.commentRepository.deleteByAccountId(account.getId());
+    return "Account with id equals " + account.getId() + " deleted with success";
   }
 
 }

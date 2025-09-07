@@ -37,7 +37,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     Boolean authorized = verifyAuthority(accountId);
     Account requestAccount = this.accountRepository.findById(tokenId).get();
     if (authorized && verifiedAccount) {
-      Boolean passwordConfirmation = passwordMatches(password, requestAccount.password());
+      Boolean passwordConfirmation = passwordMatches(password, requestAccount.getPassword());
       if (passwordConfirmation) {
         return acc.get();
       }
@@ -59,7 +59,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   public Account getAccountByEmail(String email) {
     Optional<Account> acc = this.accountRepository.findByEmail(email);
     Boolean verifiedAccount = verifyPresenceAndActive(acc);
-    Boolean authorized = verifyAuthority(acc.get().id());
+    Boolean authorized = verifyAuthority(acc.get().getId());
     if (authorized && verifiedAccount) {
       return acc.get();
     }
@@ -69,7 +69,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   public Account getAccountByUsername(String username) {
     Optional<Account> acc = this.accountRepository.findByUsername(username);
     Boolean verifiedAccount = verifyPresenceAndActive(acc);
-    Boolean authorized = verifyAuthority(acc.get().id());
+    Boolean authorized = verifyAuthority(acc.get().getId());
     if (authorized && verifiedAccount) {
       return acc.get();
     }
@@ -96,7 +96,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
       if (isAdmin()) {
         return true;
       }
-      if (!acc.get().active()) {
+      if (!acc.get().isActive()) {
         return false;
       }
       return true;

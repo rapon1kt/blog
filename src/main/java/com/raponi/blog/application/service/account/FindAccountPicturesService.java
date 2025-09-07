@@ -38,7 +38,7 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
     GridFSFile image = this.gridFsTemplate
-        .findOne(new Query(Criteria.where("_id").is(new ObjectId(account.get().picture()))));
+        .findOne(new Query(Criteria.where("_id").is(new ObjectId(account.get().getPicture()))));
     GridFsResource imageResource = gridFsTemplate.getResource(image);
     return imageResource.getInputStream().readAllBytes();
   }

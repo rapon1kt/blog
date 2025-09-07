@@ -28,7 +28,7 @@ public class CreatePostService implements CreatePostUseCase {
   @Override
   public PostResponseDTO handle(CreatePostRequestDTO requestDTO, String tokenId) {
     Account account = this.accountValidatorService.getAccountByAccountId(tokenId);
-    Post post = Post.create(account.id(), requestDTO.getTitle(), requestDTO.getContent());
+    Post post = Post.create(account.getId(), requestDTO.getTitle(), requestDTO.getContent());
     Post savedPost = this.postRepository.save(post);
     PostResponseDTO responsePost = this.postMapper.toResponse(savedPost);
     return responsePost;

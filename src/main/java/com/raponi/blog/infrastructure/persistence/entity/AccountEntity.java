@@ -25,21 +25,16 @@ public class AccountEntity {
   private Instant modifiedAt;
 
   public AccountEntity(Account account) {
-    this.id = account.id();
-    this.username = account.username();
-    this.picture = account.picture();
-    this.description = account.description();
-    this.email = account.email();
-    this.password = account.password();
-    this.active = account.active();
-    this.role = account.role();
-    this.createdAt = account.createdAt();
-    this.modifiedAt = account.modifiedAt();
-  }
-
-  public Account toDomain() {
-    return new Account(id, username, email, picture, description, password, active, role,
-        createdAt, modifiedAt);
+    this.id = account.getId();
+    this.username = account.getUsername();
+    this.picture = account.getPicture();
+    this.description = account.getDescription();
+    this.email = account.getEmail();
+    this.password = account.getPassword();
+    this.active = account.isActive();
+    this.role = account.getRole();
+    this.createdAt = account.getCreatedAt();
+    this.modifiedAt = account.getModifiedAt();
   }
 
 }
