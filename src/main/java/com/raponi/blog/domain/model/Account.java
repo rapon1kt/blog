@@ -3,16 +3,16 @@ package com.raponi.blog.domain.model;
 import java.time.Instant;
 
 public class Account {
-  String id;
-  String email;
-  String username;
-  String picture;
-  String description;
-  String password;
-  boolean active;
-  String role;
-  Instant createdAt;
-  Instant modifiedAt;
+  private String id;
+  private String email;
+  private String username;
+  private String picture;
+  private String description;
+  private String password;
+  private boolean active;
+  private String role;
+  private Instant createdAt;
+  private Instant modifiedAt;
 
   public Account(String email, String username, String hashedPassword) {
     this.email = email;
