@@ -1,6 +1,7 @@
 package com.raponi.blog.application.service.account;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ public class UpdateAccountInfosService implements UpdateAccountInfosUseCase {
     accountToUpdate.setDescription(requestDTO.getProfileDescription().isBlank() ? accountToUpdate.getDescription()
         : requestDTO.getProfileDescription());
 
+    accountToUpdate.setModifiedAt(Instant.now());
     AccountResponseDTO responseAccount = this.accountMapper.toResponse(accountToUpdate);
     this.accountRepository.save(accountToUpdate);
 
