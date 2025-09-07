@@ -14,10 +14,22 @@ public class Account {
   private Instant createdAt;
   private Instant modifiedAt;
 
-  public Account(String email, String username, String hashedPassword) {
+  private Account(String id, String email, String username, String picture, String description, String password,
+      boolean active, String role, Instant createdAt, Instant modifiedAt) {
+    this.id = id;
     this.email = email;
     this.username = username;
-    this.password = hashedPassword;
+    this.picture = picture;
+    this.description = description;
+    this.password = password;
+    this.active = active;
+    this.role = role;
+    this.createdAt = createdAt;
+    this.modifiedAt = modifiedAt;
+  }
+
+  public static Account create(String email, String username, String password) {
+    return new Account(null, email, username, null, null, password, true, "USER", Instant.now(), Instant.now());
   }
 
   public String getId() {
