@@ -30,7 +30,7 @@ public class CreateAccountService implements CreateAccountUseCase {
   public CreatedAccountResponseDTO handle(CreateAccountRequestDTO requestDTO) {
     validateRequest(requestDTO);
     String hashedPassword = this.passwordEncoderService.encode(requestDTO.getPassword());
-    Account account = new Account(requestDTO.getEmail(), requestDTO.getUsername(), hashedPassword);
+    Account account = Account.create(requestDTO.getEmail(), requestDTO.getUsername(), hashedPassword);
     Account savedAccount = this.accountRepository.save(account);
     CreatedAccountResponseDTO responseAccount = this.accountMapper.toCreatedResponse(savedAccount);
     return responseAccount;
