@@ -16,6 +16,7 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.usecase.account.FindAccountPicturesUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class FindAccountPicturesService implements FindAccountPicturesUseCase {
@@ -37,8 +38,11 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
     boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
+    if (account.get().getPicture().isEmpty() || account.get().getPicture().equals(null))
+      throw new ResourceNotFoundException("This account don't have a profile picture.");
+
     GridFSFile image = this.gridFsTemplate
-        .findOne(new Query(Criteria.where("_id").is(new ObjectId(account.get().getPicture()))));
+        .findOne(new Query(Criteria.where("_id").is(new ObjectId())));
     GridFsResource imageResource = gridFsTemplate.getResource(image);
     return imageResource.getInputStream().readAllBytes();
   }
