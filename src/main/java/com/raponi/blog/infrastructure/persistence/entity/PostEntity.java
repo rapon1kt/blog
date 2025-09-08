@@ -22,17 +22,12 @@ public class PostEntity {
   private Instant modifiedAt;
 
   public PostEntity(Post post) {
-    this.id = post.id();
-    this.title = post.title();
-    this.content = post.content();
-    this.privateStatus = post.privateStatus();
-    this.accountId = post.accountId();
-    this.createdAt = post.createdAt();
-    this.modifiedAt = post.modifiedAt();
+    this.id = post.getId();
+    this.title = post.getTitle();
+    this.content = post.getContent();
+    this.privateStatus = post.isPrivateStatus();
+    this.accountId = post.getAccountId();
+    this.createdAt = post.getCreatedAt();
+    this.modifiedAt = post.getModifiedAt();
   }
-
-  public Post toDomain() {
-    return new Post(id, title, content, privateStatus, accountId, createdAt, modifiedAt);
-  }
-
 }
