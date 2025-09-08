@@ -3,9 +3,7 @@ package com.raponi.blog.presentation.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.raponi.blog.application.service.comment.CreateCommentService;
-import com.raponi.blog.application.service.comment.DeleteCommentService;
-import com.raponi.blog.application.service.comment.FindPostCommentsService;
+import com.raponi.blog.application.service.comment.*;
 import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
 
 import jakarta.validation.Valid;
@@ -23,12 +21,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class CommentController {
 
   private final CreateCommentService createCommentService;
+  private final AnswerCommentService answerCommentService;
+  private final FindAllCommentAnswersService findAllCommentAnswersService;
   private final FindPostCommentsService findAllCommentsService;
   private final DeleteCommentService deleteCommentService;
 
-  public CommentController(CreateCommentService createCommentService, FindPostCommentsService findAllCommentsService,
+  public CommentController(CreateCommentService createCommentService, AnswerCommentService answerCommentService,
+      FindAllCommentAnswersService findAllCommentAnswersService,
+      FindPostCommentsService findAllCommentsService,
       DeleteCommentService deleteCommentService) {
     this.createCommentService = createCommentService;
+    this.answerCommentService = answerCommentService;
+    this.findAllCommentAnswersService = findAllCommentAnswersService;
     this.findAllCommentsService = findAllCommentsService;
     this.deleteCommentService = deleteCommentService;
   }
@@ -38,6 +42,17 @@ public class CommentController {
       @RequestBody @Valid CreateCommentRequestDTO requestDTO,
       Authentication auth) {
     return ResponseEntity.status(201).body(this.createCommentService.handle(auth.getName(), postId, requestDTO));
+  }
+
+  @PostMapping("/{commentId}")
+  public ResponseEntity<?> answerComment(@PathVariable("commentId") String commentId,
+      @RequestBody @Valid CreateCommentRequestDTO requestDTO, Authentication auth) {
+    return ResponseEntity.status(201).body(this.answerCommentService.handle(auth.getName(), commentId, requestDTO));
+  }
+
+  @GetMapping("/{commentId}")
+  public ResponseEntity<?> getCommentAnswers(@PathVariable("commentId") String commentId) {
+    return ResponseEntity.ok(this.findAllCommentAnswersService.handle(commentId));
   }
 
   @GetMapping
