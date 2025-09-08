@@ -45,7 +45,7 @@ public class CreateCommentService implements CreateCommentUseCase {
     this.postValidatorService.validatePostPresenceAndPrivate(postId);
     Post post = this.postRepository.findById(postId).get();
 
-    Optional<Account> author = this.accountRepository.findById(post.accountId());
+    Optional<Account> author = this.accountRepository.findById(post.getAccountId());
     boolean validAuthorAccount = this.accountValidatorService.verifyPresenceAndActive(author);
 
     Optional<Account> account = this.accountRepository.findById(accountId);

@@ -24,8 +24,8 @@ public class PostValidatorService implements PostValidatorUseCase {
   public boolean validatePostPresenceAndPrivate(String postId) {
     Optional<Post> post = this.postRepository.findById(postId);
     if (post.isPresent()) {
-      if (post.get().privateStatus()) {
-        if (this.accountValidatorService.verifyAuthority(post.get().accountId())) {
+      if (post.get().isPrivateStatus()) {
+        if (this.accountValidatorService.verifyAuthority(post.get().getAccountId())) {
           return true;
         }
         return false;

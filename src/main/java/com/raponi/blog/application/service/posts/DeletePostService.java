@@ -32,13 +32,13 @@ public class DeletePostService implements DeletePostUseCase {
       throw new ResourceNotFoundException("This post cannot be found.");
     }
     Post post = this.postRepository.findById(postId).get();
-    if (!post.accountId().equals(accountId)) {
+    if (!post.getAccountId().equals(accountId)) {
       throw new InvalidParamException("This post does not belong to this user.");
     }
     boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
-    this.postRepository.deleteById(post.id());
+    this.postRepository.deleteById(post.getId());
     return "Post deleted with success!";
   }
 }
