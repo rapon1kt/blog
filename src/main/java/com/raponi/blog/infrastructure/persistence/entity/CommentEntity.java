@@ -21,16 +21,12 @@ public class CommentEntity {
   Instant modifiedAt;
 
   public CommentEntity(Comment comment) {
-    this.id = comment.id();
-    this.content = comment.content();
-    this.accountId = comment.accountId();
-    this.postId = comment.postId();
-    this.createdAt = comment.createdAt();
-    this.modifiedAt = comment.modifiedAt();
-  }
-
-  public Comment toDomain() {
-    return new Comment(id, content, accountId, postId, createdAt, modifiedAt);
+    this.id = comment.getId();
+    this.content = comment.getContent();
+    this.accountId = comment.getAccountId();
+    this.postId = comment.getPostId();
+    this.createdAt = comment.getCreatedAt();
+    this.modifiedAt = comment.getModifiedAt();
   }
 
 }
