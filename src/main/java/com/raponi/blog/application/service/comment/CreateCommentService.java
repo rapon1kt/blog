@@ -52,7 +52,7 @@ public class CreateCommentService implements CreateCommentUseCase {
     boolean validAccount = this.accountValidatorService.verifyPresenceAndActive(account);
     if (validAuthorAccount) {
       if (validAccount) {
-        Comment createdComment = Comment.create(requestDTO.getContent(), accountId, post.id());
+        Comment createdComment = Comment.create(accountId, postId, requestDTO.getContent());
         Comment savedComment = this.commentRepository.save(createdComment);
         return this.commentMapper.toResponse(savedComment);
       }

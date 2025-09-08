@@ -41,13 +41,13 @@ public class CommentValidatorService implements CommentValidatorUseCase {
 
   private boolean isValidAccount(String commentId) {
     Comment comment = this.commentRepository.findById(commentId).get();
-    Optional<Account> acc = this.accountRepository.findById(comment.accountId());
+    Optional<Account> acc = this.accountRepository.findById(comment.getAccountId());
     return this.accountValidatorService.verifyPresenceAndActive(acc);
   }
 
   private boolean isValidPost(String commentId) {
     Comment comment = this.commentRepository.findById(commentId).get();
-    return this.postValidatorService.validatePostPresenceAndPrivate(comment.postId());
+    return this.postValidatorService.validatePostPresenceAndPrivate(comment.getPostId());
   }
 
 }
