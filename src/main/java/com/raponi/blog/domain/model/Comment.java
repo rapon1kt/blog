@@ -7,21 +7,27 @@ public class Comment {
   private String content;
   private String accountId;
   private String postId;
+  private String commentId;
+  private boolean isAnswer;
   private Instant createdAt;
   private Instant modifiedAt;
 
-  public Comment(String id, String content, String accountId, String postId, Instant createdAt, Instant modifiedAt) {
+  public Comment(String id, String content, String accountId, String postId, String commentId, boolean isAnswer,
+      Instant createdAt,
+      Instant modifiedAt) {
     this.id = id;
     this.content = content;
     this.accountId = accountId;
     this.postId = postId;
+    this.commentId = commentId;
+    this.isAnswer = isAnswer;
     this.createdAt = createdAt;
     this.modifiedAt = modifiedAt;
   }
 
   public static Comment create(String accountId, String postId, String content) {
     Instant instant = Instant.now();
-    return new Comment(null, content, accountId, postId, instant, instant);
+    return new Comment(null, content, accountId, postId, null, false, instant, instant);
   }
 
   public String getId() {
@@ -54,6 +60,22 @@ public class Comment {
 
   public void setPostId(String postId) {
     this.postId = postId;
+  }
+
+  public String getCommentId() {
+    return commentId;
+  }
+
+  public void setCommentId(String commentId) {
+    this.commentId = commentId;
+  }
+
+  public boolean isAnswer() {
+    return isAnswer;
+  }
+
+  public void setAnswer(boolean isAnswer) {
+    this.isAnswer = isAnswer;
   }
 
   public Instant getCreatedAt() {
