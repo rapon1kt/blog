@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.raponi.blog.domain.model.Report;
-import com.raponi.blog.infrastructure.persistence.entity.ReportEntity;
 import com.raponi.blog.domain.model.ReportTargetType;
 import com.raponi.blog.domain.model.ReportStatus;
 
-public interface ReportRepository extends MongoRepository<ReportEntity, String> {
+public interface ReportRepository extends MongoRepository<Report, String> {
 
   List<Report> findByTargetId(String targetId);
 
