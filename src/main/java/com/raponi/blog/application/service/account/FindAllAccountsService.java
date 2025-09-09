@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.raponi.blog.domain.usecase.account.FindAllAccountsUseCase;
+import com.raponi.blog.application.usecase.account.FindAllAccountsUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.mapper.AccountMapper;

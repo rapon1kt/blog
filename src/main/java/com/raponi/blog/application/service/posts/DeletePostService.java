@@ -2,10 +2,10 @@ package com.raponi.blog.application.service.posts;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.post.DeletePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.domain.usecase.post.DeletePostUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.InvalidParamException;

@@ -2,8 +2,8 @@ package com.raponi.blog.application.service.like;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.like.CountPostLikeUseCase;
 import com.raponi.blog.application.validators.PostValidatorService;
-import com.raponi.blog.domain.usecase.like.CountPostLikeUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.LikeRepository;
 import com.raponi.blog.presentation.errors.InternalServerException;
 

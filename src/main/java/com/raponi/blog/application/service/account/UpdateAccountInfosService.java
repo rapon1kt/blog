@@ -7,11 +7,11 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.raponi.blog.application.usecase.account.UpdateAccountInfosUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.ImageValidationResponse;
 import com.raponi.blog.application.validators.ImageValidatorService;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.domain.usecase.account.UpdateAccountInfosUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.dto.UpdateAccountInfosRequestDTO;

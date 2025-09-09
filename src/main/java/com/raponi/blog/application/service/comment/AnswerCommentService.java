@@ -2,9 +2,9 @@ package com.raponi.blog.application.service.comment;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.comment.AnswerCommentUseCase;
 import com.raponi.blog.application.validators.CommentValidatorService;
 import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.domain.usecase.comment.AnswerCommentUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;
 import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;

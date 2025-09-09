@@ -4,9 +4,9 @@ import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.account.ChangeStatusUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.domain.usecase.account.ChangeStatusUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;

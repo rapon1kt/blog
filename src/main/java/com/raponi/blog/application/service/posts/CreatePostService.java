@@ -2,10 +2,10 @@ package com.raponi.blog.application.service.posts;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.post.CreatePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.domain.usecase.post.CreatePostUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
 import com.raponi.blog.presentation.dto.CreatePostRequestDTO;
 import com.raponi.blog.presentation.dto.PostResponseDTO;

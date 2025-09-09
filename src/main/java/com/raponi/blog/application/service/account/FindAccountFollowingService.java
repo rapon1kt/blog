@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.follow.FindAccountFollowingUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
-import com.raponi.blog.domain.usecase.follow.FindAccountFollowingUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.FollowRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;

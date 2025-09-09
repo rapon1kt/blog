@@ -6,10 +6,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.like.LikeAndUnlikePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Like;
-import com.raponi.blog.domain.usecase.like.LikeAndUnlikePostUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.LikeRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;

@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.PostValidatorUseCase;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.domain.usecase.PostValidatorUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
 
 @Service

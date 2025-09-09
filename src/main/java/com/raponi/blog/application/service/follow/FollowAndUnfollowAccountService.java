@@ -2,9 +2,9 @@ package com.raponi.blog.application.service.follow;
 
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.usecase.follow.FollowAndUnfollowAccountUseCase;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
-import com.raponi.blog.domain.usecase.follow.FollowAndUnfollowAccountUseCase;
 import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.FollowRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
