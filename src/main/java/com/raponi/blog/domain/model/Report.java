@@ -12,7 +12,7 @@ public class Report {
   private Instant createdAt;
   private Instant modifiedAt;
 
-  private Report(String id, ReportStatus status, String reporterId, String targetId, ReportTargetType reportTargetType,
+  public Report(String id, ReportStatus status, String reporterId, String targetId, ReportTargetType reportTargetType,
       String reason, Instant createdAt, Instant modifiedAt) {
     this.id = id;
     this.status = status;
@@ -61,11 +61,11 @@ public class Report {
     this.targetId = targetId;
   }
 
-  public ReportTargetType getReportType() {
+  public ReportTargetType getReportTargetType() {
     return reportTargetType;
   }
 
-  public void setReportType(ReportTargetType reportTargetType) {
+  public void setReportTargetType(ReportTargetType reportTargetType) {
     this.reportTargetType = reportTargetType;
   }
 
