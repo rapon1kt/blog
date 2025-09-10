@@ -7,7 +7,7 @@ public class Report {
   private ReportStatus status;
   private String reporterId;
   private String targetId;
-  private ReportTargetType reportType;
+  private ReportTargetType reportTargetType;
   private String reason;
   private Instant createdAt;
   private Instant modifiedAt;
@@ -18,7 +18,7 @@ public class Report {
     this.status = status;
     this.reporterId = reporterId;
     this.targetId = targetId;
-    this.reportType = reportTargetType;
+    this.reportTargetType = reportTargetType;
     this.reason = reason;
     this.createdAt = createdAt;
     this.modifiedAt = modifiedAt;
@@ -62,11 +62,11 @@ public class Report {
   }
 
   public ReportTargetType getReportType() {
-    return reportType;
+    return reportTargetType;
   }
 
-  public void setReportType(ReportTargetType reportType) {
-    this.reportType = reportType;
+  public void setReportType(ReportTargetType reportTargetType) {
+    this.reportTargetType = reportTargetType;
   }
 
   public String getReason() {
