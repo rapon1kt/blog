@@ -2,7 +2,7 @@ package com.raponi.blog.domain.model;
 
 import java.time.Instant;
 
-public class Post {
+public class Post implements Reportable {
   private String id;
   private String title;
   private String content;
@@ -27,6 +27,7 @@ public class Post {
     return new Post(null, title, content, false, accountId, instant, instant);
   }
 
+  @Override
   public String getId() {
     return id;
   }
@@ -81,6 +82,16 @@ public class Post {
 
   public void setModifiedAt(Instant modifiedAt) {
     this.modifiedAt = modifiedAt;
+  }
+
+  @Override
+  public String getAuthorId() {
+    return accountId;
+  }
+
+  @Override
+  public String getContentPreview() {
+    return content.length() > 50 ? content.substring(0, 50) + "..." : content;
   }
 
 }
