@@ -10,7 +10,7 @@ import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
 import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;

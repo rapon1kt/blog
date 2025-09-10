@@ -12,7 +12,7 @@ import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.ImageValidationResponse;
 import com.raponi.blog.application.validators.ImageValidatorService;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.dto.UpdateAccountInfosRequestDTO;
 import com.raponi.blog.presentation.errors.InvalidParamException;

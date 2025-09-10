@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.account.ChangeAccountPasswordUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.UpdateAccountPasswordRequestDTO;
 import com.raponi.blog.presentation.errors.InvalidParamException;
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.account.CreateAccountUseCase;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.port.PasswordEncoderService;
-import com.raponi.blog.infrastructure.persistence.repository.AccountRepository;
+import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.CreateAccountRequestDTO;
 import com.raponi.blog.presentation.dto.CreatedAccountResponseDTO;
 import com.raponi.blog.presentation.errors.InvalidParamException;
