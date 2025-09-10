@@ -19,7 +19,7 @@ public class ReportEntity {
   private ReportStatus status;
   private String reporterId;
   private String targetId;
-  private ReportTargetType reportType;
+  private ReportTargetType reportTargetType;
   private String reason;
   private Instant createdAt;
   private Instant modifiedAt;
@@ -29,7 +29,7 @@ public class ReportEntity {
     this.status = report.getStatus();
     this.reporterId = report.getReporterId();
     this.targetId = report.getTargetId();
-    this.reportType = report.getReportType();
+    this.reportTargetType = report.getReportTargetType();
     this.reason = report.getReason();
     this.createdAt = report.getCreatedAt();
     this.modifiedAt = report.getModifiedAt();
