@@ -5,8 +5,6 @@ import java.time.Instant;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.raponi.blog.domain.model.Account;
-
 import lombok.Data;
 
 @Data
@@ -19,22 +17,9 @@ public class AccountEntity {
   private String picture;
   private String description;
   private String password;
-  private boolean active = true;
+  private boolean active;
   private String role;
   private Instant createdAt;
   private Instant modifiedAt;
-
-  public AccountEntity(Account account) {
-    this.id = account.getId();
-    this.username = account.getUsername();
-    this.picture = account.getPicture();
-    this.description = account.getDescription();
-    this.email = account.getEmail();
-    this.password = account.getPassword();
-    this.active = account.isActive();
-    this.role = account.getRole();
-    this.createdAt = account.getCreatedAt();
-    this.modifiedAt = account.getModifiedAt();
-  }
 
 }
