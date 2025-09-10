@@ -14,7 +14,7 @@ public class Account {
   private Instant createdAt;
   private Instant modifiedAt;
 
-  private Account(String id, String email, String username, String picture, String description, String password,
+  public Account(String id, String email, String username, String picture, String description, String password,
       boolean active, String role, Instant createdAt, Instant modifiedAt) {
     this.id = id;
     this.email = email;
