@@ -16,7 +16,7 @@ public interface ReportRepository extends MongoRepository<Report, String> {
 
   List<Report> findByReporterId(String reporterId);
 
-  List<Report> findByReportType(ReportTargetType reportType);
+  List<Report> findByReportTargetType(ReportTargetType reportTargetType);
 
   List<Report> findByStatus(ReportStatus status);
 
