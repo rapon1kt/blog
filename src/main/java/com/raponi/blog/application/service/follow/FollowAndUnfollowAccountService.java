@@ -6,7 +6,8 @@ import com.raponi.blog.application.usecase.follow.FollowAndUnfollowAccountUseCas
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.repository.AccountRepository;
-import com.raponi.blog.infrastructure.persistence.repository.FollowRepository;
+import com.raponi.blog.domain.repository.FollowRepository;
+
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.BusinessRuleException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
