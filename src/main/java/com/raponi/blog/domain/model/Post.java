@@ -11,7 +11,7 @@ public class Post implements Reportable {
   private Instant createdAt;
   private Instant modifiedAt;
 
-  private Post(String id, String title, String content, boolean privateStatus, String accountId, Instant createdAt,
+  public Post(String id, String title, String content, boolean privateStatus, String accountId, Instant createdAt,
       Instant modifiedAt) {
     this.id = id;
     this.title = title;
