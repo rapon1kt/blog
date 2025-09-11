@@ -20,4 +20,12 @@ public class CommentEntity {
   private Instant createdAt;
   private Instant modifiedAt;
 
+  public boolean isAnswer() {
+    return isAnswer;
+  }
+
+  public void setAnswer(boolean isAnswer) {
+    this.isAnswer = isAnswer;
+  }
+
 }
