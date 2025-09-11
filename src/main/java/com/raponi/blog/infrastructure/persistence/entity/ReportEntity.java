@@ -5,7 +5,6 @@ import java.time.Instant;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.raponi.blog.domain.model.Report;
 import com.raponi.blog.domain.model.ReportStatus;
 import com.raponi.blog.domain.model.ReportTargetType;
 
@@ -23,16 +22,5 @@ public class ReportEntity {
   private String reason;
   private Instant createdAt;
   private Instant modifiedAt;
-
-  public ReportEntity(Report report) {
-    this.id = report.getId();
-    this.status = report.getStatus();
-    this.reporterId = report.getReporterId();
-    this.targetId = report.getTargetId();
-    this.reportTargetType = report.getReportTargetType();
-    this.reason = report.getReason();
-    this.createdAt = report.getCreatedAt();
-    this.modifiedAt = report.getModifiedAt();
-  }
 
 }
