@@ -6,7 +6,7 @@ import com.raponi.blog.application.usecase.post.CreatePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.dto.CreatePostRequestDTO;
 import com.raponi.blog.presentation.dto.PostResponseDTO;
 import com.raponi.blog.presentation.mapper.PostMapper;

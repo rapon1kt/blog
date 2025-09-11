@@ -8,7 +8,7 @@ import com.raponi.blog.application.usecase.post.UpdatePostStatusUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.dto.PostResponseDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;

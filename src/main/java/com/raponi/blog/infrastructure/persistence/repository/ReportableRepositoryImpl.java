@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.raponi.blog.domain.model.ReportTargetType;
 import com.raponi.blog.domain.model.Reportable;
+import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.domain.repository.ReportableRepository;
 
 @Repository

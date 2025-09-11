@@ -6,6 +6,7 @@ import com.raponi.blog.application.usecase.account.DeleteAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
+import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.infrastructure.persistence.repository.*;
 import com.raponi.blog.presentation.dto.DeleteAccountRequestDTO;
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.PostValidatorUseCase;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.infrastructure.persistence.repository.PostRepository;
+import com.raponi.blog.domain.repository.PostRepository;
 
 @Service
 public class PostValidatorService implements PostValidatorUseCase {
