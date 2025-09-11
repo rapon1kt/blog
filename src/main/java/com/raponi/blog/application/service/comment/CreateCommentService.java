@@ -12,7 +12,7 @@ import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.PostRepository;
-import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
+import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;
 import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;

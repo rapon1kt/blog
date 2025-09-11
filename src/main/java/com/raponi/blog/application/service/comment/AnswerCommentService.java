@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.comment.AnswerCommentUseCase;
 import com.raponi.blog.application.validators.CommentValidatorService;
 import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
+import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;
 import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
@@ -36,8 +36,8 @@ public class AnswerCommentService implements AnswerCommentUseCase {
     Comment commentAnswer = Comment.create(accountId, comment.getPostId(), requestDTO.getContent());
     commentAnswer.setCommentId(commentId);
     commentAnswer.setAnswer(true);
-    this.commentRepository.save(commentAnswer);
-    CommentResponseDTO commentAnswerResponse = this.commentMapper.toResponse(commentAnswer);
+    Comment savedCommentAnswer = this.commentRepository.save(commentAnswer);
+    CommentResponseDTO commentAnswerResponse = this.commentMapper.toResponse(savedCommentAnswer);
     return commentAnswerResponse;
   }
 

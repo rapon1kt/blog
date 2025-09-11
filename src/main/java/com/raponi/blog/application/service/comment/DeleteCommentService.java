@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.comment.DeleteCommentUseCase;
 import com.raponi.blog.application.validators.CommentValidatorService;
 import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
+import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service

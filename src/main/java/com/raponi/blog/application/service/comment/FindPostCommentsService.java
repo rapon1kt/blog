@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.comment.FindPostCommentsUseCase;
-import com.raponi.blog.infrastructure.persistence.repository.CommentRepository;
+import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;
 import com.raponi.blog.presentation.mapper.CommentMapper;
 
