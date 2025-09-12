@@ -8,11 +8,11 @@ public class Comment implements Reportable {
   private String accountId;
   private String postId;
   private String commentId;
-  private boolean isAnswer;
+  private boolean answer;
   private Instant createdAt;
   private Instant modifiedAt;
 
-  public Comment(String id, String content, String accountId, String postId, String commentId, boolean isAnswer,
+  public Comment(String id, String content, String accountId, String postId, String commentId, boolean answer,
       Instant createdAt,
       Instant modifiedAt) {
     this.id = id;
@@ -20,7 +20,7 @@ public class Comment implements Reportable {
     this.accountId = accountId;
     this.postId = postId;
     this.commentId = commentId;
-    this.isAnswer = isAnswer;
+    this.answer = answer;
     this.createdAt = createdAt;
     this.modifiedAt = modifiedAt;
   }
@@ -72,11 +72,11 @@ public class Comment implements Reportable {
   }
 
   public boolean isAnswer() {
-    return isAnswer;
+    return answer;
   }
 
-  public void setAnswer(boolean isAnswer) {
-    this.isAnswer = isAnswer;
+  public void setAnswer(boolean answer) {
+    this.answer = answer;
   }
 
   public Instant getCreatedAt() {
@@ -104,5 +104,4 @@ public class Comment implements Reportable {
   public String getContentPreview() {
     return content.length() > 50 ? content.substring(0, 50) + "..." : content;
   }
-
 }
