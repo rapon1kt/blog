@@ -2,11 +2,12 @@ package com.raponi.blog.domain.model;
 
 import java.time.Instant;
 
-public class Post implements Reportable {
+public class Post implements Reportable, Likable {
   private String id;
   private String title;
   private String content;
   private boolean privateStatus;
+  private long likeCount = 0;
   private String accountId;
   private Instant createdAt;
   private Instant modifiedAt;
@@ -92,6 +93,22 @@ public class Post implements Reportable {
   @Override
   public String getContentPreview() {
     return content.length() > 50 ? content.substring(0, 50) + "..." : content;
+  }
+
+  @Override
+  public long getLikeCount() {
+    return this.likeCount;
+  }
+
+  @Override
+  public void incrementLikeCount() {
+    this.likeCount++;
+  }
+
+  @Override
+  public void decrementLikeCount() {
+    if (this.likeCount > 0)
+      this.likeCount--;
   }
 
 }

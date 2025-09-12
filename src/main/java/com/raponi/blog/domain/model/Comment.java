@@ -2,13 +2,14 @@ package com.raponi.blog.domain.model;
 
 import java.time.Instant;
 
-public class Comment implements Reportable {
+public class Comment implements Reportable, Likable {
   private String id;
   private String content;
   private String accountId;
   private String postId;
   private String commentId;
   private boolean answer;
+  private long likeCount = 0;
   private Instant createdAt;
   private Instant modifiedAt;
 
@@ -103,5 +104,21 @@ public class Comment implements Reportable {
   @Override
   public String getContentPreview() {
     return content.length() > 50 ? content.substring(0, 50) + "..." : content;
+  }
+
+  @Override
+  public long getLikeCount() {
+    return this.likeCount;
+  }
+
+  @Override
+  public void incrementLikeCount() {
+    this.likeCount++;
+  }
+
+  @Override
+  public void decrementLikeCount() {
+    if (this.likeCount > 0)
+      this.likeCount--;
   }
 }
