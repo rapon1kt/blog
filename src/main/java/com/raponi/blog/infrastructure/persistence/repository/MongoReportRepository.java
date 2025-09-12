@@ -5,20 +5,20 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.raponi.blog.domain.model.Report;
 import com.raponi.blog.domain.model.ReportTargetType;
+import com.raponi.blog.infrastructure.persistence.entity.ReportEntity;
 import com.raponi.blog.domain.model.ReportStatus;
 
 @Repository
-public interface ReportRepository extends MongoRepository<Report, String> {
+public interface MongoReportRepository extends MongoRepository<ReportEntity, String> {
 
-  List<Report> findByTargetId(String targetId);
+  List<ReportEntity> findByTargetId(String targetId);
 
-  List<Report> findByReporterId(String reporterId);
+  List<ReportEntity> findByReporterId(String reporterId);
 
-  List<Report> findByReportTargetType(ReportTargetType reportTargetType);
+  List<ReportEntity> findByReportTargetType(ReportTargetType reportTargetType);
 
-  List<Report> findByStatus(ReportStatus status);
+  List<ReportEntity> findByStatus(ReportStatus status);
 
   boolean existsByReporterIdAndTargetId(String reporterId, String targetId);
 
