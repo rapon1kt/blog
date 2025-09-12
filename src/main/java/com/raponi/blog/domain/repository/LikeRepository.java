@@ -13,8 +13,6 @@ public interface LikeRepository {
 
   public List<Like> findByAccountId(String accountId);
 
-  public long countByPostId(String postId);
-
   public boolean existsByPostIdAndAccountId(String postId, String accountId);
 
   public void deleteByPostIdAndAccountId(String postId, String accountId);
