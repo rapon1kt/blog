@@ -16,16 +16,8 @@ public class CommentEntity {
   private String accountId;
   private String postId;
   private String commentId;
-  private boolean isAnswer;
+  private boolean answer;
   private Instant createdAt;
   private Instant modifiedAt;
-
-  public boolean isAnswer() {
-    return isAnswer;
-  }
-
-  public void setAnswer(boolean isAnswer) {
-    this.isAnswer = isAnswer;
-  }
 
 }
