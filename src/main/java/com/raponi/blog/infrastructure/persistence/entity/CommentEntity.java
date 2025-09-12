@@ -17,6 +17,7 @@ public class CommentEntity {
   private String postId;
   private String commentId;
   private boolean answer;
+  private long likeCount = 0;
   private Instant createdAt;
   private Instant modifiedAt;
 
