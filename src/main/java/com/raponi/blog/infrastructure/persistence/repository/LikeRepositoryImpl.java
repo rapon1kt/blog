@@ -22,11 +22,6 @@ public class LikeRepositoryImpl implements LikeRepository {
   }
 
   @Override
-  public long countByPostId(String postId) {
-    return this.mongoRepository.countByPostId(postId);
-  }
-
-  @Override
   public void deleteByAccountId(String accountId) {
     this.mongoRepository.deleteByAccountId(accountId);
   }
