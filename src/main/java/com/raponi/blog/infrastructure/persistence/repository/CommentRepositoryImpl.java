@@ -35,8 +35,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public List<Comment> findByCommentIdAndIsAnswerTrue(String commentId) {
-    return this.mongoRepository.findByCommentIdAndIsAnswerTrue(commentId).stream().map(commentMapper::toDomain)
+  public List<Comment> findByCommentIdAndAnswerTrue(String commentId) {
+    return this.mongoRepository.findByCommentIdAndAnswerTrue(commentId).stream().map(commentMapper::toDomain)
         .toList();
   }
 
@@ -46,13 +46,13 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public List<Comment> existsByAccountId(String accountId) {
-    return this.mongoRepository.existsByAccountId(accountId).stream().map(commentMapper::toDomain).toList();
+  public List<Comment> findByAccountId(String accountId) {
+    return this.mongoRepository.findByAccountId(accountId).stream().map(commentMapper::toDomain).toList();
   }
 
   @Override
-  public List<Comment> existsByPostId(String postId) {
-    return this.mongoRepository.existsByPostId(postId).stream().map(commentMapper::toDomain).toList();
+  public List<Comment> findByPostId(String postId) {
+    return this.mongoRepository.findByPostId(postId).stream().map(commentMapper::toDomain).toList();
   }
 
   @Override

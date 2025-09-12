@@ -10,14 +10,14 @@ import com.raponi.blog.infrastructure.persistence.entity.CommentEntity;
 @Repository
 public interface MongoCommentRepository extends MongoRepository<CommentEntity, String> {
 
-  List<CommentEntity> existsByPostId(String postId);
+  List<CommentEntity> findByPostId(String postId);
 
-  List<CommentEntity> existsByAccountId(String accountId);
+  List<CommentEntity> findByAccountId(String accountId);
 
   void deleteByAccountId(String accountId);
 
   void deleteByPostId(String postId);
 
-  List<CommentEntity> findByCommentIdAndIsAnswerTrue(String commentId);
+  List<CommentEntity> findByCommentIdAndAnswerTrue(String commentId);
 
 }

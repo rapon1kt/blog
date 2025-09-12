@@ -13,11 +13,11 @@ public interface CommentRepository {
 
   public List<Comment> findAll();
 
-  public List<Comment> findByCommentIdAndIsAnswerTrue(String commentId);
+  public List<Comment> findByCommentIdAndAnswerTrue(String commentId);
 
-  public List<Comment> existsByPostId(String postId);
+  public List<Comment> findByPostId(String postId);
 
-  public List<Comment> existsByAccountId(String accountId);
+  public List<Comment> findByAccountId(String accountId);
 
   public void deleteByAccountId(String accountId);
 
