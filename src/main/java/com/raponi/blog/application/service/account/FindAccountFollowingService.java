@@ -33,7 +33,7 @@ public class FindAccountFollowingService implements FindAccountFollowingUseCase 
     Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-    return this.followRepository.findByFollowerId(accountId).stream().map(Follow::followingId).toList();
+    return this.followRepository.findByFollowerId(accountId).stream().map(Follow::getFollowingId).toList();
   }
 
 }
