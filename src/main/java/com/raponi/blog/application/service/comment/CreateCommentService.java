@@ -16,6 +16,7 @@ import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;
 import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 import com.raponi.blog.presentation.mapper.CommentMapper;
 
 @Service
@@ -42,23 +43,28 @@ public class CreateCommentService implements CreateCommentUseCase {
 
   @Override
   public CommentResponseDTO handle(String accountId, String postId, CreateCommentRequestDTO requestDTO) {
-    this.postValidatorService.validatePostPresenceAndPrivate(postId);
-    Post post = this.postRepository.findById(postId).get();
+    boolean isValidPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
 
-    Optional<Account> author = this.accountRepository.findById(post.getAccountId());
-    boolean validAuthorAccount = this.accountValidatorService.verifyPresenceAndActive(author);
+    if (isValidPost) {
+      Post post = this.postRepository.findById(postId).get();
 
-    Optional<Account> account = this.accountRepository.findById(accountId);
-    boolean validAccount = this.accountValidatorService.verifyPresenceAndActive(account);
-    if (validAuthorAccount) {
-      if (validAccount) {
-        Comment createdComment = Comment.create(accountId, postId, requestDTO.getContent());
-        Comment savedComment = this.commentRepository.save(createdComment);
-        return this.commentMapper.toResponse(savedComment);
+      Optional<Account> author = this.accountRepository.findById(post.getAccountId());
+      boolean validAuthorAccount = this.accountValidatorService.verifyPresenceAndActive(author);
+
+      Optional<Account> account = this.accountRepository.findById(accountId);
+      boolean validAccount = this.accountValidatorService.verifyPresenceAndActive(account);
+      if (validAuthorAccount) {
+        if (validAccount) {
+          Comment createdComment = Comment.create(accountId, postId, requestDTO.getContent());
+          Comment savedComment = this.commentRepository.save(createdComment);
+          return this.commentMapper.toResponse(savedComment);
+        }
+        throw new AccessDeniedException("You can't release this action please active your account.");
       }
-      throw new AccessDeniedException("You can't release this action please active your account.");
+      throw new AccessDeniedException("The owner of this post has has their account disabled.");
     }
-    throw new AccessDeniedException("The owner of this post has has their account disabled.");
+    throw new ResourceNotFoundException("This post cannot be found");
+
   }
 
 }
