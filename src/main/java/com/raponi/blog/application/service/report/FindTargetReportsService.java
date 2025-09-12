@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.report.FindTargetReportsUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Report;
-import com.raponi.blog.infrastructure.persistence.repository.ReportRepository;
+import com.raponi.blog.domain.repository.ReportRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 
 @Service

@@ -6,7 +6,7 @@ import com.raponi.blog.application.usecase.report.CreateReportUseCase;
 import com.raponi.blog.domain.model.Report;
 import com.raponi.blog.domain.model.ReportTargetType;
 import com.raponi.blog.domain.repository.ReportableRepository;
-import com.raponi.blog.infrastructure.persistence.repository.ReportRepository;
+import com.raponi.blog.domain.repository.ReportRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.BusinessRuleException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
