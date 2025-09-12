@@ -13,9 +13,11 @@ public interface LikeRepository {
 
   public List<Like> findByAccountId(String accountId);
 
-  public boolean existsByPostIdAndAccountId(String postId, String accountId);
+  public List<Like> findByTargetId(String targetId);
 
-  public void deleteByPostIdAndAccountId(String postId, String accountId);
+  public boolean existsByTargetIdAndAccountId(String targetId, String accountId);
+
+  public void deleteByTargetIdAndAccountId(String targetId, String accountId);
 
   public void deleteByAccountId(String accountId);
 

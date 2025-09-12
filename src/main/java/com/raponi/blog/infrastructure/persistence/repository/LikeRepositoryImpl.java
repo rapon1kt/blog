@@ -32,13 +32,18 @@ public class LikeRepositoryImpl implements LikeRepository {
   }
 
   @Override
-  public void deleteByPostIdAndAccountId(String postId, String accountId) {
-    this.mongoRepository.deleteByPostIdAndAccountId(postId, accountId);
+  public List<Like> findByTargetId(String targetId) {
+    return this.mongoRepository.findByTargetId(targetId).stream().map(likeMapper::toDomain).toList();
   }
 
   @Override
-  public boolean existsByPostIdAndAccountId(String postId, String accountId) {
-    return this.mongoRepository.existsByPostIdAndAccountId(postId, accountId);
+  public void deleteByTargetIdAndAccountId(String targetId, String accountId) {
+    this.mongoRepository.deleteByTargetIdAndAccountId(targetId, accountId);
+  }
+
+  @Override
+  public boolean existsByTargetIdAndAccountId(String targetId, String accountId) {
+    return this.mongoRepository.existsByTargetIdAndAccountId(targetId, accountId);
   }
 
   @Override

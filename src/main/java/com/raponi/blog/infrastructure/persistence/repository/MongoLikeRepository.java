@@ -10,12 +10,14 @@ import com.raponi.blog.infrastructure.persistence.entity.LikeEntity;
 @Repository
 public interface MongoLikeRepository extends MongoRepository<LikeEntity, String> {
 
-  boolean existsByPostIdAndAccountId(String postId, String accountId);
+  boolean existsByTargetIdAndAccountId(String targetId, String accountId);
 
-  void deleteByPostIdAndAccountId(String postId, String accountId);
+  void deleteByTargetIdAndAccountId(String targetId, String accountId);
 
   void deleteByAccountId(String accountId);
 
   List<LikeEntity> findByAccountId(String accountId);
+
+  List<LikeEntity> findByTargetId(String targetId);
 
 }
