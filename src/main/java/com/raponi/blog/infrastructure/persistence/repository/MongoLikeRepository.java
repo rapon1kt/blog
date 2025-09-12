@@ -9,7 +9,6 @@ import com.raponi.blog.infrastructure.persistence.entity.LikeEntity;
 
 @Repository
 public interface MongoLikeRepository extends MongoRepository<LikeEntity, String> {
-  long countByPostId(String postId);
 
   boolean existsByPostIdAndAccountId(String postId, String accountId);
 
