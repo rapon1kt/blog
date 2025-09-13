@@ -45,12 +45,12 @@ public class ReportRepositoryImpl implements ReportRepository {
 
   @Override
   public boolean existsByReporterIdAndTargetId(String reporterId, String targetId) {
-    return this.existsByReporterIdAndTargetId(reporterId, targetId);
+    return this.mongoRepository.existsByReporterIdAndTargetId(reporterId, targetId);
   }
 
   @Override
   public boolean existsByTargetIdAndStatus(String targetId, ReportStatus status) {
-    return this.existsByTargetIdAndStatus(targetId, status);
+    return this.mongoRepository.existsByTargetIdAndStatus(targetId, status);
   }
 
   @Override
