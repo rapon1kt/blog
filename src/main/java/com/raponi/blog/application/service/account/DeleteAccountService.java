@@ -16,16 +16,19 @@ public class DeleteAccountService implements DeleteAccountUseCase {
   private final LikeRepository likeRepository;
   private final FollowRepository followRepository;
   private final CommentRepository commentRepository;
+  private final ReportRepository reportRepository;
   private final AccountValidatorService accountValidatorService;
 
   public DeleteAccountService(AccountRepository accountRepository, PostRepository postRepository,
       LikeRepository likeRepository, FollowRepository followRepository, CommentRepository commentRepository,
+      ReportRepository reportRepository,
       AccountValidatorService accountValidatorService) {
     this.accountRepository = accountRepository;
     this.postRepository = postRepository;
     this.likeRepository = likeRepository;
     this.followRepository = followRepository;
     this.commentRepository = commentRepository;
+    this.reportRepository = reportRepository;
     this.accountValidatorService = accountValidatorService;
   }
 
@@ -40,6 +43,7 @@ public class DeleteAccountService implements DeleteAccountUseCase {
     this.followRepository.deleteByFollowerId(account.getId());
     this.followRepository.deleteByFollowingId(account.getId());
     this.commentRepository.deleteByAccountId(account.getId());
+    this.reportRepository.deleteByReporterId(account.getId());
     return "Account with id equals " + account.getId() + " deleted with success";
   }
 
