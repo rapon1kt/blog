@@ -25,6 +25,8 @@ public interface ReportRepository {
 
   public boolean existsByReporterIdAndTargetId(String reporterId, String targetId);
 
+  public boolean existsByTargetIdAndStatus(String targetId, ReportStatus status);
+
   public void deleteByStatus(ReportStatus status);
 
   public void deleteByTargetId(String targetId);

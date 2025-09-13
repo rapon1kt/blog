@@ -49,6 +49,11 @@ public class ReportRepositoryImpl implements ReportRepository {
   }
 
   @Override
+  public boolean existsByTargetIdAndStatus(String targetId, ReportStatus status) {
+    return this.existsByTargetIdAndStatus(targetId, status);
+  }
+
+  @Override
   public Optional<Report> findById(String id) {
     Optional<ReportEntity> reportEntity = this.mongoRepository.findById(id);
     return Optional.of(reportEntity.map(reportMapper::toDomain).orElse(null));

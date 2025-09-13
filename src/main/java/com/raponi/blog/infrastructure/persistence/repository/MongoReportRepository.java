@@ -22,6 +22,8 @@ public interface MongoReportRepository extends MongoRepository<ReportEntity, Str
 
   boolean existsByReporterIdAndTargetId(String reporterId, String targetId);
 
+  boolean existsByTargetIdAndStatus(String targetId, ReportStatus status);
+
   void deleteByStatus(ReportStatus status);
 
   void deleteByTargetId(String targetId);
