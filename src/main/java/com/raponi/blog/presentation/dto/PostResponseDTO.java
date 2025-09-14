@@ -8,6 +8,7 @@ public class PostResponseDTO {
   private String content;
   private String accountId;
   private Instant createdAt;
+  private long likeCount;
 
   public String getId() {
     return id;
@@ -47,6 +48,14 @@ public class PostResponseDTO {
 
   public void setCreatedAt(Instant createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public long getLikeCount() {
+    return likeCount;
+  }
+
+  public void setLikeCount(long likeCount) {
+    this.likeCount = likeCount;
   }
 
 }
