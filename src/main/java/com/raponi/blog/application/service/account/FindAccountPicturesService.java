@@ -33,8 +33,8 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
   }
 
   @Override
-  public byte[] handle(String accountId) throws IOException {
-    Optional<Account> account = this.accountRepository.findById(accountId);
+  public byte[] handle(String username) throws IOException {
+    Optional<Account> account = this.accountRepository.findByUsername(username);
     boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
