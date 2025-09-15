@@ -42,7 +42,7 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
       throw new ResourceNotFoundException("This account don't have a profile picture.");
 
     GridFSFile image = this.gridFsTemplate
-        .findOne(new Query(Criteria.where("_id").is(new ObjectId())));
+        .findOne(new Query(Criteria.where("_id").is(new ObjectId(account.get().getPicture()))));
     GridFsResource imageResource = gridFsTemplate.getResource(image);
     return imageResource.getInputStream().readAllBytes();
   }
