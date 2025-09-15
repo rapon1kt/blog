@@ -42,7 +42,7 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .authorizeHttpRequests(registry -> {
-          registry.requestMatchers("/req/**").permitAll();
+          registry.requestMatchers("/req/**", "/public/**").permitAll();
           registry.anyRequest().authenticated();
         })
         .httpBasic(Customizer.withDefaults())
