@@ -31,19 +31,20 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
   }
 
   @Override
-  public List<PostResponseDTO> handle(String accountId) {
-    Optional<Account> acc = this.accountRepository.findById(accountId);
+  public List<PostResponseDTO> handle(String username) {
+    Optional<Account> acc = this.accountRepository.findByUsername(username);
     Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
-    Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority(accountId);
+    Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority(acc.get().getId());
 
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
 
     if (verifiedAuthority) {
-      return this.postRepository.findByAccountId(accountId).stream().map(postMapper::toResponse).toList();
+      return this.postRepository.findByAccountId(acc.get().getId()).stream().map(postMapper::toResponse).toList();
     }
 
-    return this.postRepository.findByAccountIdAndPrivateStatusFalse(accountId).stream().map(postMapper::toResponse)
+    return this.postRepository.findByAccountIdAndPrivateStatusFalse(acc.get().getId()).stream()
+        .map(postMapper::toResponse)
         .toList();
   }
 
