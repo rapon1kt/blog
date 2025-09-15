@@ -28,12 +28,12 @@ public class FindAccountFollowersService implements FindAccountFollowersUseCase 
   }
 
   @Override
-  public List<String> handle(String accountId) {
-    Optional<Account> acc = this.accountRepository.findById(accountId);
+  public List<String> handle(String username) {
+    Optional<Account> acc = this.accountRepository.findByUsername(username);
     Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-    return this.followRepository.findByFollowingId(accountId).stream().map(Follow::getFollowerId).toList();
+    return this.followRepository.findByFollowingId(username).stream().map(Follow::getFollowerId).toList();
   }
 
 }
