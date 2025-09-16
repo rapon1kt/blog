@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.PostValidatorUseCase;
 import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.PostRepository;
 
 @Service
@@ -24,7 +25,7 @@ public class PostValidatorService implements PostValidatorUseCase {
   public boolean validatePostPresenceAndPrivate(String postId) {
     Optional<Post> post = this.postRepository.findById(postId);
     if (post.isPresent()) {
-      if (post.get().isPrivateStatus()) {
+      if (!post.get().getPostVisibility().equals(PostVisibility.PUBLIC)) {
         if (this.accountValidatorService.verifyAuthority(post.get().getAccountId())) {
           return true;
         }
