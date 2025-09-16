@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.post.FindAllPostsUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.dto.PostResponseDTO;
 import com.raponi.blog.presentation.mapper.PostMapper;
@@ -30,7 +31,8 @@ public class FindAllPostsService implements FindAllPostsUseCase {
     if (this.accountValidatorService.isAdmin())
       return this.postRepository.findAll().stream().map(postMapper::toResponse).toList();
     else
-      return this.postRepository.findByPrivateStatus(false).stream().map(postMapper::toResponse).toList();
+      return this.postRepository.findByPostVisibility(PostVisibility.PUBLIC).stream().map(postMapper::toResponse)
+          .toList();
   };
 
 }
