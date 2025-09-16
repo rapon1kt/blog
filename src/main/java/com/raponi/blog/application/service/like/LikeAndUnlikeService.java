@@ -47,12 +47,11 @@ public class LikeAndUnlikeService implements LikeAndUnlikeUseCase {
       Like like = Like.create(accountId, targetId, type);
       this.likeRepository.save(like);
       likable.incrementLikeCount();
-
-      this.likableRepository.save(likable);
     } else {
       this.likeRepository.deleteByTargetIdAndAccountId(targetId, accountId);
       likable.decrementLikeCount();
     }
+    this.likableRepository.save(likable);
 
     return new LikeResponseDTO(likable.getId(), likable.getLikeCount());
   };
