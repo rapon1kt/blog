@@ -7,7 +7,7 @@ public class Post implements Reportable, Likable {
   private String title;
   private String content;
   private PostVisibility postVisibility;
-  private long likeCount = 0;
+  private long likeCount;
   private String accountId;
   private Instant createdAt;
   private Instant modifiedAt;
@@ -101,15 +101,19 @@ public class Post implements Reportable, Likable {
     return this.likeCount;
   }
 
+  public void setLikeCount(long likeCount) {
+    this.likeCount = likeCount;
+  }
+
   @Override
   public void incrementLikeCount() {
-    this.likeCount++;
+    this.setLikeCount(this.likeCount + 1);
   }
 
   @Override
   public void decrementLikeCount() {
     if (this.likeCount > 0)
-      this.likeCount--;
+      this.setLikeCount(this.likeCount - 1);
   }
 
 }
