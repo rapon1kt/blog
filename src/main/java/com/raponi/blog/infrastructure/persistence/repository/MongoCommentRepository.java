@@ -14,6 +14,8 @@ public interface MongoCommentRepository extends MongoRepository<CommentEntity, S
 
   List<CommentEntity> findByAccountId(String accountId);
 
+  void deleteByAccountIdAndPostId(String accountId, String postId);
+
   void deleteByAccountId(String accountId);
 
   void deleteByPostId(String postId);

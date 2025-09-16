@@ -19,6 +19,8 @@ public interface CommentRepository {
 
   public List<Comment> findByAccountId(String accountId);
 
+  public void deleteByAccountIdAndPostId(String accountId, String postId);
+
   public void deleteByAccountId(String accountId);
 
   public void deleteByPostId(String postId);

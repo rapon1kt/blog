@@ -56,6 +56,11 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
+  public void deleteByAccountIdAndPostId(String accountId, String postId) {
+    this.mongoRepository.deleteByAccountIdAndPostId(accountId, postId);
+  }
+
+  @Override
   public void deleteByPostId(String postId) {
     this.mongoRepository.deleteByPostId(postId);
   }
