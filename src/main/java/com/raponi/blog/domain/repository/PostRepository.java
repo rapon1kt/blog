@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.domain.model.PostVisibility;
 
 public interface PostRepository {
 
@@ -15,9 +16,9 @@ public interface PostRepository {
 
   public List<Post> findByAccountId(String accountId);
 
-  public List<Post> findByPrivateStatus(boolean privateStatus);
+  public List<Post> findByPostVisibility(PostVisibility postVisibility);
 
-  public List<Post> findByAccountIdAndPrivateStatusFalse(String accountId);
+  public List<Post> findByAccountIdAndPostVisibility(String accountId, PostVisibility postVisibility);
 
   public void deleteById(String id);
 

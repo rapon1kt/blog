@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.infrastructure.persistence.entity.PostEntity;
 import com.raponi.blog.presentation.mapper.PostMapper;
@@ -55,14 +56,15 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public List<Post> findByAccountIdAndPrivateStatusFalse(String accountId) {
-    return this.mongoRepository.findByAccountIdAndPrivateStatusFalse(accountId).stream().map(postMapper::toDomain)
+  public List<Post> findByAccountIdAndPostVisibility(String accountId, PostVisibility postVisibility) {
+    return this.mongoRepository.findByAccountIdAndPostVisibility(accountId, postVisibility).stream()
+        .map(postMapper::toDomain)
         .toList();
   }
 
   @Override
-  public List<Post> findByPrivateStatus(boolean privateStatus) {
-    return this.mongoRepository.findByPrivateStatus(privateStatus).stream().map(postMapper::toDomain).toList();
+  public List<Post> findByPostVisibility(PostVisibility postVisibility) {
+    return this.mongoRepository.findByPostVisibility(postVisibility).stream().map(postMapper::toDomain).toList();
   }
 
 }
