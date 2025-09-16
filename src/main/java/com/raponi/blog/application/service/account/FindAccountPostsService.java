@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.account.FindAccountPostsUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.dto.PostResponseDTO;
@@ -43,7 +44,7 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
       return this.postRepository.findByAccountId(acc.get().getId()).stream().map(postMapper::toResponse).toList();
     }
 
-    return this.postRepository.findByAccountIdAndPrivateStatusFalse(acc.get().getId()).stream()
+    return this.postRepository.findByAccountIdAndPostVisibility(acc.get().getId(), PostVisibility.PUBLIC).stream()
         .map(postMapper::toResponse)
         .toList();
   }
