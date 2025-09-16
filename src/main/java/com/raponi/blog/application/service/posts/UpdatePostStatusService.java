@@ -8,6 +8,7 @@ import com.raponi.blog.application.usecase.post.UpdatePostStatusUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.dto.PostResponseDTO;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
@@ -31,7 +32,7 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
   }
 
   @Override
-  public PostResponseDTO handle(String accountId, String postId) {
+  public PostResponseDTO handle(String accountId, String postId, PostVisibility newVisibility) {
     boolean validatedPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
     if (!validatedPost)
       throw new ResourceNotFoundException("This post cannot be found.");
@@ -42,7 +43,7 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
     Boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
-    post.setPrivateStatus(post.isPrivateStatus() ? false : true);
+    post.setPostVisibility(newVisibility);
     post.setModifiedAt(Instant.now());
     this.postRepository.save(post);
     PostResponseDTO responsePost = this.postMapper.toResponse(post);
