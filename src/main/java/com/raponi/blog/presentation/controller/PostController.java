@@ -1,9 +1,11 @@
 package com.raponi.blog.presentation.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.posts.*;
+import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.presentation.dto.CreatePostRequestDTO;
 
 import jakarta.validation.Valid;
@@ -37,16 +39,15 @@ public class PostController {
     return ResponseEntity.status(201).body(this.createPostService.handle(requestDTO, auth.getName()));
   }
 
-  @PutMapping("/{accountId}/{postId}")
-  public ResponseEntity<?> updatePostStatus(@PathVariable("accountId") String accountId,
-      @PathVariable("postId") String postId) {
-    return ResponseEntity.ok(this.updatePostStatusService.handle(accountId, postId));
+  @PutMapping("/{postId}")
+  public ResponseEntity<?> updatePostStatus(@PathVariable("postId") String postId, Authentication auth,
+      @RequestParam("visibility") PostVisibility visibility) {
+    return ResponseEntity.ok(this.updatePostStatusService.handle(auth.getName(), postId, visibility));
   }
 
-  @DeleteMapping("/{accountId}/{postId}")
-  public ResponseEntity<?> deletePostById(@PathVariable("accountId") String accountId,
-      @PathVariable("postId") String postId) {
-    return ResponseEntity.ok(this.deletePostService.handle(accountId, postId));
+  @DeleteMapping("/{postId}")
+  public ResponseEntity<?> deletePostById(@PathVariable("postId") String postId, Authentication auth) {
+    return ResponseEntity.ok(this.deletePostService.handle(auth.getName(), postId));
   }
 
 }
