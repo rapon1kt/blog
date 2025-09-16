@@ -25,7 +25,7 @@ public class LikeController {
   @PostMapping("/{targetId}")
   public ResponseEntity<?> likeAndUnlike(@PathVariable("targetId") String targetId, @RequestParam LikeTargetType type,
       Authentication auth) {
-    return ResponseEntity.status(201).body(this.likeAndUnlikeService.handle(auth.getName(), targetId, type));
+    return ResponseEntity.status(200).body(this.likeAndUnlikeService.handle(auth.getName(), targetId, type));
   }
 
 }
