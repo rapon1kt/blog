@@ -6,18 +6,19 @@ public class Post implements Reportable, Likable {
   private String id;
   private String title;
   private String content;
-  private boolean privateStatus;
+  private PostVisibility postVisibility;
   private long likeCount = 0;
   private String accountId;
   private Instant createdAt;
   private Instant modifiedAt;
 
-  public Post(String id, String title, String content, boolean privateStatus, String accountId, Instant createdAt,
+  public Post(String id, String title, String content, PostVisibility postVisibility, String accountId,
+      Instant createdAt,
       Instant modifiedAt) {
     this.id = id;
     this.title = title;
     this.content = content;
-    this.privateStatus = privateStatus;
+    this.postVisibility = postVisibility;
     this.accountId = accountId;
     this.createdAt = createdAt;
     this.modifiedAt = modifiedAt;
@@ -25,7 +26,7 @@ public class Post implements Reportable, Likable {
 
   public static Post create(String accountId, String title, String content) {
     Instant instant = Instant.now();
-    return new Post(null, title, content, false, accountId, instant, instant);
+    return new Post(null, title, content, PostVisibility.PUBLIC, accountId, instant, instant);
   }
 
   @Override
@@ -53,12 +54,12 @@ public class Post implements Reportable, Likable {
     this.content = content;
   }
 
-  public boolean isPrivateStatus() {
-    return privateStatus;
+  public PostVisibility getPostVisibility() {
+    return postVisibility;
   }
 
-  public void setPrivateStatus(boolean privateStatus) {
-    this.privateStatus = privateStatus;
+  public void setPostVisibility(PostVisibility postVisibility) {
+    this.postVisibility = postVisibility;
   }
 
   public String getAccountId() {
