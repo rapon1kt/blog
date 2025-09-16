@@ -5,6 +5,8 @@ import java.time.Instant;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.raponi.blog.domain.model.PostVisibility;
+
 import lombok.Data;
 
 @Data
@@ -14,7 +16,7 @@ public class PostEntity {
   private String id;
   private String title;
   private String content;
-  private boolean privateStatus;
+  private PostVisibility postVisibility;
   private long likeCount;
   private String accountId;
   private Instant createdAt;
