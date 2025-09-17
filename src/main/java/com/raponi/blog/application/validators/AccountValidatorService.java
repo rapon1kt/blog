@@ -2,78 +2,64 @@ package com.raponi.blog.application.validators;
 
 import java.util.Optional;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.AccountValidatorUseCase;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.domain.repository.AccountRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.InvalidParamException;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class AccountValidatorService implements AccountValidatorUseCase {
 
-  private final AccountRepository accountRepository;
-  private final PasswordEncoder passwordEncoder;
+  private final MongoTemplate mongoTemplate;
 
-  public AccountValidatorService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
-    this.accountRepository = accountRepository;
-    this.passwordEncoder = passwordEncoder;
+  public AccountValidatorService(MongoTemplate mongoTemplate) {
+    this.mongoTemplate = mongoTemplate;
   }
 
   private Authentication getAuth() {
     return SecurityContextHolder.getContext().getAuthentication();
   }
 
-  public Account getAccountWithPasswordConfirmation(String accountId, String password) {
+  public boolean verifyAccountWithAccountId(String accountId) {
+    Boolean verifiedAccount = verifyPresenceAndActive("_id", accountId);
+    if (verifiedAccount) {
+      Boolean authorized = verifyAuthority("_id", accountId);
+      if (!authorized)
+        return false;
 
-    String tokenId = this.getAuth().getName();
-
-    Optional<Account> acc = this.accountRepository.findById(accountId);
-    Boolean verifiedAccount = verifyPresenceAndActive(acc);
-    Boolean authorized = verifyAuthority(accountId);
-    Account requestAccount = this.accountRepository.findById(tokenId).get();
-    if (authorized && verifiedAccount) {
-      Boolean passwordConfirmation = passwordMatches(password, requestAccount.getPassword());
-      if (passwordConfirmation) {
-        return acc.get();
-      }
-      throw new InvalidParamException("Your password is incorrect.");
+      return true;
     }
-    throw new AccessDeniedException("You don't have permission to do this.");
+    return false;
   }
 
-  public Account getAccountByAccountId(String accountId) {
-    Optional<Account> acc = this.accountRepository.findById(accountId);
-    Boolean verifiedAccount = verifyPresenceAndActive(acc);
-    Boolean authorized = verifyAuthority(accountId);
-    if (authorized && verifiedAccount) {
-      return acc.get();
+  public boolean verifyAccountWithEmail(String email) {
+    Boolean verifiedAccount = verifyPresenceAndActive("email", email);
+    if (verifiedAccount) {
+      Boolean authorized = verifyAuthority("email", email);
+      if (!authorized)
+        return false;
+
+      return true;
     }
-    throw new AccessDeniedException("You don't have permission to do this.");
+    return false;
   }
 
-  public Account getAccountByEmail(String email) {
-    Optional<Account> acc = this.accountRepository.findByEmail(email);
-    Boolean verifiedAccount = verifyPresenceAndActive(acc);
-    Boolean authorized = verifyAuthority(acc.get().getId());
-    if (authorized && verifiedAccount) {
-      return acc.get();
-    }
-    throw new AccessDeniedException("You don't have permission to do this.");
-  }
+  public boolean verifyAccountWithUsername(String username) {
+    Boolean verifiedAccount = verifyPresenceAndActive("username", username);
+    if (verifiedAccount) {
+      Boolean authorized = verifyAuthority("username", username);
+      if (!authorized)
+        return false;
 
-  public Account getAccountByUsername(String username) {
-    Optional<Account> acc = this.accountRepository.findByUsername(username);
-    Boolean verifiedAccount = verifyPresenceAndActive(acc);
-    Boolean authorized = verifyAuthority(acc.get().getId());
-    if (authorized && verifiedAccount) {
-      return acc.get();
+      return true;
     }
-    throw new AccessDeniedException("You don't have permission to do this.");
+    return false;
   }
 
   public boolean isAdmin() {
@@ -81,8 +67,11 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     return role.equals("ROLE_ADMIN");
   }
 
-  public boolean verifyAuthority(String accountId) {
-    if (!accountId.equals(this.getAuth().getName())) {
+  public boolean verifyAuthority(String key, String value) {
+    Query query = new Query(Criteria.where(key).is(value));
+    Account account = Optional.of(this.mongoTemplate.findOne(query, Account.class))
+        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
+    if (!account.getId().equals(this.getAuth().getName())) {
       if (!isAdmin()) {
         return false;
       }
@@ -91,7 +80,9 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     return true;
   }
 
-  public boolean verifyPresenceAndActive(Optional<Account> acc) {
+  public boolean verifyPresenceAndActive(String key, String value) {
+    Query query = new Query(Criteria.where(key).is(value));
+    Optional<Account> acc = Optional.of(this.mongoTemplate.findOne(query, Account.class));
     if (acc.isPresent()) {
       if (isAdmin()) {
         return true;
@@ -102,10 +93,6 @@ public class AccountValidatorService implements AccountValidatorUseCase {
       return true;
     }
     return false;
-  }
-
-  private boolean passwordMatches(String password, String hashedPassword) {
-    return this.passwordEncoder.matches(password, hashedPassword);
   }
 
 }
