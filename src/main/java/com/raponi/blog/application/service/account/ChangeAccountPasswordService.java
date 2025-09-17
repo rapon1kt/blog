@@ -8,7 +8,9 @@ import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.UpdateAccountPasswordRequestDTO;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.InvalidParamException;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCase {
@@ -26,7 +28,14 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
 
   @Override
   public String handle(String accountId, UpdateAccountPasswordRequestDTO requestDTO) {
-    Account acc = this.accountValidatorService.getAccountWithPasswordConfirmation(accountId, requestDTO.getPassword());
+    Account acc = this.accountRepository.findById(accountId)
+        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
+    boolean isValidAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
+    if (!isValidAccount)
+      throw new AccessDeniedException("You don't have permission to do this.");
+    boolean correctOldPassword = passwordEncoder.matches(acc.getPassword(), requestDTO.getPassword());
+    if (!correctOldPassword)
+      throw new InvalidParamException("Your password does not match the system password.");
     verifyNewPassword(requestDTO.getNewPassword(), requestDTO.getPassword());
     acc.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
     this.accountRepository.save(acc);
