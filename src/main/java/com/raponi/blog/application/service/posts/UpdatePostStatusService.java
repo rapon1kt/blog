@@ -40,7 +40,7 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
     if (!post.getAccountId().equals(accountId)) {
       throw new ResourceNotFoundException("This post does not belong to this user.");
     }
-    Boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
+    Boolean authorized = this.accountValidatorService.verifyAccountWithAccountId(accountId);
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
     post.setPostVisibility(newVisibility);

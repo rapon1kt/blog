@@ -1,16 +1,12 @@
 package com.raponi.blog.application.service.comment;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.comment.CreateCommentUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
-import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.model.Post;
-import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;
@@ -23,18 +19,16 @@ import com.raponi.blog.presentation.mapper.CommentMapper;
 public class CreateCommentService implements CreateCommentUseCase {
 
   private final CommentRepository commentRepository;
-  private final AccountRepository accountRepository;
   private final PostRepository postRepository;
   private final AccountValidatorService accountValidatorService;
   private final PostValidatorService postValidatorService;
   private final CommentMapper commentMapper;
 
-  public CreateCommentService(CommentRepository commentRepository, AccountRepository accountRepository,
+  public CreateCommentService(CommentRepository commentRepository,
       PostRepository postRepository,
       AccountValidatorService accountValidatorService,
       PostValidatorService postValidatorService, CommentMapper commentMapper) {
     this.commentRepository = commentRepository;
-    this.accountRepository = accountRepository;
     this.postRepository = postRepository;
     this.accountValidatorService = accountValidatorService;
     this.postValidatorService = postValidatorService;
@@ -47,12 +41,8 @@ public class CreateCommentService implements CreateCommentUseCase {
 
     if (isValidPost) {
       Post post = this.postRepository.findById(postId).get();
-
-      Optional<Account> author = this.accountRepository.findById(post.getAccountId());
-      boolean validAuthorAccount = this.accountValidatorService.verifyPresenceAndActive(author);
-
-      Optional<Account> account = this.accountRepository.findById(accountId);
-      boolean validAccount = this.accountValidatorService.verifyPresenceAndActive(account);
+      boolean validAuthorAccount = this.accountValidatorService.verifyPresenceAndActive("_id", post.getAccountId());
+      boolean validAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
       if (validAuthorAccount) {
         if (validAccount) {
           Comment createdComment = Comment.create(accountId, postId, requestDTO.getContent());

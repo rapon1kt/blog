@@ -15,6 +15,7 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.AccountResponseDTO;
 import com.raponi.blog.presentation.dto.UpdateAccountInfosRequestDTO;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.InvalidParamException;
 import com.raponi.blog.presentation.mapper.AccountMapper;
 
@@ -41,7 +42,12 @@ public class UpdateAccountInfosService implements UpdateAccountInfosUseCase {
   @Override
   public AccountResponseDTO handle(String accountId, UpdateAccountInfosRequestDTO requestDTO, MultipartFile image)
       throws IOException {
-    Account accountToUpdate = this.accountValidatorService.getAccountByAccountId(accountId);
+    boolean isAccountValid = this.accountValidatorService.verifyAccountWithAccountId(accountId);
+
+    if (!isAccountValid)
+      throw new AccessDeniedException("You don't have permission to do this.");
+
+    Account accountToUpdate = this.accountRepository.findById(accountId).get();
 
     String imageId = gridFsTemplate.store(
         image.getInputStream(),

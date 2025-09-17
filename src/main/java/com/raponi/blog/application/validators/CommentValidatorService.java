@@ -5,24 +5,20 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.CommentValidatorUseCase;
-import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.CommentRepository;
 
 @Service
 public class CommentValidatorService implements CommentValidatorUseCase {
 
   private final CommentRepository commentRepository;
-  private final AccountRepository accountRepository;
   private final AccountValidatorService accountValidatorService;
   private final PostValidatorService postValidatorService;
 
-  public CommentValidatorService(CommentRepository commentRepository, AccountRepository accountRepository,
+  public CommentValidatorService(CommentRepository commentRepository,
       AccountValidatorService accountValidatorService,
       PostValidatorService postValidatorService) {
     this.commentRepository = commentRepository;
-    this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
     this.postValidatorService = postValidatorService;
   }
@@ -41,8 +37,7 @@ public class CommentValidatorService implements CommentValidatorUseCase {
 
   private boolean isValidAccount(String commentId) {
     Comment comment = this.commentRepository.findById(commentId).get();
-    Optional<Account> acc = this.accountRepository.findById(comment.getAccountId());
-    return this.accountValidatorService.verifyPresenceAndActive(acc);
+    return this.accountValidatorService.verifyPresenceAndActive("_id", comment.getAccountId());
   }
 
   private boolean isValidPost(String commentId) {

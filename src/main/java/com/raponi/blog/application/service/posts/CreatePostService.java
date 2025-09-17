@@ -4,11 +4,11 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.post.CreatePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
-import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.dto.CreatePostRequestDTO;
 import com.raponi.blog.presentation.dto.PostResponseDTO;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.mapper.PostMapper;
 
 @Service
@@ -27,8 +27,10 @@ public class CreatePostService implements CreatePostUseCase {
 
   @Override
   public PostResponseDTO handle(CreatePostRequestDTO requestDTO, String tokenId) {
-    Account account = this.accountValidatorService.getAccountByAccountId(tokenId);
-    Post post = Post.create(account.getId(), requestDTO.getTitle(), requestDTO.getContent());
+    boolean isValidAccount = this.accountValidatorService.verifyAccountWithAccountId(tokenId);
+    if (!isValidAccount)
+      throw new AccessDeniedException("You don't have permission to do this.");
+    Post post = Post.create(tokenId, requestDTO.getTitle(), requestDTO.getContent());
     Post savedPost = this.postRepository.save(post);
     PostResponseDTO responsePost = this.postMapper.toResponse(savedPost);
     return responsePost;

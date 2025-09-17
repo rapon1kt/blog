@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.account.FindAccountLikesUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
-import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Like;
 import com.raponi.blog.domain.repository.LikeRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 
 @Service
 public class FindAccountLikesService implements FindAccountLikesUseCase {
@@ -23,8 +23,10 @@ public class FindAccountLikesService implements FindAccountLikesUseCase {
 
   @Override
   public List<Like> handle(String accountId) {
-    Account account = this.accountValidatorService.getAccountByAccountId(accountId);
-    return this.likeRepository.findByAccountId(account.getId());
+    boolean isValidAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
+    if (!isValidAccount)
+      throw new AccessDeniedException("You don't have permission to view the likes of this account.");
+    return this.likeRepository.findByAccountId(accountId);
   }
 
 }

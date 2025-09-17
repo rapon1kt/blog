@@ -1,7 +1,6 @@
 package com.raponi.blog.application.service.account;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -33,18 +32,16 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
 
   @Override
   public List<PostResponseDTO> handle(String username) {
-    Optional<Account> acc = this.accountRepository.findByUsername(username);
-    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(acc);
-    Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority(acc.get().getId());
-
+    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive("username", username);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-
+    Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority("username", username);
+    Account acc = this.accountRepository.findByUsername(username).get();
     if (verifiedAuthority) {
-      return this.postRepository.findByAccountId(acc.get().getId()).stream().map(postMapper::toResponse).toList();
+      return this.postRepository.findByAccountId(acc.getId()).stream().map(postMapper::toResponse).toList();
     }
 
-    return this.postRepository.findByAccountIdAndPostVisibility(acc.get().getId(), PostVisibility.PUBLIC).stream()
+    return this.postRepository.findByAccountIdAndPostVisibility(acc.getId(), PostVisibility.PUBLIC).stream()
         .map(postMapper::toResponse)
         .toList();
   }

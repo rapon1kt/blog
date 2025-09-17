@@ -28,8 +28,8 @@ public class UpdateAccountStatusService implements ChangeStatusUseCase {
 
   @Override
   public AccountResponseDTO handle(String accountId) {
-    Boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
-    if (!authorized)
+    Boolean isValidAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
+    if (!isValidAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
     Account account = this.accountRepository.findById(accountId).get();
     account.setActive(account.isActive() ? false : true);

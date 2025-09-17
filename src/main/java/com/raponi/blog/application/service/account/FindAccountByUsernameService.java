@@ -1,7 +1,5 @@
 package com.raponi.blog.application.service.account;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.account.FindAccountByUsernameUseCase;
@@ -28,11 +26,11 @@ public class FindAccountByUsernameService implements FindAccountByUsernameUseCas
 
   @Override
   public PublicAccountResponseDTO handle(String username) {
-    Optional<Account> account = this.accountRepository.findByUsername(username);
-    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
+    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive("username", username);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-    PublicAccountResponseDTO responseAccount = mapper.toPublicAccountResponseDTO(account.get());
+    Account account = this.accountRepository.findByUsername(username).get();
+    PublicAccountResponseDTO responseAccount = mapper.toPublicAccountResponseDTO(account);
     return responseAccount;
   }
 

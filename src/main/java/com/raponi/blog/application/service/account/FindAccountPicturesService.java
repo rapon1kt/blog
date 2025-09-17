@@ -1,7 +1,6 @@
 package com.raponi.blog.application.service.account;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -34,15 +33,16 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
 
   @Override
   public byte[] handle(String username) throws IOException {
-    Optional<Account> account = this.accountRepository.findByUsername(username);
-    boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive(account);
+    boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive("username", username);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-    if (account.get().getPicture().isEmpty() || account.get().getPicture().equals(null))
+
+    Account account = this.accountRepository.findByUsername(username).get();
+    if (account.getPicture().isEmpty() || account.getPicture().equals(null))
       throw new ResourceNotFoundException("This account don't have a profile picture.");
 
     GridFSFile image = this.gridFsTemplate
-        .findOne(new Query(Criteria.where("_id").is(new ObjectId(account.get().getPicture()))));
+        .findOne(new Query(Criteria.where("_id").is(new ObjectId(account.getPicture()))));
     GridFsResource imageResource = gridFsTemplate.getResource(image);
     return imageResource.getInputStream().readAllBytes();
   }

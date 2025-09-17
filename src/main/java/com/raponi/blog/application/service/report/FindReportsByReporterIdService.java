@@ -23,7 +23,7 @@ public class FindReportsByReporterIdService implements FindReportsByReporterIdUs
   }
 
   public List<Report> handle(String reporterId) {
-    boolean isAuthorized = this.accountValidatorService.verifyAuthority(reporterId);
+    boolean isAuthorized = this.accountValidatorService.verifyAccountWithAccountId(reporterId);
     if (!isAuthorized)
       throw new AccessDeniedException("You cannot see the reports of this account.");
     return this.reportRepository.findByReporterId(reporterId);

@@ -35,7 +35,7 @@ public class DeletePostService implements DeletePostUseCase {
     if (!post.getAccountId().equals(accountId)) {
       throw new InvalidParamException("This post does not belong to this user.");
     }
-    boolean authorized = this.accountValidatorService.verifyAuthority(accountId);
+    boolean authorized = this.accountValidatorService.verifyAccountWithAccountId(accountId);
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
     this.postRepository.deleteById(post.getId());
