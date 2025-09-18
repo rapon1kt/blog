@@ -3,6 +3,7 @@ package com.raponi.blog.presentation.controller;
 import java.io.IOException;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,13 @@ import com.raponi.blog.presentation.dto.DeleteAccountRequestDTO;
 import com.raponi.blog.presentation.dto.UpdateAccountInfosRequestDTO;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
 
+  private BlockAndUnblockAccountService blockAccountService;
   private FindAllAccountsService findAllService;
   private FindAccountByIdService findAccountByIdService;
   private FindAccountByEmailService findAccountByEmailService;
@@ -38,7 +41,7 @@ public class AccountController {
       UpdateAccountInfosService updateAccountInfosService, DeleteAccountService deleteAccountService,
       ChangeAccountPasswordService changeAccountPasswordService,
       UpdateAccountStatusService updateAccountStatusService,
-      FindAccountLikesService findAccountLikesService) {
+      FindAccountLikesService findAccountLikesService, BlockAndUnblockAccountService blockAccountService) {
     this.findAllService = findAllService;
     this.findAccountByIdService = findAccountByIdService;
     this.findAccountByEmailService = findAccountByEmailService;
@@ -47,6 +50,7 @@ public class AccountController {
     this.changeAccountPasswordService = changeAccountPasswordService;
     this.updateAccountStatusService = updateAccountStatusService;
     this.findAccountLikesService = findAccountLikesService;
+    this.blockAccountService = blockAccountService;
   }
 
   @GetMapping
@@ -92,4 +96,10 @@ public class AccountController {
   public ResponseEntity<?> getAccountLikes(@PathVariable("accountId") String accountId) {
     return ResponseEntity.ok(this.findAccountLikesService.handle(accountId));
   }
+
+  @PostMapping("/{blockedId}/block")
+  public ResponseEntity<?> blockAccount(@PathVariable("blockedId") String blockedId, Authentication auth) {
+    return ResponseEntity.status(201).body(this.blockAccountService.handle(auth.getName(), blockedId));
+  }
+
 }
