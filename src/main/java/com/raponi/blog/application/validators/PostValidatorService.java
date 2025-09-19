@@ -26,7 +26,7 @@ public class PostValidatorService implements PostValidatorUseCase {
     Optional<Post> post = this.postRepository.findById(postId);
     if (post.isPresent()) {
       if (!post.get().getPostVisibility().equals(PostVisibility.PUBLIC)) {
-        if (this.accountValidatorService.verifyAuthority("_id", post.get().getAccountId())) {
+        if (this.accountValidatorService.verifyAuthority("_id", post.get().getAuthorId())) {
           return true;
         }
         return false;

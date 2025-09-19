@@ -30,7 +30,7 @@ public class DeleteCommentService implements DeleteCommentUseCase {
     boolean isValidComment = this.commentValidatorService.isValidComment(commentId);
     if (isValidComment) {
       Comment comment = this.commentRepository.findById(commentId).get();
-      if (comment.getAccountId().equals(accountId) || role.equals("ROLE_ADMIN")) {
+      if (comment.getAuthorId().equals(accountId) || role.equals("ROLE_ADMIN")) {
         this.commentRepository.deleteById(commentId);
         return "Comment deleted with success!";
       }
