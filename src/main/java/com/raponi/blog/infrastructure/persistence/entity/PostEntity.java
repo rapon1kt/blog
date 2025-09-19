@@ -18,7 +18,7 @@ public class PostEntity {
   private String content;
   private PostVisibility postVisibility;
   private long likeCount;
-  private String accountId;
+  private String authorId;
   private Instant createdAt;
   private Instant modifiedAt;
 

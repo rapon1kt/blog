@@ -13,11 +13,11 @@ public class CommentEntity {
   @Id
   private String id;
   private String content;
-  private String accountId;
+  private String authorId;
   private String postId;
   private String commentId;
   private boolean answer;
-  private long likeCount = 0;
+  private long likeCount;
   private Instant createdAt;
   private Instant modifiedAt;
 
