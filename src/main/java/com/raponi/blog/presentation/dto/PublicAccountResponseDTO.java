@@ -3,19 +3,10 @@ package com.raponi.blog.presentation.dto;
 import java.time.Instant;
 
 public class PublicAccountResponseDTO {
-  private String id;
   private String username;
   private String picture;
   private String description;
   private Instant createdAt;
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
 
   public String getUsername() {
     return username;
