@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.AccountValidatorUseCase;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
+import com.raponi.blog.infrastructure.persistence.entity.BlockEntity;
 import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
@@ -96,6 +97,23 @@ public class AccountValidatorService implements AccountValidatorUseCase {
       return true;
     }
     return false;
+  }
+
+  public boolean isBlocked(String accountId) {
+    if (!this.getAuth().isAuthenticated())
+      return false;
+    Query query = new Query(Criteria.where("blockedId").is(getAuth().getName()).and("blockerId").is(accountId));
+    boolean isViwerBlocked = this.mongoTemplate.exists(query, BlockEntity.class);
+    return isViwerBlocked;
+  }
+
+  public String verifyAccountWithUsernameAndReturnId(String username) {
+    if (verifyPresenceAndActive("username", username)) {
+      Query query = new Query(Criteria.where("username").is(username));
+      Account account = accountMapper.toDomain(mongoTemplate.findOne(query, AccountEntity.class));
+      return account.getId();
+    }
+    return null;
   }
 
 }
