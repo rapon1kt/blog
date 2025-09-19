@@ -33,10 +33,12 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
 
   @Override
   public byte[] handle(String username) throws IOException {
-    boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive("username", username);
-    if (!verifiedAccount)
+    String accountId = this.accountValidatorService.verifyAccountWithUsernameAndReturnId(username);
+    if (accountId.equals(null))
       throw new AccessDeniedException("You don't have permission to do this.");
-
+    boolean isViwerBlocked = this.accountValidatorService.isBlocked(accountId);
+    if (isViwerBlocked)
+      return null;
     Account account = this.accountRepository.findByUsername(username).get();
     if (account.getPicture().isEmpty() || account.getPicture().equals(null))
       throw new ResourceNotFoundException("This account don't have a profile picture.");
