@@ -5,7 +5,7 @@ import java.time.Instant;
 public class Comment implements Reportable, Likable {
   private String id;
   private String content;
-  private String accountId;
+  private String authorId;
   private String postId;
   private String commentId;
   private boolean answer;
@@ -13,12 +13,12 @@ public class Comment implements Reportable, Likable {
   private Instant createdAt;
   private Instant modifiedAt;
 
-  public Comment(String id, String content, String accountId, String postId, String commentId, boolean answer,
+  public Comment(String id, String content, String authorId, String postId, String commentId, boolean answer,
       Instant createdAt,
       Instant modifiedAt) {
     this.id = id;
     this.content = content;
-    this.accountId = accountId;
+    this.authorId = authorId;
     this.postId = postId;
     this.commentId = commentId;
     this.answer = answer;
@@ -26,9 +26,9 @@ public class Comment implements Reportable, Likable {
     this.modifiedAt = modifiedAt;
   }
 
-  public static Comment create(String accountId, String postId, String content) {
+  public static Comment create(String authorId, String postId, String content) {
     Instant instant = Instant.now();
-    return new Comment(null, content, accountId, postId, null, false, instant, instant);
+    return new Comment(null, content, authorId, postId, null, false, instant, instant);
   }
 
   @Override
@@ -48,12 +48,13 @@ public class Comment implements Reportable, Likable {
     this.content = content;
   }
 
-  public String getAccountId() {
-    return accountId;
+  @Override
+  public String getAuthorId() {
+    return authorId;
   }
 
-  public void setAccountId(String accountId) {
-    this.accountId = accountId;
+  public void setAuthorId(String authorId) {
+    this.authorId = authorId;
   }
 
   public String getPostId() {
@@ -94,11 +95,6 @@ public class Comment implements Reportable, Likable {
 
   public void setModifiedAt(Instant modifiedAt) {
     this.modifiedAt = modifiedAt;
-  }
-
-  @Override
-  public String getAuthorId() {
-    return accountId;
   }
 
   @Override

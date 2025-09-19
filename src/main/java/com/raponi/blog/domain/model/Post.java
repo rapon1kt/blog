@@ -8,25 +8,25 @@ public class Post implements Reportable, Likable {
   private String content;
   private PostVisibility postVisibility;
   private long likeCount;
-  private String accountId;
+  private String authorId;
   private Instant createdAt;
   private Instant modifiedAt;
 
-  public Post(String id, String title, String content, PostVisibility postVisibility, String accountId,
+  public Post(String id, String title, String content, PostVisibility postVisibility, String authorId,
       Instant createdAt,
       Instant modifiedAt) {
     this.id = id;
     this.title = title;
     this.content = content;
     this.postVisibility = postVisibility;
-    this.accountId = accountId;
+    this.authorId = authorId;
     this.createdAt = createdAt;
     this.modifiedAt = modifiedAt;
   }
 
-  public static Post create(String accountId, String title, String content) {
+  public static Post create(String authorId, String title, String content) {
     Instant instant = Instant.now();
-    return new Post(null, title, content, PostVisibility.PUBLIC, accountId, instant, instant);
+    return new Post(null, title, content, PostVisibility.PUBLIC, authorId, instant, instant);
   }
 
   @Override
@@ -62,12 +62,13 @@ public class Post implements Reportable, Likable {
     this.postVisibility = postVisibility;
   }
 
-  public String getAccountId() {
-    return accountId;
+  @Override
+  public String getAuthorId() {
+    return authorId;
   }
 
-  public void setAccountId(String accountId) {
-    this.accountId = accountId;
+  public void setAuthorId(String authorId) {
+    this.authorId = authorId;
   }
 
   public Instant getCreatedAt() {
@@ -84,11 +85,6 @@ public class Post implements Reportable, Likable {
 
   public void setModifiedAt(Instant modifiedAt) {
     this.modifiedAt = modifiedAt;
-  }
-
-  @Override
-  public String getAuthorId() {
-    return accountId;
   }
 
   @Override
