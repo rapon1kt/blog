@@ -9,7 +9,7 @@ public class Comment implements Reportable, Likable {
   private String postId;
   private String commentId;
   private boolean answer;
-  private long likeCount = 0;
+  private long likeCount;
   private Instant createdAt;
   private Instant modifiedAt;
 
@@ -107,14 +107,18 @@ public class Comment implements Reportable, Likable {
     return this.likeCount;
   }
 
+  public void setLikeCount(long likeCount) {
+    this.likeCount = likeCount;
+  }
+
   @Override
   public void incrementLikeCount() {
-    this.likeCount++;
+    this.setLikeCount(this.likeCount + 1);
   }
 
   @Override
   public void decrementLikeCount() {
     if (this.likeCount > 0)
-      this.likeCount--;
+      this.setLikeCount(this.likeCount - 1);
   }
 }
