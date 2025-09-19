@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.follow.FindAccountFollowingUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
-import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
-import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.FollowRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 
@@ -16,23 +14,23 @@ import com.raponi.blog.presentation.errors.AccessDeniedException;
 public class FindAccountFollowingService implements FindAccountFollowingUseCase {
 
   private final FollowRepository followRepository;
-  private final AccountRepository accountRepository;
   private final AccountValidatorService accountValidatorService;
 
-  public FindAccountFollowingService(FollowRepository followRepository, AccountRepository accountRepository,
+  public FindAccountFollowingService(FollowRepository followRepository,
       AccountValidatorService accountValidatorService) {
     this.followRepository = followRepository;
-    this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
   }
 
   @Override
   public List<String> handle(String username) {
-    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive("username", username);
-    if (!verifiedAccount)
+    String accountId = this.accountValidatorService.verifyAccountWithUsernameAndReturnId(username);
+    if (accountId.equals(null))
       throw new AccessDeniedException("You don't have permission to do this.");
-    Account account = this.accountRepository.findByUsername(username).get();
-    return this.followRepository.findByFollowerId(account.getId()).stream().map(Follow::getFollowingId).toList();
+    boolean isViewerBlocked = this.accountValidatorService.isBlocked(accountId);
+    if (!isViewerBlocked)
+      return this.followRepository.findByFollowerId(accountId).stream().map(Follow::getFollowingId).toList();
+    return null;
   }
 
 }

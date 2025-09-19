@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.follow.FindAccountFollowersUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
-import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
-import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.FollowRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 
@@ -16,24 +14,24 @@ import com.raponi.blog.presentation.errors.AccessDeniedException;
 public class FindAccountFollowersService implements FindAccountFollowersUseCase {
 
   private final FollowRepository followRepository;
-  private final AccountRepository accountRepository;
   private final AccountValidatorService accountValidatorService;
 
-  public FindAccountFollowersService(FollowRepository followRepository, AccountRepository accountRepository,
+  public FindAccountFollowersService(FollowRepository followRepository,
       AccountValidatorService accountValidatorService) {
     this.followRepository = followRepository;
-    this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
   }
 
   @Override
   public List<String> handle(String username) {
-    Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive("username", username);
-    if (!verifiedAccount)
+    String accountId = this.accountValidatorService.verifyAccountWithUsernameAndReturnId(username);
+    if (accountId.equals(null))
       throw new AccessDeniedException("You don't have permission to do this.");
-    Account account = this.accountRepository.findByUsername(username).get();
-    return this.followRepository.findByFollowingId(account.getId()).stream().map(Follow::getFollowerId)
-        .toList();
+    boolean isViewerBlocked = this.accountValidatorService.isBlocked(accountId);
+    if (!isViewerBlocked)
+      return this.followRepository.findByFollowingId(accountId).stream().map(Follow::getFollowerId)
+          .toList();
+    return null;
   }
 
 }
