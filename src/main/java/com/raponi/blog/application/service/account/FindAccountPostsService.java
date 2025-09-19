@@ -37,10 +37,12 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
       throw new AccessDeniedException("You don't have permission to do this.");
     Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority("username", username);
     Account acc = this.accountRepository.findByUsername(username).get();
+    boolean isViwerBlocked = this.accountValidatorService.isBlocked(acc.getId());
+    if (isViwerBlocked)
+      return null;
     if (verifiedAuthority) {
       return this.postRepository.findByAccountId(acc.getId()).stream().map(postMapper::toResponse).toList();
     }
-
     return this.postRepository.findByAccountIdAndPostVisibility(acc.getId(), PostVisibility.PUBLIC).stream()
         .map(postMapper::toResponse)
         .toList();
