@@ -11,15 +11,18 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.AccountValidatorUseCase;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.presentation.errors.ResourceNotFoundException;
+import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
+import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
 public class AccountValidatorService implements AccountValidatorUseCase {
 
   private final MongoTemplate mongoTemplate;
+  private final AccountMapper accountMapper;
 
-  public AccountValidatorService(MongoTemplate mongoTemplate) {
+  public AccountValidatorService(MongoTemplate mongoTemplate, AccountMapper accountMapper) {
     this.mongoTemplate = mongoTemplate;
+    this.accountMapper = accountMapper;
   }
 
   private Authentication getAuth() {
@@ -69,8 +72,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
 
   public boolean verifyAuthority(String key, String value) {
     Query query = new Query(Criteria.where(key).is(value));
-    Account account = Optional.of(this.mongoTemplate.findOne(query, Account.class))
-        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
+    Account account = accountMapper.toDomain(mongoTemplate.findOne(query, AccountEntity.class));
     if (!account.getId().equals(this.getAuth().getName())) {
       if (!isAdmin()) {
         return false;
@@ -82,7 +84,8 @@ public class AccountValidatorService implements AccountValidatorUseCase {
 
   public boolean verifyPresenceAndActive(String key, String value) {
     Query query = new Query(Criteria.where(key).is(value));
-    Optional<Account> acc = Optional.of(this.mongoTemplate.findOne(query, Account.class));
+    Optional<Account> acc = Optional
+        .of(accountMapper.toDomain(mongoTemplate.findOne(query, AccountEntity.class)));
     if (acc.isPresent()) {
       if (isAdmin()) {
         return true;
