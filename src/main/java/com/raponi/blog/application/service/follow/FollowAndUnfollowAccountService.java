@@ -3,6 +3,7 @@ package com.raponi.blog.application.service.follow;
 import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.follow.FollowAndUnfollowAccountUseCase;
+import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.repository.AccountRepository;
@@ -10,17 +11,19 @@ import com.raponi.blog.domain.repository.FollowRepository;
 
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.BusinessRuleException;
-import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccountUseCase {
 
   private final FollowRepository followRepository;
   private final AccountRepository accountRepository;
+  private final AccountValidatorService accountValidatorService;
 
-  public FollowAndUnfollowAccountService(FollowRepository followRepository, AccountRepository accountRepository) {
+  public FollowAndUnfollowAccountService(FollowRepository followRepository, AccountRepository accountRepository,
+      AccountValidatorService accountValidatorService) {
     this.followRepository = followRepository;
     this.accountRepository = accountRepository;
+    this.accountValidatorService = accountValidatorService;
   }
 
   @Override
@@ -28,26 +31,23 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
     if (followerId.equals(followingId))
       throw new BusinessRuleException("You can't follow yourself.");
 
-    Account originAcc = this.accountRepository.findById(followerId)
-        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
+    boolean isFollowerValid = this.accountValidatorService.verifyAccountWithAccountId(followerId);
+    boolean isFollowingValid = this.accountValidatorService.verifyPresenceAndActive("_id", followingId);
+    if (!isFollowerValid || !isFollowingValid)
+      throw new AccessDeniedException("You don't have permission to do this.");
 
-    Account destinyAcc = this.accountRepository.findById(followingId)
-        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
-
-    if (!originAcc.isActive())
-      throw new AccessDeniedException("You must active your account to do this.");
-
-    if (destinyAcc.isActive()) {
-      Boolean exists = this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId);
-      if (exists) {
-        this.followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
-        return ("Unfollowed " + destinyAcc.getUsername());
-      }
-      Follow follow = Follow.create(followerId, followingId);
-      this.followRepository.save(follow);
-      return ("Followed " + destinyAcc.getUsername());
+    boolean isViewerBlocked = this.accountValidatorService.isBlocked(followingId);
+    if (isViewerBlocked)
+      throw new AccessDeniedException("You cannot follow this account.");
+    Boolean exists = this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId);
+    Account destinyAcc = this.accountRepository.findById(followingId).get();
+    if (exists) {
+      this.followRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
+      return ("Unfollowed " + destinyAcc.getUsername());
     }
-    throw new AccessDeniedException("This account is desactivated.");
+    Follow follow = Follow.create(followerId, followingId);
+    this.followRepository.save(follow);
+    return ("Followed " + destinyAcc.getUsername());
   }
 
 }
