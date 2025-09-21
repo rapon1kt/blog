@@ -74,7 +74,7 @@ public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase
   private void removeInteractions(String blockerId, String blockedId) {
     if (this.followRepository.existsByFollowerIdAndFollowingId(blockerId, blockedId))
       this.followAndUnfollowAccountService.handle(blockerId, blockedId);
-    List<Post> blockerPosts = this.postRepository.findByAccountId(blockerId);
+    List<Post> blockerPosts = this.postRepository.findByAuthorId(blockerId);
     blockerPosts.forEach(post -> {
       if (this.likeRepository.existsByTargetIdAndAccountId(post.getId(), blockedId)) {
         this.likeAndUnlikeService.handle(blockedId, post.getId(), LikeTargetType.POST);
@@ -82,12 +82,12 @@ public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase
       List<Comment> comments = this.commentRepository.findByPostId(post.getId());
       comments.forEach(comment -> {
         if (comment.getAuthorId().equals(blockedId))
-          this.commentRepository.deleteByAccountId(blockedId);
+          this.commentRepository.deleteByAuthorId(blockedId);
         if (this.likeRepository.existsByTargetIdAndAccountId(comment.getId(), blockedId)) {
           this.likeAndUnlikeService.handle(blockedId, post.getId(), LikeTargetType.COMMENT);
         }
       });
-      this.commentRepository.deleteByAccountIdAndPostId(blockedId, post.getId());
+      this.commentRepository.deleteByAuthorIdAndPostId(blockedId, post.getId());
     });
   }
 

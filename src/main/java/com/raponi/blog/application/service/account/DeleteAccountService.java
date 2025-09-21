@@ -57,11 +57,11 @@ public class DeleteAccountService implements DeleteAccountUseCase {
 
   private void deleteInteractions(String accountId) {
     this.accountRepository.deleteById(accountId);
-    this.postRepository.deleteByAccountId(accountId);
+    this.postRepository.deleteByAuthorId(accountId);
     this.likeRepository.deleteByAccountId(accountId);
     this.followRepository.deleteByFollowerId(accountId);
     this.followRepository.deleteByFollowingId(accountId);
-    this.commentRepository.deleteByAccountId(accountId);
+    this.commentRepository.deleteByAuthorId(accountId);
     this.reportRepository.deleteByReporterId(accountId);
   }
 

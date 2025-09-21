@@ -41,9 +41,9 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
     if (isViwerBlocked)
       return null;
     if (verifiedAuthority) {
-      return this.postRepository.findByAccountId(acc.getId()).stream().map(postMapper::toResponse).toList();
+      return this.postRepository.findByAuthorId(acc.getId()).stream().map(postMapper::toResponse).toList();
     }
-    return this.postRepository.findByAccountIdAndPostVisibility(acc.getId(), PostVisibility.PUBLIC).stream()
+    return this.postRepository.findByAuthorIdAndPostVisibility(acc.getId(), PostVisibility.PUBLIC).stream()
         .map(postMapper::toResponse)
         .toList();
   }
