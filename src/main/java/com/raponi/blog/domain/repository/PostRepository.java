@@ -14,13 +14,13 @@ public interface PostRepository {
 
   public List<Post> findAll();
 
-  public List<Post> findByAccountId(String accountId);
+  public List<Post> findByAuthorId(String authorId);
 
   public List<Post> findByPostVisibility(PostVisibility postVisibility);
 
-  public List<Post> findByAccountIdAndPostVisibility(String accountId, PostVisibility postVisibility);
+  public List<Post> findByAuthorIdAndPostVisibility(String authorId, PostVisibility postVisibility);
 
   public void deleteById(String id);
 
-  public void deleteByAccountId(String accountId);
+  public void deleteByAuthorId(String authorId);
 }

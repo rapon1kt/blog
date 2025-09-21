@@ -17,11 +17,11 @@ public interface CommentRepository {
 
   public List<Comment> findByPostId(String postId);
 
-  public List<Comment> findByAccountId(String accountId);
+  public List<Comment> findByAuthorId(String authorId);
 
-  public void deleteByAccountIdAndPostId(String accountId, String postId);
+  public void deleteByAuthorIdAndPostId(String authorId, String postId);
 
-  public void deleteByAccountId(String accountId);
+  public void deleteByAuthorId(String authorId);
 
   public void deleteByPostId(String postId);
 
