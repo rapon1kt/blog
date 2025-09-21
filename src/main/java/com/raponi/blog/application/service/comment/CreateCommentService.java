@@ -45,6 +45,8 @@ public class CreateCommentService implements CreateCommentUseCase {
       boolean validAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
       if (validAuthorAccount) {
         if (validAccount) {
+          if (this.accountValidatorService.isBlocked(post.getAuthorId()))
+            throw new AccessDeniedException("You cannot comment on this account's post.");
           Comment createdComment = Comment.create(accountId, postId, requestDTO.getContent());
           Comment savedComment = this.commentRepository.save(createdComment);
           return this.commentMapper.toResponse(savedComment);
