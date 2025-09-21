@@ -10,11 +10,11 @@ import com.raponi.blog.infrastructure.persistence.entity.PostEntity;
 
 @Repository
 public interface MongoPostRepository extends MongoRepository<PostEntity, String> {
-  List<PostEntity> findByAccountId(String accountId);
+  List<PostEntity> findByAuthorId(String authorId);
 
   List<PostEntity> findByPostVisibility(PostVisibility postVisibility);
 
-  List<PostEntity> findByAccountIdAndPostVisibility(String accountId, PostVisibility postVisibility);
+  List<PostEntity> findByAuthorIdAndPostVisibility(String authorId, PostVisibility postVisibility);
 
-  void deleteByAccountId(String accountId);
+  void deleteByAuthorId(String authorId);
 }

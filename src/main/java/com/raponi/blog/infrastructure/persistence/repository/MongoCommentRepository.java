@@ -12,11 +12,11 @@ public interface MongoCommentRepository extends MongoRepository<CommentEntity, S
 
   List<CommentEntity> findByPostId(String postId);
 
-  List<CommentEntity> findByAccountId(String accountId);
+  List<CommentEntity> findByAuthorId(String authorId);
 
-  void deleteByAccountIdAndPostId(String accountId, String postId);
+  void deleteByAuthorIdAndPostId(String authorId, String postId);
 
-  void deleteByAccountId(String accountId);
+  void deleteByAuthorId(String authorId);
 
   void deleteByPostId(String postId);
 
