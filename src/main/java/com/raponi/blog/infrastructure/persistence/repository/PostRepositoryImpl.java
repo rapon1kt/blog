@@ -41,13 +41,13 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public List<Post> findByAccountId(String accountId) {
-    return this.mongoRepository.findByAccountId(accountId).stream().map(postMapper::toDomain).toList();
+  public List<Post> findByAuthorId(String authorId) {
+    return this.mongoRepository.findByAuthorId(authorId).stream().map(postMapper::toDomain).toList();
   }
 
   @Override
-  public void deleteByAccountId(String accountId) {
-    this.mongoRepository.deleteByAccountId(accountId);
+  public void deleteByAuthorId(String authorId) {
+    this.mongoRepository.deleteByAuthorId(authorId);
   }
 
   @Override
@@ -56,8 +56,8 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
-  public List<Post> findByAccountIdAndPostVisibility(String accountId, PostVisibility postVisibility) {
-    return this.mongoRepository.findByAccountIdAndPostVisibility(accountId, postVisibility).stream()
+  public List<Post> findByAuthorIdAndPostVisibility(String authorId, PostVisibility postVisibility) {
+    return this.mongoRepository.findByAuthorIdAndPostVisibility(authorId, postVisibility).stream()
         .map(postMapper::toDomain)
         .toList();
   }

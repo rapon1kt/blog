@@ -46,8 +46,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public List<Comment> findByAccountId(String accountId) {
-    return this.mongoRepository.findByAccountId(accountId).stream().map(commentMapper::toDomain).toList();
+  public List<Comment> findByAuthorId(String authorId) {
+    return this.mongoRepository.findByAuthorId(authorId).stream().map(commentMapper::toDomain).toList();
   }
 
   @Override
@@ -56,8 +56,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public void deleteByAccountIdAndPostId(String accountId, String postId) {
-    this.mongoRepository.deleteByAccountIdAndPostId(accountId, postId);
+  public void deleteByAuthorIdAndPostId(String authorId, String postId) {
+    this.mongoRepository.deleteByAuthorIdAndPostId(authorId, postId);
   }
 
   @Override
@@ -71,8 +71,8 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
-  public void deleteByAccountId(String accountId) {
-    this.mongoRepository.deleteByAccountId(accountId);
+  public void deleteByAuthorId(String authorId) {
+    this.mongoRepository.deleteByAuthorId(authorId);
   }
 
 }
