@@ -31,6 +31,8 @@ public class LikeAndUnlikeService implements LikeAndUnlikeUseCase {
       throw new AccessDeniedException("You don't have permission to do this.");
     Likable likable = this.likableRepository.findById(targetId, type)
         .orElseThrow(() -> new ResourceNotFoundException("This resource cannot be found."));
+    if (this.accountValidatorService.isBlocked(likable.getAuthorId()))
+      throw new AccessDeniedException("You cannot like this content.");
     boolean isLiked = this.likeRepository.existsByTargetIdAndAccountId(targetId, accountId);
     if (!isLiked) {
       Like like = Like.create(accountId, targetId, type);
