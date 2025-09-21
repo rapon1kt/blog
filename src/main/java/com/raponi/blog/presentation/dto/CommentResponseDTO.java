@@ -6,7 +6,7 @@ public class CommentResponseDTO {
   private String id;
   private String postId;
   private String content;
-  private String accountId;
+  private String authorId;
   private Instant createdAt;
   private long likeCount;
 
@@ -34,12 +34,12 @@ public class CommentResponseDTO {
     this.content = content;
   }
 
-  public String getAccountId() {
-    return accountId;
+  public String getAuthorId() {
+    return authorId;
   }
 
-  public void setAccountId(String accountId) {
-    this.accountId = accountId;
+  public void setAuthorId(String authorId) {
+    this.authorId = authorId;
   }
 
   public Instant getCreatedAt() {
