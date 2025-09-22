@@ -9,6 +9,7 @@ import com.raponi.blog.application.usecase.account.BlockUnblockAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Block;
 import com.raponi.blog.domain.model.Comment;
+import com.raponi.blog.domain.model.Like;
 import com.raponi.blog.domain.model.LikeTargetType;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.*;
@@ -77,14 +78,16 @@ public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase
     List<Post> blockerPosts = this.postRepository.findByAuthorId(blockerId);
     blockerPosts.forEach(post -> {
       if (this.likeRepository.existsByTargetIdAndAccountId(post.getId(), blockedId)) {
-        this.likeAndUnlikeService.handle(blockedId, post.getId(), LikeTargetType.POST);
+        Like like = this.likeRepository.findByAccountIdAndTargetId(blockedId, post.getId()).get();
+        this.likeAndUnlikeService.handle(blockedId, post.getId(), like.getLikeType(), LikeTargetType.POST);
       }
       List<Comment> comments = this.commentRepository.findByPostId(post.getId());
       comments.forEach(comment -> {
         if (comment.getAuthorId().equals(blockedId))
           this.commentRepository.deleteByAuthorId(blockedId);
         if (this.likeRepository.existsByTargetIdAndAccountId(comment.getId(), blockedId)) {
-          this.likeAndUnlikeService.handle(blockedId, post.getId(), LikeTargetType.COMMENT);
+          Like like = this.likeRepository.findByAccountIdAndTargetId(blockedId, comment.getId()).get();
+          this.likeAndUnlikeService.handle(blockedId, comment.getId(), like.getLikeType(), LikeTargetType.COMMENT);
         }
       });
       this.commentRepository.deleteByAuthorIdAndPostId(blockedId, post.getId());
