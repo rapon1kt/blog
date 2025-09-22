@@ -1,4 +1,4 @@
-package com.raponi.blog.infrastructure.persistence.repository;
+package com.raponi.blog.infrastructure.repository;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package com.raponi.blog.infrastructure.persistence.repository;
+package com.raponi.blog.infrastructure.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +9,7 @@ import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.infrastructure.persistence.entity.PostEntity;
+import com.raponi.blog.infrastructure.persistence.repository.MongoPostRepository;
 import com.raponi.blog.presentation.mapper.PostMapper;
 
 @Component

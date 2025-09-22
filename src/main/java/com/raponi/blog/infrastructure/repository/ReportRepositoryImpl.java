@@ -1,4 +1,4 @@
-package com.raponi.blog.infrastructure.persistence.repository;
+package com.raponi.blog.infrastructure.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import com.raponi.blog.domain.model.ReportStatus;
 import com.raponi.blog.domain.model.ReportTargetType;
 import com.raponi.blog.domain.repository.ReportRepository;
 import com.raponi.blog.infrastructure.persistence.entity.ReportEntity;
+import com.raponi.blog.infrastructure.persistence.repository.MongoReportRepository;
 import com.raponi.blog.presentation.mapper.ReportMapper;
 
 @Component

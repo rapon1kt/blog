@@ -1,4 +1,4 @@
-package com.raponi.blog.infrastructure.persistence.repository;
+package com.raponi.blog.infrastructure.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.raponi.blog.domain.model.Like;
 import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.infrastructure.persistence.entity.LikeEntity;
+import com.raponi.blog.infrastructure.persistence.repository.MongoLikeRepository;
 import com.raponi.blog.presentation.mapper.LikeMapper;
 
 @Component

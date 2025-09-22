@@ -1,4 +1,4 @@
-package com.raponi.blog.infrastructure.persistence.repository;
+package com.raponi.blog.infrastructure.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.repository.FollowRepository;
 import com.raponi.blog.infrastructure.persistence.entity.FollowEntity;
+import com.raponi.blog.infrastructure.persistence.repository.MongoFollowRepository;
 import com.raponi.blog.presentation.mapper.FollowMapper;
 
 @Component
