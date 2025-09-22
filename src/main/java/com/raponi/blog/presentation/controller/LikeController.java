@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.like.LikeAndUnlikeService;
 import com.raponi.blog.domain.model.LikeTargetType;
+import com.raponi.blog.domain.model.LikeType;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,9 +24,11 @@ public class LikeController {
   }
 
   @PostMapping("/{targetId}")
-  public ResponseEntity<?> likeAndUnlike(@PathVariable("targetId") String targetId, @RequestParam LikeTargetType type,
+  public ResponseEntity<?> likeAndUnlike(@PathVariable("targetId") String targetId,
+      @RequestParam("likeType") LikeType likeType, @RequestParam LikeTargetType targetType,
       Authentication auth) {
-    return ResponseEntity.status(200).body(this.likeAndUnlikeService.handle(auth.getName(), targetId, type));
+    return ResponseEntity.status(200)
+        .body(this.likeAndUnlikeService.handle(auth.getName(), targetId, likeType, targetType));
   }
 
 }
