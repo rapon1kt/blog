@@ -11,6 +11,8 @@ public interface LikeRepository {
 
   public Optional<Like> findById(String id);
 
+  public Optional<Like> findByAccountIdAndTargetId(String accountId, String targetId);
+
   public List<Like> findByAccountId(String accountId);
 
   public List<Like> findByTargetId(String targetId);

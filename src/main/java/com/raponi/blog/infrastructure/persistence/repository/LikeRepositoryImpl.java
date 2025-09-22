@@ -37,6 +37,12 @@ public class LikeRepositoryImpl implements LikeRepository {
   }
 
   @Override
+  public Optional<Like> findByAccountIdAndTargetId(String accountId, String targetId) {
+    Optional<LikeEntity> likeEntity = this.mongoRepository.findByAccountIdAndTargetId(accountId, targetId);
+    return Optional.of(likeEntity.map(likeMapper::toDomain).orElse(null));
+  }
+
+  @Override
   public void deleteByTargetIdAndAccountId(String targetId, String accountId) {
     this.mongoRepository.deleteByTargetIdAndAccountId(targetId, accountId);
   }
