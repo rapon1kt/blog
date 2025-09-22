@@ -6,19 +6,22 @@ public class Like {
   String id;
   String accountId;
   String targetId;
+  LikeType likeType;
   LikeTargetType targetType;
   Instant createdAt;
 
-  public Like(String id, String accountId, String targetId, LikeTargetType targetType, Instant createdAt) {
+  public Like(String id, String accountId, String targetId, LikeType likeType, LikeTargetType targetType,
+      Instant createdAt) {
     this.id = id;
     this.accountId = accountId;
     this.targetId = targetId;
+    this.likeType = likeType;
     this.targetType = targetType;
     this.createdAt = createdAt;
   }
 
-  public static Like create(String accountId, String targetId, LikeTargetType type) {
-    return new Like(null, accountId, targetId, type, Instant.now());
+  public static Like create(String accountId, String targetId, LikeType likeType, LikeTargetType type) {
+    return new Like(null, accountId, targetId, likeType, type, Instant.now());
   }
 
   public String getId() {
@@ -39,6 +42,14 @@ public class Like {
 
   public String getTargetId() {
     return targetId;
+  }
+
+  public LikeType getLikeType() {
+    return likeType;
+  }
+
+  public void setLikeType(LikeType likeType) {
+    this.likeType = likeType;
   }
 
   public void setTargetId(String targetId) {
