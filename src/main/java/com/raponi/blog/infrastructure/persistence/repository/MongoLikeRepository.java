@@ -23,4 +23,5 @@ public interface MongoLikeRepository extends MongoRepository<LikeEntity, String>
 
   List<LikeEntity> findByTargetId(String targetId);
 
+  void deleteByTargetId(String targetId);
 }

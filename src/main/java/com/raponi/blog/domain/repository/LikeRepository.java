@@ -25,4 +25,6 @@ public interface LikeRepository {
 
   public void deleteById(String id);
 
+  public void deleteByTargetId(String targetId);
+
 }
