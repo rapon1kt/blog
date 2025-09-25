@@ -7,6 +7,7 @@ public class Notification {
   private String authorId;
   private String actorId;
   private NotificationType type;
+  private boolean read;
   private String targetId;
   private Instant createdAt;
 
@@ -15,6 +16,7 @@ public class Notification {
     this.authorId = authorId;
     this.actorId = actorId;
     this.type = type;
+    this.read = false;
     this.targetId = targetId;
     this.createdAt = Instant.now();
   }
@@ -54,6 +56,14 @@ public class Notification {
 
   public void setType(NotificationType type) {
     this.type = type;
+  }
+
+  public boolean isRead() {
+    return read;
+  }
+
+  public void setRead(boolean read) {
+    this.read = read;
   }
 
   public String getTargetId() {
