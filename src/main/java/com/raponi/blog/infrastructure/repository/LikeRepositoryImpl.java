@@ -23,6 +23,11 @@ public class LikeRepositoryImpl implements LikeRepository {
   }
 
   @Override
+  public void deleteByTargetId(String targetId) {
+    this.mongoRepository.deleteByTargetId(targetId);
+  }
+
+  @Override
   public void deleteByAccountId(String accountId) {
     this.mongoRepository.deleteByAccountId(accountId);
   }
