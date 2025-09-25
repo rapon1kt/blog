@@ -32,7 +32,7 @@ public class DeleteCommentService implements DeleteCommentUseCase {
   }
 
   @Override
-  public String handle(String accountId, String commentId, String postId) {
+  public String handle(String accountId, String commentId) {
     boolean isValidComment = this.commentValidatorService.isValidComment(commentId);
     if (isValidComment) {
       boolean isAuthorized = this.accountValidatorService.verifyAuthority("_id", accountId);
