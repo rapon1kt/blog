@@ -9,6 +9,7 @@ import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.CommentValidatorService;
 import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.repository.CommentRepository;
+import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
@@ -16,12 +17,16 @@ import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 public class DeleteCommentService implements DeleteCommentUseCase {
 
   private final CommentRepository commentRepository;
+  private final LikeRepository likeRepository;
   private final CommentValidatorService commentValidatorService;
   private final AccountValidatorService accountValidatorService;
 
-  public DeleteCommentService(CommentRepository commentRepository, CommentValidatorService commentValidatorService,
+  public DeleteCommentService(CommentRepository commentRepository,
+      LikeRepository likeRepository,
+      CommentValidatorService commentValidatorService,
       AccountValidatorService accountValidatorService) {
     this.commentRepository = commentRepository;
+    this.likeRepository = likeRepository;
     this.commentValidatorService = commentValidatorService;
     this.accountValidatorService = accountValidatorService;
   }
@@ -33,9 +38,11 @@ public class DeleteCommentService implements DeleteCommentUseCase {
       boolean isAuthorized = this.accountValidatorService.verifyAuthority("_id", accountId);
       if (isAuthorized) {
         this.commentRepository.deleteById(commentId);
+        this.likeRepository.deleteByTargetId(commentId);
         List<Comment> commentAnswers = this.commentRepository.findByCommentIdAndAnswerTrue(commentId);
         commentAnswers.forEach(comment -> {
           this.commentRepository.deleteById(comment.getId());
+          this.likeRepository.deleteByTargetId(comment.getId());
         });
         return "Comment deleted with success!";
       }
