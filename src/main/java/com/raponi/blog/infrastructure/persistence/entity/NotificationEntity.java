@@ -17,6 +17,7 @@ public class NotificationEntity {
   private String authorId;
   private String actorId;
   private NotificationType type;
+  private boolean read;
   private String targetId;
   private Instant createdAt;
 }
