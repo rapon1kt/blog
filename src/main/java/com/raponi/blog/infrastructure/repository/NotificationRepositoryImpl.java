@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.raponi.blog.domain.model.Notification;
+import com.raponi.blog.domain.model.NotificationType;
 import com.raponi.blog.domain.repository.NotificationRepository;
 import com.raponi.blog.infrastructure.persistence.entity.NotificationEntity;
 import com.raponi.blog.infrastructure.persistence.repository.MongoNotificationRepository;
@@ -32,30 +33,43 @@ public class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @Override
-  public Optional<Notification> findByActorIdAndAuthorId(String actorId, String authorId) {
-    Optional<NotificationEntity> notificationEntity = this.mongoNotificationRepository
-        .findByActorIdAndAuthorId(actorId, authorId);
-    return notificationEntity.map(notificationMapper::toDomain);
+  public boolean existsByAuthorIdAndActorIdAndType(String actorId, String authorId, NotificationType type) {
+    return this.mongoNotificationRepository.existsByAuthorIdAndActorIdAndType(authorId, actorId, type);
   }
 
   @Override
-  public List<Notification> findByAuthorId(String authorId) {
-    return this.mongoNotificationRepository.findByAuthorId(authorId).stream()
+  public List<Notification> findByAuthorIdAndReadOrderByCreatedAtDesc(String authorId, boolean read) {
+    return this.mongoNotificationRepository.findByAuthorIdAndReadOrderByCreatedAtDesc(authorId, read).stream()
         .map(notificationMapper::toDomain)
         .toList();
   }
 
   @Override
-  public Optional<Notification> findByActorIdAndTargetId(String authorId, String targetId) {
-    Optional<NotificationEntity> notificationEntity = this.mongoNotificationRepository.findByActorIdAndTargetId(
-        authorId,
-        targetId);
+  public Optional<Notification> findByActorIdAndTargetIdAndType(String authorId, String targetId,
+      NotificationType type) {
+    Optional<NotificationEntity> notificationEntity = this.mongoNotificationRepository.findByActorIdAndTargetIdAndType(
+        authorId, targetId, type);
     return notificationEntity.map(notificationMapper::toDomain);
   }
 
   @Override
   public void deleteById(String id) {
     this.mongoNotificationRepository.deleteById(id);
+  }
+
+  @Override
+  public void deleteByActorId(String actorId) {
+    this.mongoNotificationRepository.deleteByActorId(actorId);
+  }
+
+  @Override
+  public void deleteByAuthorId(String authorId) {
+    this.mongoNotificationRepository.deleteByAuthorId(authorId);
+  }
+
+  @Override
+  public void deleteByTargetId(String id) {
+    this.mongoNotificationRepository.deleteByTargetId(id);
   }
 
 }
