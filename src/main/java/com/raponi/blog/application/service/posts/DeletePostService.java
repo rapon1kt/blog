@@ -7,6 +7,8 @@ import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.NotificationRepository;
+import com.raponi.blog.domain.repository.CommentRepository;
+import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.InvalidParamException;
@@ -17,14 +19,18 @@ public class DeletePostService implements DeletePostUseCase {
 
   private final PostRepository postRepository;
   private final NotificationRepository notificationRepository;
+  private final LikeRepository likeRepository;
+  private final CommentRepository commentRepository;
   private final PostValidatorService postValidatorService;
   private final AccountValidatorService accountValidatorService;
 
   public DeletePostService(PostRepository postRepository, NotificationRepository notificationRepository,
-      PostValidatorService postValidatorService,
-      AccountValidatorService accountValidatorService) {
+      LikeRepository likeRepository, CommentRepository commentRepository,
+      PostValidatorService postValidatorService, AccountValidatorService accountValidatorService) {
     this.postRepository = postRepository;
     this.notificationRepository = notificationRepository;
+    this.likeRepository = likeRepository;
+    this.commentRepository = commentRepository;
     this.postValidatorService = postValidatorService;
     this.accountValidatorService = accountValidatorService;
   }
@@ -44,6 +50,12 @@ public class DeletePostService implements DeletePostUseCase {
       throw new AccessDeniedException("You don't have permission to do this.");
     this.postRepository.deleteById(post.getId());
     this.notificationRepository.deleteByTargetId(postId);
+    deleteInteractions(postId);
     return "Post deleted with success!";
   }
+
+  private void deleteInteractions(String postId) {
+    this.commentRepository.deleteByPostId(postId);
+    this.likeRepository.deleteById(postId);
+  };
 }
