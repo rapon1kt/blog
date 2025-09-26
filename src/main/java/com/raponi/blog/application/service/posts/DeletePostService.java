@@ -49,12 +49,12 @@ public class DeletePostService implements DeletePostUseCase {
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
     this.postRepository.deleteById(post.getId());
-    this.notificationRepository.deleteByTargetId(postId);
     deleteInteractions(postId);
     return "Post deleted with success!";
   }
 
   private void deleteInteractions(String postId) {
+    this.notificationRepository.deleteByTargetId(postId);
     this.commentRepository.deleteByPostId(postId);
     this.likeRepository.deleteById(postId);
   };
