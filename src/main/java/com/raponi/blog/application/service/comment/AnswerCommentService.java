@@ -1,11 +1,12 @@
 package com.raponi.blog.application.service.comment;
 
 import org.springframework.stereotype.Service;
-
+import com.raponi.blog.application.service.notification.CreateNotificationService;
 import com.raponi.blog.application.usecase.comment.AnswerCommentUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.CommentValidatorService;
 import com.raponi.blog.domain.model.Comment;
+import com.raponi.blog.domain.model.NotificationType;
 import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.presentation.dto.CommentResponseDTO;
 import com.raponi.blog.presentation.dto.CreateCommentRequestDTO;
@@ -16,18 +17,20 @@ import com.raponi.blog.presentation.mapper.CommentMapper;
 @Service
 public class AnswerCommentService implements AnswerCommentUseCase {
 
+  private final CreateNotificationService createNotificationService;
   private final AccountValidatorService accountValidatorService;
-
   private final CommentMapper commentMapper;
   private final CommentRepository commentRepository;
   private final CommentValidatorService commentValidatorService;
 
   public AnswerCommentService(CommentMapper commentMapper, CommentRepository commentRepository,
-      CommentValidatorService commentValidatorService, AccountValidatorService accountValidatorService) {
+      CommentValidatorService commentValidatorService,
+      AccountValidatorService accountValidatorService, CreateNotificationService createNotificationService) {
     this.commentMapper = commentMapper;
     this.commentRepository = commentRepository;
     this.commentValidatorService = commentValidatorService;
     this.accountValidatorService = accountValidatorService;
+    this.createNotificationService = createNotificationService;
   }
 
   @Override
@@ -45,6 +48,7 @@ public class AnswerCommentService implements AnswerCommentUseCase {
     commentAnswer.setCommentId(commentId);
     commentAnswer.setAnswer(true);
     Comment savedCommentAnswer = this.commentRepository.save(commentAnswer);
+    this.createNotificationService.handle(comment.getAuthorId(), accountId, NotificationType.COMMENT, comment.getId());
     CommentResponseDTO commentAnswerResponse = this.commentMapper.toResponse(savedCommentAnswer);
     return commentAnswerResponse;
   }
