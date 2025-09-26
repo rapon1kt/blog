@@ -1,11 +1,12 @@
 package com.raponi.blog.application.service.comment;
 
 import org.springframework.stereotype.Service;
-
+import com.raponi.blog.application.service.notification.CreateNotificationService;
 import com.raponi.blog.application.usecase.comment.CreateCommentUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Comment;
+import com.raponi.blog.domain.model.NotificationType;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.domain.repository.CommentRepository;
@@ -23,16 +24,19 @@ public class CreateCommentService implements CreateCommentUseCase {
   private final AccountValidatorService accountValidatorService;
   private final PostValidatorService postValidatorService;
   private final CommentMapper commentMapper;
+  private final CreateNotificationService createNotificationService;
 
   public CreateCommentService(CommentRepository commentRepository,
       PostRepository postRepository,
       AccountValidatorService accountValidatorService,
-      PostValidatorService postValidatorService, CommentMapper commentMapper) {
+      PostValidatorService postValidatorService, CommentMapper commentMapper,
+      CreateNotificationService createNotificationService) {
     this.commentRepository = commentRepository;
     this.postRepository = postRepository;
     this.accountValidatorService = accountValidatorService;
     this.postValidatorService = postValidatorService;
     this.commentMapper = commentMapper;
+    this.createNotificationService = createNotificationService;
   }
 
   @Override
@@ -49,6 +53,7 @@ public class CreateCommentService implements CreateCommentUseCase {
             throw new AccessDeniedException("You cannot comment on this account's post.");
           Comment createdComment = Comment.create(accountId, postId, requestDTO.getContent());
           Comment savedComment = this.commentRepository.save(createdComment);
+          this.createNotificationService.handle(post.getAuthorId(), accountId, NotificationType.COMMENT, postId);
           return this.commentMapper.toResponse(savedComment);
         }
         throw new AccessDeniedException("You can't release this action please active your account.");
