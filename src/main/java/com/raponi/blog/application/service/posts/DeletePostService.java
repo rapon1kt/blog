@@ -6,6 +6,7 @@ import com.raponi.blog.application.usecase.post.DeletePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.domain.repository.NotificationRepository;
 import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.domain.repository.PostRepository;
@@ -17,15 +18,17 @@ import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 public class DeletePostService implements DeletePostUseCase {
 
   private final PostRepository postRepository;
+  private final NotificationRepository notificationRepository;
   private final LikeRepository likeRepository;
   private final CommentRepository commentRepository;
   private final PostValidatorService postValidatorService;
   private final AccountValidatorService accountValidatorService;
 
-  public DeletePostService(PostRepository postRepository, LikeRepository likeRepository,
-      CommentRepository commentRepository, PostValidatorService postValidatorService,
-      AccountValidatorService accountValidatorService) {
+  public DeletePostService(PostRepository postRepository, NotificationRepository notificationRepository,
+      LikeRepository likeRepository, CommentRepository commentRepository,
+      PostValidatorService postValidatorService, AccountValidatorService accountValidatorService) {
     this.postRepository = postRepository;
+    this.notificationRepository = notificationRepository;
     this.likeRepository = likeRepository;
     this.commentRepository = commentRepository;
     this.postValidatorService = postValidatorService;
@@ -46,6 +49,7 @@ public class DeletePostService implements DeletePostUseCase {
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
     this.postRepository.deleteById(post.getId());
+    this.notificationRepository.deleteByTargetId(postId);
     deleteInteractions(postId);
     return "Post deleted with success!";
   }
