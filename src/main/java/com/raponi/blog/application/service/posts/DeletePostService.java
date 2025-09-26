@@ -6,6 +6,7 @@ import com.raponi.blog.application.usecase.post.DeletePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
+import com.raponi.blog.domain.repository.NotificationRepository;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.InvalidParamException;
@@ -15,12 +16,15 @@ import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 public class DeletePostService implements DeletePostUseCase {
 
   private final PostRepository postRepository;
+  private final NotificationRepository notificationRepository;
   private final PostValidatorService postValidatorService;
   private final AccountValidatorService accountValidatorService;
 
-  public DeletePostService(PostRepository postRepository, PostValidatorService postValidatorService,
+  public DeletePostService(PostRepository postRepository, NotificationRepository notificationRepository,
+      PostValidatorService postValidatorService,
       AccountValidatorService accountValidatorService) {
     this.postRepository = postRepository;
+    this.notificationRepository = notificationRepository;
     this.postValidatorService = postValidatorService;
     this.accountValidatorService = accountValidatorService;
   }
@@ -39,6 +43,7 @@ public class DeletePostService implements DeletePostUseCase {
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
     this.postRepository.deleteById(post.getId());
+    this.notificationRepository.deleteByTargetId(postId);
     return "Post deleted with success!";
   }
 }
