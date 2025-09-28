@@ -9,6 +9,7 @@ public class Post implements Reportable, Likable {
   private PostVisibility postVisibility;
   private long likeCount;
   private String authorId;
+  private boolean pinned;
   private Instant createdAt;
   private Instant modifiedAt;
 
@@ -20,6 +21,7 @@ public class Post implements Reportable, Likable {
     this.content = content;
     this.postVisibility = postVisibility;
     this.authorId = authorId;
+    this.pinned = false;
     this.createdAt = createdAt;
     this.modifiedAt = modifiedAt;
   }
@@ -73,6 +75,14 @@ public class Post implements Reportable, Likable {
 
   public Instant getCreatedAt() {
     return createdAt;
+  }
+
+  public boolean isPinned() {
+    return pinned;
+  }
+
+  public void setPinned(boolean pinned) {
+    this.pinned = pinned;
   }
 
   public void setCreatedAt(Instant createdAt) {
