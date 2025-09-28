@@ -16,5 +16,7 @@ public interface MongoPostRepository extends MongoRepository<PostEntity, String>
 
   List<PostEntity> findByAuthorIdAndPostVisibility(String authorId, PostVisibility postVisibility);
 
+  List<PostEntity> findByAuthorIdAndPinnedTrue(String authorId);
+
   void deleteByAuthorId(String authorId);
 }
