@@ -20,6 +20,8 @@ public interface PostRepository {
 
   public List<Post> findByAuthorIdAndPostVisibility(String authorId, PostVisibility postVisibility);
 
+  public List<Post> findByAuthorIdAndPinnedTrue(String authorId);
+
   public void deleteById(String id);
 
   public void deleteByAuthorId(String authorId);

@@ -7,6 +7,7 @@ public class PostResponseDTO {
   private String title;
   private String content;
   private String authorId;
+  private boolean pinned;
   private Instant createdAt;
   private long likeCount;
 
@@ -40,6 +41,14 @@ public class PostResponseDTO {
 
   public void setAuthorId(String authorId) {
     this.authorId = authorId;
+  }
+
+  public boolean isPinned() {
+    return pinned;
+  }
+
+  public void setPinned(boolean pinned) {
+    this.pinned = pinned;
   }
 
   public Instant getCreatedAt() {

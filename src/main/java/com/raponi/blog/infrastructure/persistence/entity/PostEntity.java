@@ -19,6 +19,7 @@ public class PostEntity {
   private PostVisibility postVisibility;
   private long likeCount;
   private String authorId;
+  private boolean pinned;
   private Instant createdAt;
   private Instant modifiedAt;
 

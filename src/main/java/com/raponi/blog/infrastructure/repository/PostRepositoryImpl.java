@@ -52,6 +52,11 @@ public class PostRepositoryImpl implements PostRepository {
   }
 
   @Override
+  public List<Post> findByAuthorIdAndPinnedTrue(String authorId) {
+    return this.mongoRepository.findByAuthorIdAndPinnedTrue(authorId).stream().map(postMapper::toDomain).toList();
+  }
+
+  @Override
   public void deleteById(String id) {
     this.mongoRepository.deleteById(id);
   }
