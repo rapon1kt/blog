@@ -19,8 +19,6 @@ public class AccountEntity {
   private String password;
   private boolean active;
   private String role;
-  private Instant banExpiresAt;
-  private String banReason;
   private Instant createdAt;
   private Instant modifiedAt;
 

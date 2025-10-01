@@ -11,8 +11,6 @@ public class Account {
   private String password;
   private boolean active;
   private String role;
-  private Instant banExpiresAt;
-  private String banReason;
   private Instant createdAt;
   private Instant modifiedAt;
 
@@ -96,26 +94,6 @@ public class Account {
 
   public void setRole(String role) {
     this.role = role;
-  }
-
-  public boolean isBanned() {
-    return this.banExpiresAt != null && this.banExpiresAt.isAfter(Instant.now());
-  }
-
-  public Instant getBanExpiresAt() {
-    return banExpiresAt;
-  }
-
-  public void setBanExpiresAt(Instant banExpiresAt) {
-    this.banExpiresAt = banExpiresAt;
-  }
-
-  public String getBanReason() {
-    return banReason;
-  }
-
-  public void setBanReason(String banReason) {
-    this.banReason = banReason;
   }
 
   public Instant getCreatedAt() {
