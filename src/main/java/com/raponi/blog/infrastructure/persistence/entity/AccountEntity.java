@@ -18,6 +18,7 @@ public class AccountEntity {
   private String description;
   private String password;
   private boolean active;
+  private boolean banned;
   private String role;
   private Instant createdAt;
   private Instant modifiedAt;
