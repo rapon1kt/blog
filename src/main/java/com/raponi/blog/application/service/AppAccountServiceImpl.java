@@ -24,6 +24,10 @@ public class AppAccountServiceImpl implements UserDetailsService {
   private AccountRepository accountRepository;
   private BanRepository banRepository;
 
+  public AppAccountServiceImpl(BanRepository banRepository) {
+    this.banRepository = banRepository;
+  }
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Account account = this.accountRepository.findByUsername(username)
@@ -34,8 +38,9 @@ public class AppAccountServiceImpl implements UserDetailsService {
     if (optionalBan.isPresent()) {
       Ban activeBan = optionalBan.get();
       if (activeBan.getExpiresAt().isAfter(Instant.now())) {
-        throw new AccessDeniedException("Your account is temporarily banned until" + activeBan.getExpiresAt().toString()
-            + ". Reason: " + activeBan.getReason() + " - " + activeBan.getDescription());
+        throw new AccessDeniedException(
+            "Your account is temporarily banned until " + activeBan.getExpiresAt().toString()
+                + ". Reason: " + activeBan.getReason() + " - " + activeBan.getModeratorDescription());
       } else {
         activeBan.setActive(false);
         this.banRepository.save(activeBan);
@@ -55,7 +60,7 @@ public class AppAccountServiceImpl implements UserDetailsService {
       Ban activeBan = optionalBan.get();
       if (activeBan.getExpiresAt().isAfter(Instant.now())) {
         throw new AccessDeniedException("Your account is temporarily banned until" + activeBan.getExpiresAt().toString()
-            + ". Reason: " + activeBan.getReason() + " - " + activeBan.getDescription());
+            + ". Reason: " + activeBan.getReason() + " - " + activeBan.getModeratorDescription());
       } else {
         activeBan.setActive(false);
         this.banRepository.save(activeBan);
