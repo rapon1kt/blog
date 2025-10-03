@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.ban.BanAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Ban;
 import com.raponi.blog.domain.model.BanReason;
+import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.dto.BanAccountRequestDTO;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
@@ -17,10 +19,13 @@ import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 public class BanAccountService implements BanAccountUseCase {
 
   private final BanRepository banRepository;
+  private final AccountRepository accountRepository;
   private final AccountValidatorService accountValidatorService;
 
-  public BanAccountService(BanRepository banRepository, AccountValidatorService accountValidatorService) {
+  public BanAccountService(BanRepository banRepository, AccountRepository accountRepository,
+      AccountValidatorService accountValidatorService) {
     this.banRepository = banRepository;
+    this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
   }
 
@@ -34,6 +39,10 @@ public class BanAccountService implements BanAccountUseCase {
       existingBan.setActive(false);
       this.banRepository.save(existingBan);
     });
+
+    Account bannedAccount = this.accountRepository.findById(bannedId).get();
+    bannedAccount.setBanned(true);
+    this.accountRepository.save(bannedAccount);
 
     Instant expiresAt = Instant.now().plus(Duration.ofDays(requestDTO.getTime()));
     Ban newBan = new Ban(reason.getCategory(), reason, requestDTO.getDescription(), moderatorId, bannedId, expiresAt);
