@@ -25,6 +25,11 @@ public class BanRepositoryImpl implements BanRepository {
   }
 
   @Override
+  public List<Ban> findAllByBannedIdOrderByActiveDesc(String bannedId) {
+    return this.mongoRepository.findAllByBannedIdOrderByActiveDesc(bannedId).stream().map(banMapper::toDomain).toList();
+  }
+
+  @Override
   public List<Ban> findByActiveTrue(boolean active) {
     return this.mongoRepository.findByActiveTrue(active).stream().map(banMapper::toDomain).toList();
   }

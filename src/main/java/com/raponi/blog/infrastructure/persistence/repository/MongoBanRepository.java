@@ -21,4 +21,6 @@ public interface MongoBanRepository extends MongoRepository<BanEntity, String> {
 
   List<BanEntity> findByReasonAndActiveTrue(BanReason banReason);
 
+  List<BanEntity> findAllByBannedIdOrderByActiveDesc(String bannedId);
+
 }

@@ -21,4 +21,6 @@ public interface BanRepository {
 
   List<Ban> findByReasonAndActiveTrue(BanReason banReason);
 
+  List<Ban> findAllByBannedIdOrderByActiveDesc(String bannedId);
+
 }
