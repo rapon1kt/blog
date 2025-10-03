@@ -18,7 +18,8 @@ public class BanEntity {
   private boolean active;
   private BanCategory category;
   private BanReason reason;
-  private String description;
+  private String banDescription;
+  private String moderatorDescription;
   private String moderatorId;
   private String bannedId;
   private Instant expiresAt;

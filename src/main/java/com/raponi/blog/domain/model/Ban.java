@@ -7,7 +7,8 @@ public class Ban {
   private boolean active;
   private BanCategory category;
   private BanReason reason;
-  private String description;
+  private String banDescription;
+  private String moderatorDescription;
   private String moderatorId;
   private String bannedId;
   private Instant expiresAt;
@@ -18,7 +19,8 @@ public class Ban {
     this.active = true;
     this.category = category;
     this.reason = reason;
-    this.description = reason.getDescription();
+    this.banDescription = reason.getDescription();
+    this.moderatorDescription = description;
     this.moderatorId = moderatorId;
     this.bannedId = bannedId;
     this.expiresAt = expiresAt;
@@ -57,12 +59,20 @@ public class Ban {
     this.reason = reason;
   }
 
-  public String getDescription() {
-    return description;
+  public String getBanDescription() {
+    return banDescription;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setBanDescription(String banDescription) {
+    this.banDescription = banDescription;
+  }
+
+  public String getModeratorDescription() {
+    return moderatorDescription;
+  }
+
+  public void setModeratorDescription(String moderatorDescription) {
+    this.moderatorDescription = moderatorDescription;
   }
 
   public String getModeratorId() {
