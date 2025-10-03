@@ -8,6 +8,8 @@ import com.raponi.blog.application.service.ban.FindAccountBansService;
 import com.raponi.blog.domain.model.BanReason;
 import com.raponi.blog.presentation.dto.BanAccountRequestDTO;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -32,7 +34,8 @@ public class BanController {
 
   @PostMapping("/{bannedId}")
   public ResponseEntity<?> banAccount(@PathVariable("bannedId") String bannedId,
-      @RequestParam("reason") BanReason reason, Authentication auth, @RequestBody BanAccountRequestDTO requestDTO) {
+      @RequestParam("reason") BanReason reason, Authentication auth,
+      @RequestBody @Valid BanAccountRequestDTO requestDTO) {
     return ResponseEntity.ok(this.banAccountService.handle(auth.getName(), bannedId, reason, requestDTO));
   }
 
