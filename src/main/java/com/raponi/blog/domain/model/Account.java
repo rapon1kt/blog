@@ -10,12 +10,13 @@ public class Account {
   private String description;
   private String password;
   private boolean active;
+  private boolean banned;
   private String role;
   private Instant createdAt;
   private Instant modifiedAt;
 
   public Account(String id, String email, String username, String picture, String description, String password,
-      boolean active, String role, Instant createdAt, Instant modifiedAt) {
+      boolean active, boolean banned, String role, Instant createdAt, Instant modifiedAt) {
     this.id = id;
     this.email = email;
     this.username = username;
@@ -23,13 +24,14 @@ public class Account {
     this.description = description;
     this.password = password;
     this.active = active;
+    this.banned = banned;
     this.role = role;
     this.createdAt = createdAt;
     this.modifiedAt = modifiedAt;
   }
 
   public static Account create(String email, String username, String password) {
-    return new Account(null, email, username, null, null, password, true, "USER", Instant.now(), Instant.now());
+    return new Account(null, email, username, null, null, password, true, false, "USER", Instant.now(), Instant.now());
   }
 
   public String getId() {
@@ -86,6 +88,14 @@ public class Account {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public boolean isBanned() {
+    return banned;
+  }
+
+  public void setBanned(boolean banned) {
+    this.banned = banned;
   }
 
   public String getRole() {
