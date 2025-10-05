@@ -14,13 +14,13 @@ public class Ban {
   private Instant expiresAt;
   private Instant bannedAt;
 
-  public Ban(BanCategory category, BanReason reason, String description, String moderatorId, String bannedId,
+  public Ban(BanCategory category, BanReason reason, String moderatorDescription, String moderatorId, String bannedId,
       Instant expiresAt) {
     this.active = true;
     this.category = category;
     this.reason = reason;
     this.banDescription = reason.getDescription();
-    this.moderatorDescription = description;
+    this.moderatorDescription = moderatorDescription;
     this.moderatorId = moderatorId;
     this.bannedId = bannedId;
     this.expiresAt = expiresAt;
