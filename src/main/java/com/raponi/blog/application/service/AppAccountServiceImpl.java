@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Ban;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
@@ -42,7 +43,7 @@ public class AppAccountServiceImpl implements UserDetailsService {
             "Your account is temporarily banned until " + activeBan.getExpiresAt().toString()
                 + ". Reason: " + activeBan.getReason() + " - " + activeBan.getModeratorDescription());
       } else {
-        activeBan.setActive(false);
+        activeBan.setStatus(BanStatus.EXPIRED);
         this.banRepository.save(activeBan);
       }
     }
@@ -62,7 +63,7 @@ public class AppAccountServiceImpl implements UserDetailsService {
         throw new AccessDeniedException("Your account is temporarily banned until" + activeBan.getExpiresAt().toString()
             + ". Reason: " + activeBan.getReason() + " - " + activeBan.getModeratorDescription());
       } else {
-        activeBan.setActive(false);
+        activeBan.setStatus(BanStatus.EXPIRED);
         this.banRepository.save(activeBan);
       }
     }
