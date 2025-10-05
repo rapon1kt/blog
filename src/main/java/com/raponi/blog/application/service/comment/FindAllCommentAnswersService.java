@@ -42,12 +42,14 @@ public class FindAllCommentAnswersService implements FindAllCommentAnswersUseCas
           .toList();
     } else {
       List<Comment> answers = this.commentRepository.findByCommentIdAndAnswerTrue(commentId);
-      List<Comment> answersOfNonBlocked = new ArrayList<Comment>();
+      List<Comment> answersOfNonBlockedAndNonBanned = new ArrayList<Comment>();
       answers.forEach(comment -> {
-        if (!this.accountValidatorService.isBlocked(comment.getAuthorId()))
-          answersOfNonBlocked.add(comment);
+        boolean isViwerBlocked = this.accountValidatorService.isBlocked(comment.getAuthorId());
+        boolean isAccountBanned = this.accountValidatorService.isBanned(comment.getAuthorId());
+        if (!isViwerBlocked && !isAccountBanned)
+          answersOfNonBlockedAndNonBanned.add(comment);
       });
-      return answersOfNonBlocked.stream().map(commentMapper::toResponse).toList();
+      return answersOfNonBlockedAndNonBanned.stream().map(commentMapper::toResponse).toList();
     }
   }
 
