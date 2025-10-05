@@ -10,6 +10,7 @@ import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Ban;
 import com.raponi.blog.domain.model.BanReason;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.dto.BanAccountRequestDTO;
@@ -37,14 +38,15 @@ public class BanAccountService implements BanAccountUseCase {
 
     long countOfBans = this.banRepository.countByBannedId(bannedId);
 
-    if (countOfBans == 5) {
-      Instant expiresAt = Instant.now().plus(Duration.ofDays(3650));
+    if (countOfBans == 4) {
+      Instant expiresAt = Instant.now().plus(Duration.ofDays(3650000));
       Ban maxBan = new Ban(reason.getCategory(), reason, requestDTO.getDescription(), moderatorId, bannedId, expiresAt);
+      maxBan.setStatus(BanStatus.PERMANENTLY_ACTIVE);
       return this.banRepository.save(maxBan);
     }
 
     this.banRepository.findByBannedIdAndActiveTrue(bannedId).ifPresent(existingBan -> {
-      existingBan.setActive(false);
+      existingBan.setStatus(BanStatus.REPLACED);
       this.banRepository.save(existingBan);
     });
 
