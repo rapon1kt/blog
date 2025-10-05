@@ -23,4 +23,6 @@ public interface BanRepository {
 
   List<Ban> findAllByBannedIdOrderByActiveDesc(String bannedId);
 
+  long countByBannedId(String bannedId);
+
 }
