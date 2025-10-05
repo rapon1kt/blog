@@ -107,6 +107,15 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     return isViwerBlocked;
   }
 
+  public boolean isBanned(String accountId) {
+    boolean verifiedAccount = this.verifyPresenceAndActive("_id", accountId);
+    if (verifiedAccount) {
+      Query query = new Query(Criteria.where("_id").is(accountId));
+      return this.mongoTemplate.findOne(query, Account.class).isBanned();
+    }
+    return false;
+  }
+
   public String verifyAccountWithUsernameAndReturnId(String username) {
     if (verifyPresenceAndActive("username", username)) {
       Query query = new Query(Criteria.where("username").is(username));
