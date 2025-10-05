@@ -35,6 +35,14 @@ public class BanAccountService implements BanAccountUseCase {
     if (!validAccount)
       throw new ResourceNotFoundException("This account cannot be found");
 
+    long countOfBans = this.banRepository.countByBannedId(bannedId);
+
+    if (countOfBans == 5) {
+      Instant expiresAt = Instant.now().plus(Duration.ofDays(3650));
+      Ban maxBan = new Ban(reason.getCategory(), reason, requestDTO.getDescription(), moderatorId, bannedId, expiresAt);
+      return this.banRepository.save(maxBan);
+    }
+
     this.banRepository.findByBannedIdAndActiveTrue(bannedId).ifPresent(existingBan -> {
       existingBan.setActive(false);
       this.banRepository.save(existingBan);
