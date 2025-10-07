@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.raponi.blog.domain.model.Ban;
 import com.raponi.blog.domain.model.BanCategory;
 import com.raponi.blog.domain.model.BanReason;
+import com.raponi.blog.domain.model.BanStatus;
 
 public interface BanRepository {
 
@@ -13,15 +14,15 @@ public interface BanRepository {
 
   Optional<Ban> findById(String id);
 
-  List<Ban> findByActiveTrue(boolean active);
+  List<Ban> findByStatus(BanStatus status);
 
-  Optional<Ban> findByBannedIdAndActiveTrue(String bannedId);
+  Optional<Ban> findTopByBannedIdAndOrderByBannedAt(String bannedId);
 
-  List<Ban> findByCategoryAndActiveTrue(BanCategory category);
+  List<Ban> findByCategoryAndStatus(BanCategory category, BanStatus status);
 
-  List<Ban> findByReasonAndActiveTrue(BanReason banReason);
+  List<Ban> findByReasonAndStatus(BanReason banReason, BanStatus status);
 
-  List<Ban> findAllByBannedIdOrderByActiveDesc(String bannedId);
+  List<Ban> findAllByBannedIdOrderByStatusDesc(String bannedId, BanStatus status);
 
   long countByBannedId(String bannedId);
 
