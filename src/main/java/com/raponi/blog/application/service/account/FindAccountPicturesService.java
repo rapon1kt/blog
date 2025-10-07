@@ -41,7 +41,7 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
     if (isViwerBlocked || isAccountBanned)
       return null;
     Account account = this.accountRepository.findByUsername(username).get();
-    if (account.getPicture().isEmpty() || account.getPicture().equals(null))
+    if (account.getPicture() == null || account.getPicture().isEmpty())
       throw new ResourceNotFoundException("This account don't have a profile picture.");
 
     GridFSFile image = this.gridFsTemplate
