@@ -45,7 +45,7 @@ public class BanAccountService implements BanAccountUseCase {
       return this.banRepository.save(maxBan);
     }
 
-    this.banRepository.findByBannedIdAndActiveTrue(bannedId).ifPresent(existingBan -> {
+    this.banRepository.findTopByBannedIdAndOrderByBannedAt(bannedId).ifPresent(existingBan -> {
       existingBan.setStatus(BanStatus.REPLACED);
       this.banRepository.save(existingBan);
     });

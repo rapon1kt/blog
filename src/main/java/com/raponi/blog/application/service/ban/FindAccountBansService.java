@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.ban.FindAccountBansUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Ban;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
@@ -25,7 +26,7 @@ public class FindAccountBansService implements FindAccountBansUseCase {
   public List<Ban> handle(String bannedId) {
     boolean isVerified = this.accountValidatorService.verifyAccountWithAccountId(bannedId);
     if (isVerified)
-      return this.banRepository.findAllByBannedIdOrderByActiveDesc(bannedId);
+      return this.banRepository.findAllByBannedIdOrderByStatusDesc(bannedId, BanStatus.ACTIVE);
     throw new ResourceNotFoundException("This account cannot be found.");
   }
 
