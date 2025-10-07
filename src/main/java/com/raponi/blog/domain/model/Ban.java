@@ -4,7 +4,7 @@ import java.time.Instant;
 
 public class Ban {
   private String id;
-  private boolean active;
+  private BanStatus status;
   private BanCategory category;
   private BanReason reason;
   private String banDescription;
@@ -14,13 +14,13 @@ public class Ban {
   private Instant expiresAt;
   private Instant bannedAt;
 
-  public Ban(BanCategory category, BanReason reason, String description, String moderatorId, String bannedId,
+  public Ban(BanCategory category, BanReason reason, String moderatorDescription, String moderatorId, String bannedId,
       Instant expiresAt) {
-    this.active = true;
+    this.status = BanStatus.ACTIVE;
     this.category = category;
     this.reason = reason;
     this.banDescription = reason.getDescription();
-    this.moderatorDescription = description;
+    this.moderatorDescription = moderatorDescription;
     this.moderatorId = moderatorId;
     this.bannedId = bannedId;
     this.expiresAt = expiresAt;
@@ -35,12 +35,12 @@ public class Ban {
     this.id = id;
   }
 
-  public boolean isActive() {
-    return active;
+  public BanStatus getStatus() {
+    return status;
   }
 
-  public void setActive(boolean active) {
-    this.active = active;
+  public void setStatus(BanStatus status) {
+    this.status = status;
   }
 
   public BanCategory getCategory() {

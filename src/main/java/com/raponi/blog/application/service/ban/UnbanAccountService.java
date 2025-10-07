@@ -8,6 +8,7 @@ import com.raponi.blog.application.usecase.ban.UnbanAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Ban;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
@@ -33,11 +34,11 @@ public class UnbanAccountService implements UnbanAccountUseCase {
     if (!isValidAccount)
       throw new ResourceNotFoundException("This account cannot be found.");
 
-    Optional<Ban> optionalBan = this.banRepository.findByBannedIdAndActiveTrue(bannedId);
+    Optional<Ban> optionalBan = this.banRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId);
     Account bannedAccount = this.accountRepository.findById(bannedId).get();
     if (optionalBan.isPresent()) {
       Ban existingBan = optionalBan.get();
-      existingBan.setActive(false);
+      existingBan.setStatus(BanStatus.ACTIVE);
       bannedAccount.setBanned(false);
       this.banRepository.save(existingBan);
       this.accountRepository.save(bannedAccount);

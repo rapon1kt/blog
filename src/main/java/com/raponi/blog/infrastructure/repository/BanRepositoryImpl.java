@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.raponi.blog.domain.model.Ban;
-import com.raponi.blog.domain.model.BanCategory;
 import com.raponi.blog.domain.model.BanReason;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.infrastructure.persistence.entity.BanEntity;
 import com.raponi.blog.infrastructure.persistence.repository.MongoBanRepository;
@@ -25,23 +25,24 @@ public class BanRepositoryImpl implements BanRepository {
   }
 
   @Override
-  public List<Ban> findAllByBannedIdOrderByActiveDesc(String bannedId) {
-    return this.mongoRepository.findAllByBannedIdOrderByActiveDesc(bannedId).stream().map(banMapper::toDomain).toList();
+  public long countByBannedId(String bannedId) {
+    return this.mongoRepository.countByBannedId(bannedId);
   }
 
   @Override
-  public List<Ban> findByActiveTrue(boolean active) {
-    return this.mongoRepository.findByActiveTrue(active).stream().map(banMapper::toDomain).toList();
+  public List<Ban> findAllByBannedIdOrderByBannedAtDesc(String bannedId) {
+    return this.mongoRepository.findAllByBannedIdOrderByBannedAtDesc(bannedId).stream().map(banMapper::toDomain)
+        .toList();
   }
 
   @Override
-  public List<Ban> findByCategoryAndActiveTrue(BanCategory category) {
-    return this.mongoRepository.findByCategoryAndActiveTrue(category).stream().map(banMapper::toDomain).toList();
+  public List<Ban> findByStatus(BanStatus status) {
+    return this.mongoRepository.findByStatus(status).stream().map(banMapper::toDomain).toList();
   }
 
   @Override
-  public Optional<Ban> findByBannedIdAndActiveTrue(String bannedId) {
-    Optional<BanEntity> entity = this.mongoRepository.findByBannedIdAndActiveTrue(bannedId);
+  public Optional<Ban> findTopByBannedIdOrderByBannedAtDesc(String bannedId) {
+    Optional<BanEntity> entity = this.mongoRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId);
     return entity.map(banMapper::toDomain);
   }
 
@@ -52,8 +53,13 @@ public class BanRepositoryImpl implements BanRepository {
   }
 
   @Override
-  public List<Ban> findByReasonAndActiveTrue(BanReason banReason) {
-    return this.mongoRepository.findByReasonAndActiveTrue(banReason).stream().map(banMapper::toDomain).toList();
+  public List<Ban> findAll() {
+    return this.mongoRepository.findAll().stream().map(banMapper::toDomain).toList();
+  }
+
+  @Override
+  public List<Ban> findByReasonAndStatus(BanReason banReason, BanStatus status) {
+    return this.mongoRepository.findByReasonAndStatus(banReason, status).stream().map(banMapper::toDomain).toList();
   }
 
   @Override

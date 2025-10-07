@@ -10,9 +10,11 @@ import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Ban;
 import com.raponi.blog.domain.model.BanReason;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.dto.BanAccountRequestDTO;
+import com.raponi.blog.presentation.errors.BusinessRuleException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
@@ -35,9 +37,30 @@ public class BanAccountService implements BanAccountUseCase {
     if (!validAccount)
       throw new ResourceNotFoundException("This account cannot be found");
 
-    this.banRepository.findByBannedIdAndActiveTrue(bannedId).ifPresent(existingBan -> {
-      existingBan.setActive(false);
-      this.banRepository.save(existingBan);
+    long countOfBans = this.banRepository.countByBannedId(bannedId);
+
+    if (countOfBans == 4) {
+      Instant expiresAt = Instant.now().plus(Duration.ofDays(3650000));
+      Ban maxBan = new Ban(reason.getCategory(), reason, requestDTO.getDescription(), moderatorId, bannedId, expiresAt);
+      maxBan.setStatus(BanStatus.PERMANENTLY_ACTIVE);
+      this.banRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId).ifPresent(existingBan -> {
+        if (existingBan.getStatus().equals(BanStatus.ACTIVE)) {
+          existingBan.setStatus(BanStatus.REPLACED);
+          this.banRepository.save(existingBan);
+        }
+      });
+      return this.banRepository.save(maxBan);
+    }
+
+    if (countOfBans >= 5) {
+      throw new BusinessRuleException("This account is already banned permanently.");
+    }
+
+    this.banRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId).ifPresent(existingBan -> {
+      if (existingBan.getStatus().equals(BanStatus.ACTIVE)) {
+        existingBan.setStatus(BanStatus.REPLACED);
+        this.banRepository.save(existingBan);
+      }
     });
 
     Account bannedAccount = this.accountRepository.findById(bannedId).get();

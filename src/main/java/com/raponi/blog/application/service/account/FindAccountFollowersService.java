@@ -28,7 +28,8 @@ public class FindAccountFollowersService implements FindAccountFollowersUseCase 
     if (accountId.equals(null))
       throw new AccessDeniedException("You don't have permission to do this.");
     boolean isViewerBlocked = this.accountValidatorService.isBlocked(accountId);
-    if (!isViewerBlocked)
+    boolean isAccountBanned = this.accountValidatorService.isBanned(accountId);
+    if (!isViewerBlocked && !isAccountBanned)
       return this.followRepository.findByFollowingId(accountId).stream().map(Follow::getFollowerId)
           .toList();
     return null;

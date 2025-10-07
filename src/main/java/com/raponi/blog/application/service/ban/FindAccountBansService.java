@@ -25,7 +25,7 @@ public class FindAccountBansService implements FindAccountBansUseCase {
   public List<Ban> handle(String bannedId) {
     boolean isVerified = this.accountValidatorService.verifyAccountWithAccountId(bannedId);
     if (isVerified)
-      return this.banRepository.findAllByBannedIdOrderByActiveDesc(bannedId);
+      return this.banRepository.findAllByBannedIdOrderByBannedAtDesc(bannedId);
     throw new ResourceNotFoundException("This account cannot be found.");
   }
 

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.raponi.blog.domain.model.BanCategory;
 import com.raponi.blog.domain.model.BanReason;
+import com.raponi.blog.domain.model.BanStatus;
 
 import lombok.Data;
 
@@ -15,7 +16,7 @@ import lombok.Data;
 public class BanEntity {
   @Id
   private String id;
-  private boolean active;
+  private BanStatus status;
   private BanCategory category;
   private BanReason reason;
   private String banDescription;

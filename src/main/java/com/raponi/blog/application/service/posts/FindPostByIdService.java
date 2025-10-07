@@ -38,9 +38,10 @@ public class FindPostByIdService implements FindPostByIdUseCase {
     if (this.accountValidatorService.isAdmin()) {
       return responsePost;
     } else {
-      if (this.accountValidatorService.isBlocked(post.getAuthorId()))
-        return null;
-      return responsePost;
+      if (!this.accountValidatorService.isBlocked(post.getAuthorId())
+          && !this.accountValidatorService.isBanned(post.getAuthorId()))
+        return responsePost;
+      return null;
     }
   }
 }

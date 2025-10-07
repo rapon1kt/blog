@@ -32,7 +32,8 @@ public class FindAccountByUsernameService implements FindAccountByUsernameUseCas
     if (accountId.equals(null))
       throw new AccessDeniedException("You don't have permission to do this.");
     boolean isViewerBlocked = this.accountValidatorService.isBlocked(accountId);
-    if (isViewerBlocked) {
+    boolean isAccountBanned = this.accountValidatorService.isBanned(accountId);
+    if (isViewerBlocked || isAccountBanned) {
       PublicAccountResponseDTO accountToBlockedViwer = new PublicAccountResponseDTO();
       accountToBlockedViwer.setUsername("unknow_profile_username");
       accountToBlockedViwer.setPicture("unknow_profile_picture");

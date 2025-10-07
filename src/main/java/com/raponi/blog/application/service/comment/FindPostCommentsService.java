@@ -40,12 +40,14 @@ public class FindPostCommentsService implements FindPostCommentsUseCase {
       return this.commentRepository.findByPostId(postId).stream().map(commentMapper::toResponse).toList();
     } else {
       List<Comment> comments = this.commentRepository.findByPostId(postId);
-      List<Comment> commentsOfNonBlocked = new ArrayList<Comment>();
+      List<Comment> commentsOfNonBlockedAndNonBanned = new ArrayList<Comment>();
       comments.forEach(comment -> {
-        if (!this.accountValidatorService.isBlocked(comment.getAuthorId()))
-          commentsOfNonBlocked.add(comment);
+        boolean isViwerBlocked = this.accountValidatorService.isBlocked(comment.getAuthorId());
+        boolean isAccountBanned = this.accountValidatorService.isBanned(comment.getAuthorId());
+        if (!isViwerBlocked && !isAccountBanned)
+          commentsOfNonBlockedAndNonBanned.add(comment);
       });
-      return commentsOfNonBlocked.stream().map(commentMapper::toResponse).toList();
+      return commentsOfNonBlockedAndNonBanned.stream().map(commentMapper::toResponse).toList();
     }
   }
 }
