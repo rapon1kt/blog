@@ -16,7 +16,7 @@ public interface BanRepository {
 
   List<Ban> findByStatus(BanStatus status);
 
-  Optional<Ban> findTopByBannedIdAndOrderByBannedAt(String bannedId);
+  Optional<Ban> findTopByBannedIdOrderByBannedAt(String bannedId);
 
   List<Ban> findByCategoryAndStatus(BanCategory category, BanStatus status);
 

@@ -47,8 +47,8 @@ public class BanRepositoryImpl implements BanRepository {
   }
 
   @Override
-  public Optional<Ban> findTopByBannedIdAndOrderByBannedAt(String bannedId) {
-    Optional<BanEntity> entity = this.mongoRepository.findTopByBannedIdAndOrderByBannedAt(bannedId);
+  public Optional<Ban> findTopByBannedIdOrderByBannedAt(String bannedId) {
+    Optional<BanEntity> entity = this.mongoRepository.findTopByBannedIdOrderByBannedAt(bannedId);
     return entity.map(banMapper::toDomain);
   }
 

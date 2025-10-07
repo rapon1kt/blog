@@ -16,7 +16,7 @@ public interface MongoBanRepository extends MongoRepository<BanEntity, String> {
 
   List<BanEntity> findByStatus(BanStatus status);
 
-  Optional<BanEntity> findTopByBannedIdAndOrderByBannedAt(String bannedId);
+  Optional<BanEntity> findTopByBannedIdOrderByBannedAt(String bannedId);
 
   List<BanEntity> findByCategoryAndStatus(BanCategory category, BanStatus status);
 
