@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import com.raponi.blog.domain.model.Ban;
-import com.raponi.blog.domain.model.BanCategory;
 import com.raponi.blog.domain.model.BanReason;
 import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.BanRepository;
@@ -31,12 +30,6 @@ public class BanRepositoryImpl implements BanRepository {
   }
 
   @Override
-  public List<Ban> findAllByBannedIdOrderByStatusDesc(String bannedId) {
-    return this.mongoRepository.findAllByBannedIdOrderByStatusDesc(bannedId).stream().map(banMapper::toDomain)
-        .toList();
-  }
-
-  @Override
   public List<Ban> findAllByBannedIdOrderByBannedAtDesc(String bannedId) {
     return this.mongoRepository.findAllByBannedIdOrderByBannedAtDesc(bannedId).stream().map(banMapper::toDomain)
         .toList();
@@ -45,11 +38,6 @@ public class BanRepositoryImpl implements BanRepository {
   @Override
   public List<Ban> findByStatus(BanStatus status) {
     return this.mongoRepository.findByStatus(status).stream().map(banMapper::toDomain).toList();
-  }
-
-  @Override
-  public List<Ban> findByCategoryAndStatus(BanCategory category, BanStatus status) {
-    return this.mongoRepository.findByCategoryAndStatus(category, status).stream().map(banMapper::toDomain).toList();
   }
 
   @Override
@@ -62,6 +50,11 @@ public class BanRepositoryImpl implements BanRepository {
   public Optional<Ban> findById(String id) {
     Optional<BanEntity> entity = this.mongoRepository.findById(id);
     return entity.map(banMapper::toDomain);
+  }
+
+  @Override
+  public List<Ban> findAll() {
+    return this.mongoRepository.findAll().stream().map(banMapper::toDomain).toList();
   }
 
   @Override

@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.raponi.blog.domain.model.BanCategory;
 import com.raponi.blog.domain.model.BanReason;
 import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.infrastructure.persistence.entity.BanEntity;
@@ -18,11 +17,7 @@ public interface MongoBanRepository extends MongoRepository<BanEntity, String> {
 
   Optional<BanEntity> findTopByBannedIdOrderByBannedAtDesc(String bannedId);
 
-  List<BanEntity> findByCategoryAndStatus(BanCategory category, BanStatus status);
-
   List<BanEntity> findByReasonAndStatus(BanReason banReason, BanStatus status);
-
-  List<BanEntity> findAllByBannedIdOrderByStatusDesc(String bannedId);
 
   List<BanEntity> findAllByBannedIdOrderByBannedAtDesc(String bannedId);
 
