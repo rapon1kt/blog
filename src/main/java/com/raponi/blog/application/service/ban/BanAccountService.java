@@ -14,6 +14,7 @@ import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.dto.BanAccountRequestDTO;
+import com.raponi.blog.presentation.errors.BusinessRuleException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
@@ -42,12 +43,24 @@ public class BanAccountService implements BanAccountUseCase {
       Instant expiresAt = Instant.now().plus(Duration.ofDays(3650000));
       Ban maxBan = new Ban(reason.getCategory(), reason, requestDTO.getDescription(), moderatorId, bannedId, expiresAt);
       maxBan.setStatus(BanStatus.PERMANENTLY_ACTIVE);
+      this.banRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId).ifPresent(existingBan -> {
+        if (existingBan.getStatus().equals(BanStatus.ACTIVE)) {
+          existingBan.setStatus(BanStatus.REPLACED);
+          this.banRepository.save(existingBan);
+        }
+      });
       return this.banRepository.save(maxBan);
     }
 
-    this.banRepository.findTopByBannedIdOrderByBannedAt(bannedId).ifPresent(existingBan -> {
-      existingBan.setStatus(BanStatus.REPLACED);
-      this.banRepository.save(existingBan);
+    if (countOfBans >= 5) {
+      throw new BusinessRuleException("This account is already banned permanently.");
+    }
+
+    this.banRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId).ifPresent(existingBan -> {
+      if (existingBan.getStatus().equals(BanStatus.ACTIVE)) {
+        existingBan.setStatus(BanStatus.REPLACED);
+        this.banRepository.save(existingBan);
+      }
     });
 
     Account bannedAccount = this.accountRepository.findById(bannedId).get();
