@@ -59,12 +59,13 @@ public class FindTargetLikesService implements FindTargetLikesUseCase {
       return null;
     } else {
       List<Like> likes = this.likeRepository.findByTargetId(targetId);
-      List<Like> likesOfNonBlocked = new ArrayList<Like>();
+      List<Like> likesOfNonBlockedAndNonBanned = new ArrayList<Like>();
       likes.forEach(like -> {
-        if (!this.accountValidatorService.isBlocked(like.getAccountId()))
-          likesOfNonBlocked.add(like);
+        if (!this.accountValidatorService.isBlocked(like.getAccountId()) &&
+            !this.accountValidatorService.isBanned(like.getAccountId()))
+          likesOfNonBlockedAndNonBanned.add(like);
       });
-      return likesOfNonBlocked;
+      return likesOfNonBlockedAndNonBanned;
     }
   }
 
