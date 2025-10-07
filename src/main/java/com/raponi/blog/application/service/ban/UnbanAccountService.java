@@ -34,7 +34,7 @@ public class UnbanAccountService implements UnbanAccountUseCase {
     if (!isValidAccount)
       throw new ResourceNotFoundException("This account cannot be found.");
 
-    Optional<Ban> optionalBan = this.banRepository.findTopByBannedIdOrderByBannedAt(bannedId);
+    Optional<Ban> optionalBan = this.banRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId);
     Account bannedAccount = this.accountRepository.findById(bannedId).get();
     if (optionalBan.isPresent()) {
       Ban existingBan = optionalBan.get();
