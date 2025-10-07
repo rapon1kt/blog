@@ -32,12 +32,14 @@ public class FindAllPostsService implements FindAllPostsUseCase {
       return this.postRepository.findAll().stream().map(postMapper::toResponse).toList();
     } else {
       List<Post> posts = this.postRepository.findByPostVisibility(PostVisibility.PUBLIC);
-      List<Post> postsOfNonBlocked = new ArrayList<Post>();
+      List<Post> postsOfNonBlockedAndNonBanned = new ArrayList<Post>();
       posts.forEach(post -> {
-        if (!this.accountValidatorService.isBlocked(post.getAuthorId()))
-          postsOfNonBlocked.add(post);
+        boolean isViwerBlocked = this.accountValidatorService.isBlocked(post.getAuthorId());
+        boolean isAccountBanned = this.accountValidatorService.isBanned(post.getAuthorId());
+        if (!isViwerBlocked && !isAccountBanned)
+          postsOfNonBlockedAndNonBanned.add(post);
       });
-      return postsOfNonBlocked.stream().map(postMapper::toResponse).toList();
+      return postsOfNonBlockedAndNonBanned.stream().map(postMapper::toResponse).toList();
     }
   };
 

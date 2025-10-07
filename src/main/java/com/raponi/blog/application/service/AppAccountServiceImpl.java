@@ -1,8 +1,5 @@
 package com.raponi.blog.application.service;
 
-import java.time.Instant;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,8 +7,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.raponi.blog.application.validators.BanValidatorService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Ban;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
@@ -23,9 +22,11 @@ public class AppAccountServiceImpl implements UserDetailsService {
   @Autowired
   private AccountRepository accountRepository;
   private BanRepository banRepository;
+  private BanValidatorService banValidatorService;
 
-  public AppAccountServiceImpl(BanRepository banRepository) {
+  public AppAccountServiceImpl(BanRepository banRepository, BanValidatorService banValidatorService) {
     this.banRepository = banRepository;
+    this.banValidatorService = banValidatorService;
   }
 
   @Override
@@ -33,18 +34,21 @@ public class AppAccountServiceImpl implements UserDetailsService {
     Account account = this.accountRepository.findByUsername(username)
         .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found!"));
 
-    Optional<Ban> optionalBan = this.banRepository.findByBannedIdAndActiveTrue(account.getId());
+    if (!account.isBanned() && !banValidatorService.isBanValid(account.getId())) {
+      account.setBanned(true);
+      this.accountRepository.save(account);
+    }
 
-    if (optionalBan.isPresent()) {
-      Ban activeBan = optionalBan.get();
-      if (activeBan.getExpiresAt().isAfter(Instant.now())) {
+    if (account.isBanned() && !banValidatorService.isBanValid(account.getId())) {
+      Ban activeBan = this.banRepository.findTopByBannedIdOrderByBannedAtDesc(account.getId()).get();
+      if (activeBan.getStatus().equals(BanStatus.PERMANENTLY_ACTIVE)) {
         throw new AccessDeniedException(
-            "Your account is temporarily banned until " + activeBan.getExpiresAt().toString()
-                + ". Reason: " + activeBan.getReason() + " - " + activeBan.getModeratorDescription());
-      } else {
-        activeBan.setActive(false);
-        this.banRepository.save(activeBan);
+            "Your account is banned permanently. Reason: " + activeBan.getReason() + " - "
+                + activeBan.getModeratorDescription());
       }
+      throw new AccessDeniedException(
+          "Your account is temporarily banned until " + activeBan.getExpiresAt().toString()
+              + ". Reason: " + activeBan.getReason() + " - " + activeBan.getModeratorDescription());
     }
     return User.builder()
         .username(account.getUsername())
@@ -55,17 +59,6 @@ public class AppAccountServiceImpl implements UserDetailsService {
   public String getAccountIdByUsername(String username) {
     Account account = this.accountRepository.findByUsername(username)
         .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found!"));
-    Optional<Ban> optionalBan = this.banRepository.findByBannedIdAndActiveTrue(account.getId());
-    if (optionalBan.isPresent()) {
-      Ban activeBan = optionalBan.get();
-      if (activeBan.getExpiresAt().isAfter(Instant.now())) {
-        throw new AccessDeniedException("Your account is temporarily banned until" + activeBan.getExpiresAt().toString()
-            + ". Reason: " + activeBan.getReason() + " - " + activeBan.getModeratorDescription());
-      } else {
-        activeBan.setActive(false);
-        this.banRepository.save(activeBan);
-      }
-    }
     return account.getId();
   }
 

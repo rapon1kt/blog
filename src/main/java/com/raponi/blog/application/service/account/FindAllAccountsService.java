@@ -32,12 +32,14 @@ public class FindAllAccountsService implements FindAllAccountsUseCase {
       return this.accountRepository.findAll().stream().map(accountMapper::toPublicAccountResponseDTO).toList();
     } else {
       List<Account> accounts = this.accountRepository.findAllByActiveIsTrue();
-      List<Account> nonBlockedAccounts = new ArrayList<Account>();
+      List<Account> nonBlockedAndNonBannedAccounts = new ArrayList<Account>();
       accounts.forEach(account -> {
-        if (!this.accountValidatorService.isBlocked(account.getId()))
-          nonBlockedAccounts.add(account);
+        boolean isViwerBlocked = this.accountValidatorService.isBlocked(account.getId());
+        boolean isAccountBanned = this.accountValidatorService.isBanned(account.getId());
+        if (!isViwerBlocked && !isAccountBanned)
+          nonBlockedAndNonBannedAccounts.add(account);
       });
-      return nonBlockedAccounts.stream().map(accountMapper::toPublicAccountResponseDTO).toList();
+      return nonBlockedAndNonBannedAccounts.stream().map(accountMapper::toPublicAccountResponseDTO).toList();
     }
   }
 

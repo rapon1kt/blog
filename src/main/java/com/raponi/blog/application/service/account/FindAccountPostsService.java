@@ -41,7 +41,8 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
     Boolean verifiedAuthority = this.accountValidatorService.verifyAuthority("username", username);
     Account acc = this.accountRepository.findByUsername(username).get();
     boolean isViwerBlocked = this.accountValidatorService.isBlocked(acc.getId());
-    if (isViwerBlocked)
+    boolean isAccountBanned = this.accountValidatorService.isBanned(acc.getId());
+    if (isViwerBlocked || isAccountBanned)
       return null;
     return this.getAccountFeed(verifiedAuthority, acc.getId());
   }

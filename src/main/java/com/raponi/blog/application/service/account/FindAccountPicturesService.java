@@ -37,7 +37,8 @@ public class FindAccountPicturesService implements FindAccountPicturesUseCase {
     if (accountId.equals(null))
       throw new AccessDeniedException("You don't have permission to do this.");
     boolean isViwerBlocked = this.accountValidatorService.isBlocked(accountId);
-    if (isViwerBlocked)
+    boolean isAccountBanned = this.accountValidatorService.isBanned(accountId);
+    if (isViwerBlocked || isAccountBanned)
       return null;
     Account account = this.accountRepository.findByUsername(username).get();
     if (account.getPicture().isEmpty() || account.getPicture().equals(null))

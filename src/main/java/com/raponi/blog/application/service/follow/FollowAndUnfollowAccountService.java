@@ -43,7 +43,8 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
       throw new AccessDeniedException("You don't have permission to do this.");
 
     boolean isViewerBlocked = this.accountValidatorService.isBlocked(followingId);
-    if (isViewerBlocked)
+    boolean isAccountBanned = this.accountValidatorService.isBanned(followingId);
+    if (isViewerBlocked || isAccountBanned)
       throw new AccessDeniedException("You cannot follow this account.");
     Boolean exists = this.followRepository.existsByFollowerIdAndFollowingId(followerId, followingId);
     Account destinyAcc = this.accountRepository.findById(followingId).get();
