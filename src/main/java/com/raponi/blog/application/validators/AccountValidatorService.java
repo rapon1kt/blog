@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.AccountValidatorUseCase;
 import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
 import com.raponi.blog.infrastructure.persistence.entity.BlockEntity;
 import com.raponi.blog.presentation.mapper.AccountMapper;
@@ -20,10 +21,13 @@ public class AccountValidatorService implements AccountValidatorUseCase {
 
   private final MongoTemplate mongoTemplate;
   private final AccountMapper accountMapper;
+  private final AccountRepository accountRepository;
 
-  public AccountValidatorService(MongoTemplate mongoTemplate, AccountMapper accountMapper) {
+  public AccountValidatorService(MongoTemplate mongoTemplate, AccountMapper accountMapper,
+      AccountRepository accountRepository) {
     this.mongoTemplate = mongoTemplate;
     this.accountMapper = accountMapper;
+    this.accountRepository = accountRepository;
   }
 
   private Authentication getAuth() {
@@ -110,8 +114,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   public boolean isBanned(String accountId) {
     boolean verifiedAccount = this.verifyPresenceAndActive("_id", accountId);
     if (verifiedAccount) {
-      Query query = new Query(Criteria.where("_id").is(accountId));
-      return this.mongoTemplate.findOne(query, Account.class).isBanned();
+      return this.accountRepository.findById(accountId).get().isBanned();
     }
     return false;
   }
