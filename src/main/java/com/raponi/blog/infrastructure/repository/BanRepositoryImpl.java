@@ -31,8 +31,14 @@ public class BanRepositoryImpl implements BanRepository {
   }
 
   @Override
-  public List<Ban> findAllByBannedIdOrderByStatusDesc(String bannedId, BanStatus status) {
-    return this.mongoRepository.findAllByBannedIdOrderByStatusDesc(bannedId, status).stream().map(banMapper::toDomain)
+  public List<Ban> findAllByBannedIdOrderByStatusDesc(String bannedId) {
+    return this.mongoRepository.findAllByBannedIdOrderByStatusDesc(bannedId).stream().map(banMapper::toDomain)
+        .toList();
+  }
+
+  @Override
+  public List<Ban> findAllByBannedIdOrderByBannedAtDesc(String bannedId) {
+    return this.mongoRepository.findAllByBannedIdOrderByBannedAtDesc(bannedId).stream().map(banMapper::toDomain)
         .toList();
   }
 
@@ -47,8 +53,8 @@ public class BanRepositoryImpl implements BanRepository {
   }
 
   @Override
-  public Optional<Ban> findTopByBannedIdOrderByBannedAt(String bannedId) {
-    Optional<BanEntity> entity = this.mongoRepository.findTopByBannedIdOrderByBannedAt(bannedId);
+  public Optional<Ban> findTopByBannedIdOrderByBannedAtDesc(String bannedId) {
+    Optional<BanEntity> entity = this.mongoRepository.findTopByBannedIdOrderByBannedAtDesc(bannedId);
     return entity.map(banMapper::toDomain);
   }
 

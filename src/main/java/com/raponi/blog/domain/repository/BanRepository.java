@@ -16,13 +16,15 @@ public interface BanRepository {
 
   List<Ban> findByStatus(BanStatus status);
 
-  Optional<Ban> findTopByBannedIdOrderByBannedAt(String bannedId);
+  Optional<Ban> findTopByBannedIdOrderByBannedAtDesc(String bannedId);
 
   List<Ban> findByCategoryAndStatus(BanCategory category, BanStatus status);
 
   List<Ban> findByReasonAndStatus(BanReason banReason, BanStatus status);
 
-  List<Ban> findAllByBannedIdOrderByStatusDesc(String bannedId, BanStatus status);
+  List<Ban> findAllByBannedIdOrderByStatusDesc(String bannedId);
+
+  List<Ban> findAllByBannedIdOrderByBannedAtDesc(String bannedId);
 
   long countByBannedId(String bannedId);
 

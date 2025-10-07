@@ -16,13 +16,15 @@ public interface MongoBanRepository extends MongoRepository<BanEntity, String> {
 
   List<BanEntity> findByStatus(BanStatus status);
 
-  Optional<BanEntity> findTopByBannedIdOrderByBannedAt(String bannedId);
+  Optional<BanEntity> findTopByBannedIdOrderByBannedAtDesc(String bannedId);
 
   List<BanEntity> findByCategoryAndStatus(BanCategory category, BanStatus status);
 
   List<BanEntity> findByReasonAndStatus(BanReason banReason, BanStatus status);
 
-  List<BanEntity> findAllByBannedIdOrderByStatusDesc(String bannedId, BanStatus status);
+  List<BanEntity> findAllByBannedIdOrderByStatusDesc(String bannedId);
+
+  List<BanEntity> findAllByBannedIdOrderByBannedAtDesc(String bannedId);
 
   long countByBannedId(String bannedId);
 
