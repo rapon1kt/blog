@@ -14,6 +14,7 @@ import com.raponi.blog.domain.port.PasswordEncoderService;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.CreateAccountRequestDTO;
 import com.raponi.blog.presentation.dto.CreatedAccountResponseDTO;
+import com.raponi.blog.presentation.errors.InvalidParamException;
 import com.raponi.blog.presentation.mapper.AccountMapper;
 
 public class CreateAccountServiceTest {
@@ -60,6 +61,20 @@ public class CreateAccountServiceTest {
 
     assertThat(response).isNotNull();
     assertThat(response.getUsername()).isEqualTo("username");
+  }
+
+  @Test
+  void mustThrowErrorWhenEmailIsAlreadyRegistred() {
+    CreateAccountRequestDTO request = new CreateAccountRequestDTO();
+    request.setEmail("email@mail.com");
+    request.setUsername("username");
+    request.setPassword("12345678");
+
+    when(repository.existsByEmail("email@mail.com")).thenReturn(true);
+
+    assertThatThrownBy(() -> service.handle(request))
+        .isInstanceOf(InvalidParamException.class)
+        .hasMessage("E-mail already registred.");
   }
 
 }
