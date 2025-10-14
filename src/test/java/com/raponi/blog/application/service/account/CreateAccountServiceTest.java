@@ -77,4 +77,18 @@ public class CreateAccountServiceTest {
         .hasMessage("E-mail already registred.");
   }
 
+  @Test
+  void mustThrowErrorWhenUsernameIsAlreadyInUse() {
+    CreateAccountRequestDTO request = new CreateAccountRequestDTO();
+    request.setEmail("email@mail.com");
+    request.setUsername("username");
+    request.setPassword("12345678");
+
+    when(repository.existsByUsername("username")).thenReturn(true);
+
+    assertThatThrownBy(() -> service.handle(request))
+        .isInstanceOf(InvalidParamException.class)
+        .hasMessage("Username already registred.");
+  }
+
 }
