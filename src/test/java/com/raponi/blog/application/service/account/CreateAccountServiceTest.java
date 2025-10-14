@@ -106,4 +106,19 @@ public class CreateAccountServiceTest {
         .hasMessage("E-mail invalid.");
   }
 
+  @Test
+  void mustThrowErrorWhenPasswordIsShort() {
+    CreateAccountRequestDTO request = new CreateAccountRequestDTO();
+    request.setEmail("email@mail.com");
+    request.setUsername("username");
+    request.setPassword("123");
+
+    when(repository.existsByEmail(any())).thenReturn(false);
+    when(repository.existsByUsername(any())).thenReturn(false);
+
+    assertThatThrownBy(() -> service.handle(request))
+        .isInstanceOf(InvalidParamException.class)
+        .hasMessage("The password must be at least 8 characters long.");
+  }
+
 }
