@@ -15,6 +15,7 @@ import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.CreateAccountRequestDTO;
 import com.raponi.blog.presentation.dto.CreatedAccountResponseDTO;
 import com.raponi.blog.presentation.errors.InvalidParamException;
+import com.raponi.blog.presentation.errors.MissingParamException;
 import com.raponi.blog.presentation.mapper.AccountMapper;
 
 public class CreateAccountServiceTest {
@@ -134,6 +135,18 @@ public class CreateAccountServiceTest {
     assertThatThrownBy(() -> service.handle(request))
         .isInstanceOf(InvalidParamException.class)
         .hasMessage("The username must be at least 3 characters long.");
+  }
+
+  @Test
+  void mustThrowErrorWhenRequiredParamIsNull() {
+    CreateAccountRequestDTO request = new CreateAccountRequestDTO();
+    request.setEmail(null);
+    request.setUsername("username");
+    request.setPassword("12345678");
+
+    assertThatThrownBy(() -> service.handle(request))
+        .isInstanceOf(MissingParamException.class)
+        .hasMessageContaining("email");
   }
 
 }
