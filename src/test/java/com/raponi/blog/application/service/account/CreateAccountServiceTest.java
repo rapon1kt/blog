@@ -91,4 +91,19 @@ public class CreateAccountServiceTest {
         .hasMessage("Username already registred.");
   }
 
+  @Test
+  void mustThrowErrorWhenEmailIsInvalid() {
+    CreateAccountRequestDTO request = new CreateAccountRequestDTO();
+    request.setEmail("email@@invalid");
+    request.setUsername("username");
+    request.setPassword("12345678");
+
+    when(repository.existsByEmail(any())).thenReturn(false);
+    when(repository.existsByUsername(any())).thenReturn(false);
+
+    assertThatThrownBy(() -> service.handle(request))
+        .isInstanceOf(InvalidParamException.class)
+        .hasMessage("E-mail invalid.");
+  }
+
 }
