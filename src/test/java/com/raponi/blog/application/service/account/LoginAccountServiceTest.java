@@ -74,4 +74,20 @@ public class LoginAccountServiceTest {
     assertEquals("This account cannot be found.", exception.getMessage());
   }
 
+  @Test
+  void mustThrowIfAccountNotFoundInRepository() {
+    LoginAccountRequestDTO request = new LoginAccountRequestDTO();
+    request.setUsername("non_existent_username");
+    request.setPassword("12345678");
+    Authentication mockAuth = mock(Authentication.class);
+
+    when(mockAuth.isAuthenticated()).thenReturn(true);
+    when(authenticationManager.authenticate(any())).thenReturn(mockAuth);
+    when(accountRepository.findByUsername("non_existent_username")).thenReturn(Optional.empty());
+
+    ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+        () -> loginAccountService.handle(request));
+    assertEquals("This account cannot be found.", exception.getMessage());
+  }
+
 }
