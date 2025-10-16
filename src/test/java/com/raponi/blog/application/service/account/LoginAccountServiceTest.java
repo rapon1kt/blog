@@ -2,6 +2,7 @@ package com.raponi.blog.application.service.account;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -18,6 +19,7 @@ import com.raponi.blog.application.service.JWTService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.LoginAccountRequestDTO;
+import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 public class LoginAccountServiceTest {
 
@@ -53,6 +55,23 @@ public class LoginAccountServiceTest {
         .authenticate(any(UsernamePasswordAuthenticationToken.class));
     verify(accountRepository, times(1)).findByUsername("username");
     verify(jwtService, times(1)).generateToken("username", account);
+  }
+
+  @Test
+  void mustThrowIfAuthenticationFails() {
+    LoginAccountRequestDTO request = new LoginAccountRequestDTO();
+    request.setUsername("username");
+    request.setPassword("12345678");
+
+    Authentication mockAuth = mock(Authentication.class);
+
+    when(mockAuth.isAuthenticated()).thenReturn(false);
+    when(authenticationManager.authenticate(any())).thenReturn(mockAuth);
+
+    ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+        () -> loginAccountService.handle(request));
+
+    assertEquals("This account cannot be found.", exception.getMessage());
   }
 
 }
