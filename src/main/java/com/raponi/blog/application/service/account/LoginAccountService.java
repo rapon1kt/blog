@@ -32,7 +32,8 @@ public class LoginAccountService implements LoginAccountUseCase {
         .authenticate(new UsernamePasswordAuthenticationToken(requestDTO.getUsername(), requestDTO.getPassword()));
     if (!authentication.isAuthenticated())
       throw new ResourceNotFoundException("This account cannot be found.");
-    Account account = this.accountRepository.findByUsername(requestDTO.getUsername()).get();
+    Account account = this.accountRepository.findByUsername(requestDTO.getUsername())
+        .orElseThrow(() -> new ResourceNotFoundException("This account cannot be found."));
     return jwtService.generateToken(requestDTO.getUsername(), account);
   }
 }
