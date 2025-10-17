@@ -93,4 +93,11 @@ public class AppAccountServiceImplTest {
     assertTrue(ex.getMessage().contains("Your account is temporarily banned until "));
   }
 
+  @Test
+  void mustReturnAccountIdByUsername() {
+    when(accountRepository.findByUsername("username")).thenReturn(Optional.of(account));
+    String id = appAccountService.getAccountIdByUsername("username");
+    assertEquals(account.getId(), id);
+  }
+
 }
