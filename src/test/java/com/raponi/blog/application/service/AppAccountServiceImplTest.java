@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.raponi.blog.application.validators.BanValidatorService;
 import com.raponi.blog.domain.model.Account;
@@ -39,6 +40,15 @@ public class AppAccountServiceImplTest {
     ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
         () -> appAccountService.loadUserByUsername("non_existent"));
     assertEquals("This account cannot be found!", exception.getMessage());
+  }
+
+  @Test
+  void mustLoadUserSuccessfullyWhenNotBanned() {
+    when(accountRepository.findByUsername("username")).thenReturn(Optional.of(account));
+    when(banValidatorService.isBanValid(account.getId())).thenReturn(true);
+    UserDetails user = appAccountService.loadUserByUsername("username");
+    assertEquals("username", user.getUsername());
+    assertEquals("hashed_password", user.getPassword());
   }
 
 }
