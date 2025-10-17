@@ -2,8 +2,11 @@ package com.raponi.blog.application.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +15,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.raponi.blog.application.validators.BanValidatorService;
 import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.domain.model.Ban;
+import com.raponi.blog.domain.model.BanCategory;
+import com.raponi.blog.domain.model.BanReason;
+import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.BanRepository;
+import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 public class AppAccountServiceImplTest {
@@ -49,6 +57,23 @@ public class AppAccountServiceImplTest {
     UserDetails user = appAccountService.loadUserByUsername("username");
     assertEquals("username", user.getUsername());
     assertEquals("hashed_password", user.getPassword());
+  }
+
+  @Test
+  void mustThrowWhenAccountIsPermanentlyBanned() {
+    account.setBanned(true);
+    Instant expiresAt = Instant.now().plus(Duration.ofDays(3650000));
+    Ban ban = new Ban(BanCategory.SPAM_AND_MANIPULATION, BanReason.SPAM,
+        "Admin Decision", "moderator_id", "id", expiresAt);
+    ban.setStatus(BanStatus.PERMANENTLY_ACTIVE);
+    when(accountRepository.findByUsername("username")).thenReturn(Optional.of(account));
+    when(banValidatorService.isBanValid(account.getId())).thenReturn(false);
+    when(banRepository.findTopByBannedIdOrderByBannedAtDesc(account.getId())).thenReturn(Optional.of(ban));
+
+    AccessDeniedException exception = assertThrows(AccessDeniedException.class,
+        () -> appAccountService.loadUserByUsername("username"));
+
+    assertTrue(exception.getMessage().contains("Your account is banned permanently. Reason: "));
   }
 
 }
