@@ -76,4 +76,21 @@ public class AppAccountServiceImplTest {
     assertTrue(exception.getMessage().contains("Your account is banned permanently. Reason: "));
   }
 
+  @Test
+  void mustThrowWhenAccountIsTemporarilyBanned() {
+    account.setBanned(true);
+    Instant expiresAt = Instant.now().plus(Duration.ofDays(2));
+    Ban ban = new Ban(BanCategory.SPAM_AND_MANIPULATION, BanReason.SPAM,
+        "Admin Decision", "moderator_id", "id", expiresAt);
+
+    when(accountRepository.findByUsername("username")).thenReturn(Optional.of(account));
+    when(banValidatorService.isBanValid(account.getId())).thenReturn(false);
+    when(banRepository.findTopByBannedIdOrderByBannedAtDesc(account.getId())).thenReturn(Optional.of(ban));
+
+    AccessDeniedException ex = assertThrows(AccessDeniedException.class,
+        () -> appAccountService.loadUserByUsername("username"));
+
+    assertTrue(ex.getMessage().contains("Your account is temporarily banned until "));
+  }
+
 }
