@@ -100,4 +100,12 @@ public class AppAccountServiceImplTest {
     assertEquals(account.getId(), id);
   }
 
+  @Test
+  void mustThrowWhenGettingAccountIdOfNonexistentUser() {
+    when(accountRepository.findByUsername("ghost")).thenReturn(Optional.empty());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> appAccountService.getAccountIdByUsername("ghost"));
+  }
+
 }
