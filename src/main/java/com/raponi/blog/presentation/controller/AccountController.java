@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -81,13 +82,13 @@ public class AccountController {
     return ResponseEntity.ok(this.findAccountByEmailService.handle(email));
   }
 
-  @PutMapping("/{accountId}/newpassword")
+  @PatchMapping("/{accountId}/newpassword")
   public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
       @RequestBody @Valid UpdateAccountPasswordRequestDTO requestDTO) {
     return ResponseEntity.ok(this.changeAccountPasswordService.handle(accountId, requestDTO));
   }
 
-  @PutMapping("/{accountId}/status")
+  @PatchMapping("/{accountId}/status")
   public ResponseEntity<?> updateStatus(@PathVariable("accountId") String accountId) {
     return ResponseEntity.ok(this.updateAccountStatusService.handle(accountId));
   }
