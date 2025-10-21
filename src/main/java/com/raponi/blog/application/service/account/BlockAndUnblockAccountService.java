@@ -52,7 +52,7 @@ public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase
       throw new BusinessRuleException("You cannot block yourself.");
 
     boolean isAccountValid = this.accountValidatorService.verifyAccountWithAccountId(accountId);
-    boolean isBlockedAccountValid = this.accountValidatorService.verifyPresenceAndActive("_id", accountId);
+    boolean isBlockedAccountValid = this.accountValidatorService.verifyPresenceAndActive("_id", blockedId);
 
     if (!isAccountValid)
       throw new AccessDeniedException("You don't have permission to do this.");
