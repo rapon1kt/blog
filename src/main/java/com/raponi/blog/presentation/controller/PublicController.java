@@ -4,7 +4,6 @@ import com.raponi.blog.application.service.account.*;
 import com.raponi.blog.application.service.comment.FindAllCommentAnswersService;
 import com.raponi.blog.application.service.comment.FindPostCommentsService;
 import com.raponi.blog.application.service.like.FindTargetLikesService;
-import com.raponi.blog.application.service.posts.FindAllPostsService;
 import com.raponi.blog.application.service.posts.FindPostByIdService;
 import com.raponi.blog.domain.model.LikeTargetType;
 
@@ -25,7 +24,6 @@ public class PublicController {
   private final FindAllCommentAnswersService findAllCommentAnswersService;
   private final FindTargetLikesService findTargetLikesService;
   private final FindPostByIdService findPostByIdService;
-  private final FindAllPostsService findAllPostsService;
   private final FindAccountPicturesService findAccountPicturesService;
   private final FindAccountFollowingService findAccountFollowingService;
   private final FindAccountFollowersService findAccountFollowersService;
@@ -35,7 +33,7 @@ public class PublicController {
   PublicController(FindAccountByUsernameService findAccountByUsernameService,
       FindAccountPostsService findAccountPostsService, FindAccountFollowersService findAccountFollowersService,
       FindAccountFollowingService findAccountFollowingService, FindAccountPicturesService findAccountPicturesService,
-      FindAllPostsService findAllPostsService, FindPostByIdService findPostByIdService,
+      FindPostByIdService findPostByIdService,
       FindTargetLikesService findTargetLikesService, FindAllCommentAnswersService findAllCommentAnswersService,
       FindPostCommentsService findPostCommentsService) {
     this.findAccountByUsernameService = findAccountByUsernameService;
@@ -43,7 +41,6 @@ public class PublicController {
     this.findAccountFollowersService = findAccountFollowersService;
     this.findAccountFollowingService = findAccountFollowingService;
     this.findAccountPicturesService = findAccountPicturesService;
-    this.findAllPostsService = findAllPostsService;
     this.findPostByIdService = findPostByIdService;
     this.findTargetLikesService = findTargetLikesService;
     this.findAllCommentAnswersService = findAllCommentAnswersService;
@@ -78,11 +75,6 @@ public class PublicController {
   }
 
   /* POST PUBLIC SERVICES */
-
-  @GetMapping("/posts")
-  public ResponseEntity<?> getAllPosts() {
-    return ResponseEntity.ok(this.findAllPostsService.handle());
-  }
 
   @GetMapping("/post/{postId}")
   public ResponseEntity<?> findPostById(@PathVariable("postId") String postId) {

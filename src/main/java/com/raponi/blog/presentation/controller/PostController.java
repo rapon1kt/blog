@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,7 +42,7 @@ public class PostController {
     return ResponseEntity.status(201).body(this.createPostService.handle(requestDTO, auth.getName()));
   }
 
-  @PutMapping("/{postId}")
+  @PatchMapping("/{postId}")
   public ResponseEntity<?> updatePostStatus(@PathVariable("postId") String postId, Authentication auth,
       @RequestParam("visibility") PostVisibility visibility) {
     return ResponseEntity.ok(this.updatePostStatusService.handle(auth.getName(), postId, visibility));

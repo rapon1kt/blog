@@ -33,7 +33,7 @@ public class ChangeAccountPasswordService implements ChangeAccountPasswordUseCas
     boolean isValidAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
     if (!isValidAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
-    boolean correctOldPassword = passwordEncoder.matches(acc.getPassword(), requestDTO.getPassword());
+    boolean correctOldPassword = passwordEncoder.matches(requestDTO.getPassword(), acc.getPassword());
     if (!correctOldPassword)
       throw new InvalidParamException("Your password does not match the system password.");
     verifyNewPassword(requestDTO.getNewPassword(), requestDTO.getPassword());

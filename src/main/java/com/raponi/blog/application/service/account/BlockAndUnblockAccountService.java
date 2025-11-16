@@ -3,14 +3,10 @@ package com.raponi.blog.application.service.account;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import com.raponi.blog.application.service.follow.FollowAndUnfollowAccountService;
-import com.raponi.blog.application.service.like.LikeAndUnlikeService;
 import com.raponi.blog.application.usecase.account.BlockUnblockAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Block;
 import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.domain.model.Like;
-import com.raponi.blog.domain.model.LikeTargetType;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.*;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
@@ -20,8 +16,6 @@ import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 @Service
 public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase {
 
-  private final LikeAndUnlikeService likeAndUnlikeService;
-  private final FollowAndUnfollowAccountService followAndUnfollowAccountService;
   private final BlockRepository blockRepository;
   private final PostRepository postRepository;
   private final LikeRepository likeRepository;
@@ -34,16 +28,13 @@ public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase
       LikeRepository likeRepository,
       FollowRepository followRepository,
       CommentRepository commentRepository,
-      AccountValidatorService accountValidatorService,
-      FollowAndUnfollowAccountService followAndUnfollowAccountService, LikeAndUnlikeService likeAndUnlikeService) {
+      AccountValidatorService accountValidatorService) {
     this.blockRepository = blockRepository;
     this.postRepository = postRepository;
     this.likeRepository = likeRepository;
     this.followRepository = followRepository;
     this.commentRepository = commentRepository;
     this.accountValidatorService = accountValidatorService;
-    this.followAndUnfollowAccountService = followAndUnfollowAccountService;
-    this.likeAndUnlikeService = likeAndUnlikeService;
   }
 
   @Override
@@ -52,7 +43,7 @@ public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase
       throw new BusinessRuleException("You cannot block yourself.");
 
     boolean isAccountValid = this.accountValidatorService.verifyAccountWithAccountId(accountId);
-    boolean isBlockedAccountValid = this.accountValidatorService.verifyPresenceAndActive("_id", accountId);
+    boolean isBlockedAccountValid = this.accountValidatorService.verifyPresenceAndActive("_id", blockedId);
 
     if (!isAccountValid)
       throw new AccessDeniedException("You don't have permission to do this.");
@@ -74,21 +65,19 @@ public class BlockAndUnblockAccountService implements BlockUnblockAccountUseCase
 
   private void removeInteractions(String blockerId, String blockedId) {
     if (this.followRepository.existsByFollowerIdAndFollowingId(blockerId, blockedId))
-      this.followAndUnfollowAccountService.handle(blockerId, blockedId);
+      this.followRepository.deleteByFollowerIdAndFollowingId(blockerId, blockedId);
+    if (this.followRepository.existsByFollowerIdAndFollowingId(blockedId, blockerId))
+      this.followRepository.deleteByFollowerIdAndFollowingId(blockedId, blockerId);
     List<Post> blockerPosts = this.postRepository.findByAuthorId(blockerId);
     blockerPosts.forEach(post -> {
-      if (this.likeRepository.existsByTargetIdAndAccountId(post.getId(), blockedId)) {
-        Like like = this.likeRepository.findByAccountIdAndTargetId(blockedId, post.getId()).get();
-        this.likeAndUnlikeService.handle(blockedId, post.getId(), like.getLikeType(), LikeTargetType.POST);
-      }
+      if (this.likeRepository.existsByTargetIdAndAccountId(post.getId(), blockedId))
+        this.likeRepository.deleteByTargetIdAndAccountId(post.getId(), blockedId);
       List<Comment> comments = this.commentRepository.findByPostId(post.getId());
       comments.forEach(comment -> {
         if (comment.getAuthorId().equals(blockedId))
           this.commentRepository.deleteByAuthorId(blockedId);
-        if (this.likeRepository.existsByTargetIdAndAccountId(comment.getId(), blockedId)) {
-          Like like = this.likeRepository.findByAccountIdAndTargetId(blockedId, comment.getId()).get();
-          this.likeAndUnlikeService.handle(blockedId, comment.getId(), like.getLikeType(), LikeTargetType.COMMENT);
-        }
+        if (this.likeRepository.existsByTargetIdAndAccountId(comment.getId(), blockedId))
+          this.likeRepository.deleteByTargetIdAndAccountId(comment.getId(), blockedId);
       });
       this.commentRepository.deleteByAuthorIdAndPostId(blockedId, post.getId());
     });
