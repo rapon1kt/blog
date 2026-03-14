@@ -54,12 +54,14 @@ public class UpdateAccountInfosService implements UpdateAccountInfosUseCase {
         image.getOriginalFilename(),
         image.getContentType()).toHexString();
 
-    accountToUpdate.setUsername(requestDTO.getUsername().isBlank() ? accountToUpdate.getUsername()
-        : validateUsername(requestDTO.getUsername()));
     accountToUpdate.setPicture(image.isEmpty() ? accountToUpdate.getPicture() : validateImage(image, imageId));
-    accountToUpdate.setDescription(requestDTO.getProfileDescription().isBlank() ? accountToUpdate.getDescription()
-        : requestDTO.getProfileDescription());
+    if (requestDTO != null) {
+      accountToUpdate.setUsername(requestDTO.getUsername().isBlank() ? accountToUpdate.getUsername()
+          : validateUsername(requestDTO.getUsername()));
 
+      accountToUpdate.setDescription(requestDTO.getProfileDescription().isBlank() ? accountToUpdate.getDescription()
+          : requestDTO.getProfileDescription());
+    }
     accountToUpdate.setModifiedAt(Instant.now());
     AccountResponseDTO responseAccount = this.accountMapper.toResponse(accountToUpdate);
     this.accountRepository.save(accountToUpdate);
