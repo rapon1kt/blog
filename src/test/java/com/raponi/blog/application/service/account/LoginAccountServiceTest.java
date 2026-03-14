@@ -19,10 +19,13 @@ import com.raponi.blog.application.service.JWTService;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.presentation.dto.LoginAccountRequestDTO;
+import com.raponi.blog.presentation.dto.LoginAccountResponseDTO;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
+import com.raponi.blog.presentation.mapper.AccountMapper;
 
 public class LoginAccountServiceTest {
 
+  private AccountMapper accountMapper;
   private AccountRepository accountRepository;
   private AuthenticationManager authenticationManager;
   private JWTService jwtService;
@@ -30,10 +33,11 @@ public class LoginAccountServiceTest {
 
   @BeforeEach
   void setup() {
+    accountMapper = mock(AccountMapper.class);
     accountRepository = mock(AccountRepository.class);
     authenticationManager = mock(AuthenticationManager.class);
     jwtService = mock(JWTService.class);
-    loginAccountService = new LoginAccountService(accountRepository, authenticationManager, jwtService);
+    loginAccountService = new LoginAccountService(accountMapper, accountRepository, authenticationManager, jwtService);
   }
 
   @Test
@@ -47,9 +51,9 @@ public class LoginAccountServiceTest {
     Account account = Account.create("email@mail.com", "username", "hashed_password");
     when(accountRepository.findByUsername("username")).thenReturn(Optional.of(account));
     when(jwtService.generateToken(eq("username"), eq(account))).thenReturn("mocked_jwt_token");
-    String token = loginAccountService.handle(request);
-    assertNotNull(token);
-    assertEquals("mocked_jwt_token", token);
+    LoginAccountResponseDTO response = loginAccountService.handle(request);
+    assertNotNull(response);
+    assertEquals("mocked_jwt_token", response.getToken());
 
     verify(authenticationManager, times(1))
         .authenticate(any(UsernamePasswordAuthenticationToken.class));
