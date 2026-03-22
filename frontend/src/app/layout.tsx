@@ -1,6 +1,13 @@
+import { AuthProvider, SessionGuard } from "@/components";
+import { DM_Sans, Geist_Mono } from "next/font/google";
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+const dmSans = DM_Sans({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -19,7 +26,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistMono.className}`}>{children}</body>
+      <AuthProvider>
+        <SessionGuard>
+          <body
+            className={`${dmSans.variable} ${geistMono.variable} font-sans`}
+          >
+            {children}
+          </body>
+        </SessionGuard>
+      </AuthProvider>
     </html>
   );
 }
