@@ -7,7 +7,7 @@ export type JwtPayload = {
 export type PublicAccount = {
   id: string;
   username: string;
-  picture: string;
+  picture: string | null;
   description: string | null;
   createdAt: Date;
 };
