@@ -1,9 +1,5 @@
+import { registerAccount } from "@/actions/auth/register-account";
 import { NextResponse } from "next/server";
-import {
-  getBackendBaseUrl,
-  readBackendErrorMessage,
-  type BackendErrorBody,
-} from "@/lib/backend";
 
 export async function POST(request: Request) {
   let payload: unknown;
@@ -35,38 +31,13 @@ export async function POST(request: Request) {
     password: string;
   };
 
-  let base: string;
-  try {
-    base = getBackendBaseUrl();
-  } catch {
+  const result = await registerAccount({ username, email, password });
+  if (!result.ok) {
     return NextResponse.json(
-      { message: "Server configuration error." },
-      { status: 500 },
+      { message: result.message },
+      { status: result.status },
     );
   }
 
-  const response = await fetch(`${base}/req/signup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email, password }),
-  });
-
-  let data: BackendErrorBody | Record<string, unknown> | null = null;
-  try {
-    data = (await response.json()) as BackendErrorBody;
-  } catch {
-    data = null;
-  }
-
-  if (!response.ok) {
-    const message = readBackendErrorMessage(
-      data,
-      response.status === 409
-        ? "That username or email is already taken."
-        : "Registration failed.",
-    );
-    return NextResponse.json({ message }, { status: response.status });
-  }
-
-  return NextResponse.json(data ?? {}, { status: 201 });
+  return NextResponse.json(result.data, { status: 201 });
 }

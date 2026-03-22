@@ -1,43 +1,8 @@
-import {
-  getBackendBaseUrl,
-  readBackendErrorMessage,
-  type BackendErrorBody,
-} from "@/lib/backend";
+import { loginAccount } from "@/actions/auth/login-account";
+import type { LoginResponse } from "@/types/auth";
 import { jwtDecode } from "jwt-decode";
 import type { NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-
-type LoginResponse = {
-  user: {
-    id: string;
-    username: string;
-    picture: string;
-    description?: string | null;
-    createdAt: string;
-  };
-  token: string;
-};
-
-function isLoginResponse(data: unknown): data is LoginResponse {
-  if (!data || typeof data !== "object") return false;
-  const d = data as LoginResponse;
-  return (
-    typeof d.token === "string" &&
-    !!d.user &&
-    typeof d.user.id === "string" &&
-    typeof d.user.username === "string"
-  );
-}
-
-async function safeJson(res: Response): Promise<unknown | null> {
-  const text = await res.text();
-  if (!text) return null;
-  try {
-    return JSON.parse(text) as unknown;
-  } catch {
-    return null;
-  }
-}
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -58,35 +23,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Username and password are required.");
         }
 
-        let base: string;
-        try {
-          base = getBackendBaseUrl();
-        } catch {
-          throw new Error("Server configuration error.");
-        }
-
-        const response = await fetch(`${base}/req/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        });
-
-        const data = await safeJson(response);
-
-        if (!response.ok) {
-          const message = readBackendErrorMessage(
-            data as BackendErrorBody | null,
-            response.status === 401
-              ? "Invalid username or password."
-              : "Sign in failed.",
-          );
-          throw new Error(message);
-        }
-
-        if (!isLoginResponse(data)) {
-          throw new Error("Unexpected response from server.");
-        }
-
+        const data = await loginAccount(username, password);
         const account = data.user;
         const token = data.token;
 
