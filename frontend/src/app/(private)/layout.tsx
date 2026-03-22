@@ -8,7 +8,7 @@ interface PrivateLayoutProps {
 
 export default async function PrivateLayout({ children }: PrivateLayoutProps) {
   const session = await getServerSession(authOptions);
-  if (!session?.user || session.error === "TokenExpired") {
+  if (!session?.user) {
     redirect("/");
   }
   return <>{children}</>;
