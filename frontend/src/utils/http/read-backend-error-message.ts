@@ -1,16 +1,4 @@
-export function getBackendBaseUrl(): string {
-  const url = process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "");
-  if (!url) {
-    throw new Error("NEXT_PUBLIC_BACKEND_URL is not set.");
-  }
-  return url;
-}
-
-export type BackendErrorBody = {
-  message?: string;
-  error?: string;
-  status?: number;
-};
+import type { BackendErrorBody } from "@/types/backend";
 
 export function readBackendErrorMessage(
   body: BackendErrorBody | null,
