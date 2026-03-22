@@ -1,5 +1,6 @@
 "use client";
 
+import { registerViaApi } from "@/actions/auth/register-via-api";
 import Link from "next/link";
 import React from "react";
 import { signIn } from "next-auth/react";
@@ -31,22 +32,16 @@ export default function RegisterPage() {
 
     setPending(true);
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username.trim(),
-        email: email.trim(),
-        password,
-      }),
+    const result = await registerViaApi({
+      username: username.trim(),
+      email: email.trim(),
+      password,
     });
 
-    const data = (await res.json().catch(() => ({}))) as { message?: string };
-
-    if (!res.ok) {
+    if (!result.ok) {
       setPending(false);
       setMessage({
-        text: data.message ?? "Registration failed.",
+        text: result.message ?? "Registration failed.",
         type: "error",
       });
       return;
