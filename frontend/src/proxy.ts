@@ -1,6 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isTokenExpired } from "@/utils/auth/is-token-expired";
 
 const AUTH_PAGES = new Set(["/", "/register"]);
 
@@ -22,9 +23,7 @@ export async function proxy(request: NextRequest) {
 
   const sessionUser = token?.user as { id?: string } | undefined;
   const isValidSession =
-    !!token &&
-    token.error !== "TokenExpired" &&
-    !!sessionUser?.id;
+    !!token && !isTokenExpired(token.exp) && !!sessionUser?.id;
 
   if (isValidSession) {
     return NextResponse.redirect(new URL("/home", request.url));
