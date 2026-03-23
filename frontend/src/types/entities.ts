@@ -12,11 +12,13 @@ export type PublicAccount = {
   createdAt: Date;
 };
 
-export type Post = {
+export type PostVisibility = "PUBLIC" | "PRIVATE" | "FRIENDS" | "FOLLOWERS";
+
+export type PublicPost = {
   id: string;
   title: string;
   content: string;
-  postVisibility: "public" | "private" | "friends" | "followers";
+  postVisibility: PostVisibility;
   likeCount: number;
   authorId: string;
   pinned: boolean;
@@ -24,12 +26,14 @@ export type Post = {
   modifiedAt: Date;
 };
 
+export type Post = PublicPost;
+
 export type Comment = {
   id: string;
   content: string;
   authorId: string;
   postId: string;
-  commentId: string;
+  commentId: string | null;
   answer: boolean;
   likeCount: number;
   createdAt: Date;
