@@ -2,13 +2,17 @@ package com.raponi.blog.presentation.dto;
 
 import java.time.Instant;
 
+import com.raponi.blog.domain.model.PostVisibility;
+
 public class PostResponseDTO {
   private String id;
   private String title;
   private String content;
   private String authorId;
+  private PostVisibility postVisibility;
   private boolean pinned;
   private Instant createdAt;
+  private Instant modifiedAt;
   private long likeCount;
 
   public String getId() {
@@ -43,6 +47,14 @@ public class PostResponseDTO {
     this.authorId = authorId;
   }
 
+  public PostVisibility getPostVisibility() {
+    return postVisibility;
+  }
+
+  public void setPostVisibility(PostVisibility postVisibility) {
+    this.postVisibility = postVisibility;
+  }
+
   public boolean isPinned() {
     return pinned;
   }
@@ -57,6 +69,14 @@ public class PostResponseDTO {
 
   public void setCreatedAt(Instant createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public Instant getModifiedAt() {
+    return modifiedAt;
+  }
+
+  public void setModifiedAt(Instant modifiedAt) {
+    this.modifiedAt = modifiedAt;
   }
 
   public long getLikeCount() {

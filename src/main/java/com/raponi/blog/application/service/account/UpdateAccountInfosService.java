@@ -49,17 +49,20 @@ public class UpdateAccountInfosService implements UpdateAccountInfosUseCase {
 
     Account accountToUpdate = this.accountRepository.findById(accountId).get();
 
-    String imageId = gridFsTemplate.store(
-        image.getInputStream(),
-        image.getOriginalFilename(),
-        image.getContentType()).toHexString();
+    String imageId = "";
+    if (image != null) {
+      imageId = gridFsTemplate.store(
+          image.getInputStream(),
+          image.getOriginalFilename(),
+          image.getContentType()).toHexString();
+    }
 
-    accountToUpdate.setPicture(image.isEmpty() ? accountToUpdate.getPicture() : validateImage(image, imageId));
+    accountToUpdate.setPicture(imageId == "" ? accountToUpdate.getPicture() : validateImage(image, imageId));
     if (requestDTO != null) {
-      accountToUpdate.setUsername(requestDTO.getUsername().isBlank() ? accountToUpdate.getUsername()
+      accountToUpdate.setUsername(requestDTO.getUsername() == null ? accountToUpdate.getUsername()
           : validateUsername(requestDTO.getUsername()));
 
-      accountToUpdate.setDescription(requestDTO.getProfileDescription().isBlank() ? accountToUpdate.getDescription()
+      accountToUpdate.setDescription(requestDTO.getProfileDescription() == null ? accountToUpdate.getDescription()
           : requestDTO.getProfileDescription());
     }
     accountToUpdate.setModifiedAt(Instant.now());

@@ -48,29 +48,26 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
   }
 
   private List<PostResponseDTO> getAccountFeed(boolean verifiedAuthority, String accountId) {
-    List<Post> posts = new ArrayList<>();
-    List<Post> pinned = new ArrayList<>();
-    if (verifiedAuthority) {
-      this.postRepository.findByAuthorId(accountId).forEach(post -> {
-        if (post.isPinned()) {
-          pinned.add(post);
-        } else {
-          posts.add(post);
-        }
-      });
-      posts.addAll(pinned);
-      return posts.stream().map(postMapper::toResponse).toList();
-    }
-    this.postRepository.findByPostVisibility(PostVisibility.PUBLIC).forEach(post -> {
+    List<Post> visiblePosts = verifiedAuthority
+        ? this.postRepository.findByAuthorId(accountId)
+        : this.postRepository.findByAuthorIdAndPostVisibility(accountId, PostVisibility.PUBLIC);
+
+    List<Post> pinnedPosts = new ArrayList<>();
+    List<Post> regularPosts = new ArrayList<>();
+
+    visiblePosts.forEach(post -> {
       if (post.isPinned()) {
-        pinned.add(post);
+        pinnedPosts.add(post);
       } else {
-        posts.add(post);
+        regularPosts.add(post);
       }
     });
-    posts.addAll(pinned);
-    posts.sort(Comparator.comparing(Post::getCreatedAt).reversed());
-    posts.sort(Comparator.comparing(Post::isPinned).reversed());
+
+    pinnedPosts.sort(Comparator.comparing(Post::getCreatedAt).reversed());
+    regularPosts.sort(Comparator.comparing(Post::getCreatedAt).reversed());
+
+    List<Post> posts = new ArrayList<>(pinnedPosts);
+    posts.addAll(regularPosts);
     return posts.stream().map(postMapper::toResponse).toList();
   }
 }

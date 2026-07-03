@@ -56,6 +56,6 @@ public class DeletePostService implements DeletePostUseCase {
   private void deleteInteractions(String postId) {
     this.notificationRepository.deleteByTargetId(postId);
     this.commentRepository.deleteByPostId(postId);
-    this.likeRepository.deleteById(postId);
+    this.likeRepository.deleteByTargetId(postId);
   };
 }

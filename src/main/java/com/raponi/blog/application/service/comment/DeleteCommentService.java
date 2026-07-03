@@ -10,6 +10,7 @@ import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.domain.repository.NotificationRepository;
+import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.presentation.errors.AccessDeniedException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
@@ -19,17 +20,20 @@ public class DeleteCommentService implements DeleteCommentUseCase {
   private final CommentRepository commentRepository;
   private final LikeRepository likeRepository;
   private final NotificationRepository notificationRepository;
+  private final PostRepository postRepository;
   private final CommentValidatorService commentValidatorService;
   private final AccountValidatorService accountValidatorService;
 
   public DeleteCommentService(CommentRepository commentRepository,
       LikeRepository likeRepository,
       NotificationRepository notificationRepository,
+      PostRepository postRepository,
       CommentValidatorService commentValidatorService,
       AccountValidatorService accountValidatorService) {
     this.commentRepository = commentRepository;
     this.likeRepository = likeRepository;
     this.notificationRepository = notificationRepository;
+    this.postRepository = postRepository;
     this.commentValidatorService = commentValidatorService;
     this.accountValidatorService = accountValidatorService;
   }
@@ -38,9 +42,14 @@ public class DeleteCommentService implements DeleteCommentUseCase {
   public String handle(String accountId, String commentId) {
     boolean isValidComment = this.commentValidatorService.isValidComment(commentId);
     if (isValidComment) {
-      boolean isAuthorized = this.accountValidatorService.verifyAuthority("_id", accountId);
+      Comment comment = this.commentRepository.findById(commentId).get();
+      String postAuthorId = this.postRepository.findById(comment.getPostId())
+          .orElseThrow(() -> new ResourceNotFoundException("This post cannot be found."))
+          .getAuthorId();
+      boolean isAuthorized = this.accountValidatorService.isAdmin()
+          || accountId.equals(comment.getAuthorId())
+          || accountId.equals(postAuthorId);
       if (isAuthorized) {
-        Comment comment = this.commentRepository.findById(commentId).get();
         deleteInteractions(commentId, comment.getPostId());
         return "Comment deleted with success!";
       }

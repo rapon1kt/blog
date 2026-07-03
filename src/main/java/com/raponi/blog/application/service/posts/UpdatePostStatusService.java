@@ -44,6 +44,9 @@ public class UpdatePostStatusService implements UpdatePostStatusUseCase {
     if (!authorized)
       throw new AccessDeniedException("You don't have permission to do this.");
     post.setPostVisibility(newVisibility);
+    if (!PostVisibility.PUBLIC.equals(newVisibility)) {
+      post.setPinned(false);
+    }
     post.setModifiedAt(Instant.now());
     this.postRepository.save(post);
     PostResponseDTO responsePost = this.postMapper.toResponse(post);
