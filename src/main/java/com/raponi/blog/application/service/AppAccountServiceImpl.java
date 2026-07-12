@@ -1,6 +1,5 @@
 package com.raponi.blog.application.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,12 +18,13 @@ import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 @Service
 public class AppAccountServiceImpl implements UserDetailsService {
 
-  @Autowired
   private AccountRepository accountRepository;
   private BanRepository banRepository;
   private BanValidatorService banValidatorService;
 
-  public AppAccountServiceImpl(BanRepository banRepository, BanValidatorService banValidatorService) {
+  public AppAccountServiceImpl(AccountRepository accountRepository, BanRepository banRepository,
+      BanValidatorService banValidatorService) {
+    this.accountRepository = accountRepository;
     this.banRepository = banRepository;
     this.banValidatorService = banValidatorService;
   }
