@@ -143,9 +143,10 @@ public class GlobalExceptionHandler {
     Exception ex,
     WebRequest request
   ) {
+    System.err.println(ex.getMessage());
     return buildResponse(
       HttpStatus.INTERNAL_SERVER_ERROR,
-      ex.getMessage(),
+      "Something unexpected happened; please contact support.",
       request
     );
   }
