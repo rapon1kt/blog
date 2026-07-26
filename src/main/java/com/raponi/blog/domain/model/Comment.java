@@ -3,9 +3,11 @@ package com.raponi.blog.domain.model;
 import java.time.Instant;
 
 public class Comment implements Reportable, Likable {
+
   private String id;
   private String content;
   private String authorId;
+  private String targetAuthorId;
   private String postId;
   private String commentId;
   private boolean answer;
@@ -13,12 +15,21 @@ public class Comment implements Reportable, Likable {
   private Instant createdAt;
   private Instant modifiedAt;
 
-  public Comment(String id, String content, String authorId, String postId, String commentId, boolean answer,
-      Instant createdAt,
-      Instant modifiedAt) {
+  public Comment(
+    String id,
+    String content,
+    String authorId,
+    String targetAuthorId,
+    String postId,
+    String commentId,
+    boolean answer,
+    Instant createdAt,
+    Instant modifiedAt
+  ) {
     this.id = id;
     this.content = content;
     this.authorId = authorId;
+    this.targetAuthorId = targetAuthorId;
     this.postId = postId;
     this.commentId = commentId;
     this.answer = answer;
@@ -26,9 +37,9 @@ public class Comment implements Reportable, Likable {
     this.modifiedAt = modifiedAt;
   }
 
-  public static Comment create(String authorId, String postId, String content) {
+  public static Comment create(String authorId, String targetAuthorId, String postId, String content) {
     Instant instant = Instant.now();
-    return new Comment(null, content, authorId, postId, null, false, instant, instant);
+    return new Comment(null, content, authorId, targetAuthorId, postId, null, false, instant, instant);
   }
 
   @Override
@@ -55,6 +66,14 @@ public class Comment implements Reportable, Likable {
 
   public void setAuthorId(String authorId) {
     this.authorId = authorId;
+  }
+
+  public String getTargetAuthorId() {
+    return targetAuthorId;
+  }
+
+  public void setTargetAuthorId(String targetAuthorId) {
+    this.targetAuthorId = targetAuthorId;
   }
 
   public String getPostId() {
@@ -118,7 +137,6 @@ public class Comment implements Reportable, Likable {
 
   @Override
   public void decrementLikeCount() {
-    if (this.likeCount > 0)
-      this.setLikeCount(this.likeCount - 1);
+    if (this.likeCount > 0) this.setLikeCount(this.likeCount - 1);
   }
 }
