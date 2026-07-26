@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
-    return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+    return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request);
   }
 
   @ExceptionHandler(InternalServerException.class)
