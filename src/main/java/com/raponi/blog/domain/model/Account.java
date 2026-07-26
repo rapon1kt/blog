@@ -15,6 +15,9 @@ public class Account {
   private Instant createdAt;
   private Instant modifiedAt;
 
+
+  public Account() {}
+
   public Account(String id, String email, String username, String picture, String description, String password,
       boolean active, boolean banned, String role, Instant createdAt, Instant modifiedAt) {
     this.id = id;
