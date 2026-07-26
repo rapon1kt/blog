@@ -1,6 +1,8 @@
 package com.raponi.blog.presentation.errors;
 
 import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.AccountNotFoundException;
+import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.exception.InvalidCredentialsException;
 import com.raponi.blog.presentation.dto.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -111,5 +113,10 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(InvalidCredentialsException.class)
   public ResponseEntity<ErrorResponse> handleInvalidCredentials(Exception ex, WebRequest request) {
     return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(AccountNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleAccountNotFound(Exception ex, WebRequest request) {
+    return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
   }
 }

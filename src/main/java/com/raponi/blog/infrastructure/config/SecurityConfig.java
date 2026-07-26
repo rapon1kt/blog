@@ -22,10 +22,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-  private final JWTFilter jwtFilter;
+  private final JWTConfig jwtConfig;
 
-  public SecurityConfig(JWTFilter jwtFilter) {
-    this.jwtFilter = jwtFilter;
+  public SecurityConfig(JWTConfig jwtConfig) {
+    this.jwtConfig = jwtConfig;
   }
 
   public @Bean SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,7 +36,7 @@ public class SecurityConfig {
         registry.requestMatchers("/req/**", "/public/**").permitAll().anyRequest().authenticated()
       )
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class);
+      .addFilterBefore(this.jwtConfig, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
