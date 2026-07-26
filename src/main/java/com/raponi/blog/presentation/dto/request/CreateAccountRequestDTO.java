@@ -1,4 +1,4 @@
-package com.raponi.blog.presentation.dto;
+package com.raponi.blog.presentation.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -41,5 +41,4 @@ public class CreateAccountRequestDTO {
   public void setPassword(String password) {
     this.password = password;
   }
-
 }

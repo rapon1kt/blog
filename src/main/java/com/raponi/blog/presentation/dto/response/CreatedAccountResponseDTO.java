@@ -1,9 +1,11 @@
-package com.raponi.blog.presentation.dto;
+package com.raponi.blog.presentation.dto.response;
 
 import java.time.Instant;
 
 public class CreatedAccountResponseDTO {
+
   private String id;
+  private String email;
   private String username;
   private Instant createdAt;
 
@@ -13,6 +15,14 @@ public class CreatedAccountResponseDTO {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getUsername() {
@@ -30,5 +40,4 @@ public class CreatedAccountResponseDTO {
   public void setCreatedAt(Instant createdAt) {
     this.createdAt = createdAt;
   }
-
 }
