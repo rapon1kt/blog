@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.account.FindAccountPostsUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.PostRepository;
-import com.raponi.blog.presentation.dto.PostResponseDTO;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.mapper.PostMapper;
 
 @Service
 public class FindAccountPostsService implements FindAccountPostsUseCase {
@@ -23,18 +21,16 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
   private final PostRepository postRepository;
   private final AccountRepository accountRepository;
   private final AccountValidatorService accountValidatorService;
-  private final PostMapper postMapper;
 
   public FindAccountPostsService(PostRepository postRepository, AccountRepository accountRepository,
-      AccountValidatorService accountValidatorService, PostMapper postMapper) {
+      AccountValidatorService accountValidatorService) {
     this.postRepository = postRepository;
     this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
-    this.postMapper = postMapper;
   }
 
   @Override
-  public List<PostResponseDTO> handle(String username) {
+  public List<Post> handle(String username) {
     Boolean verifiedAccount = this.accountValidatorService.verifyPresenceAndActive("username", username);
     if (!verifiedAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
@@ -47,7 +43,7 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
     return this.getAccountFeed(verifiedAuthority, acc.getId());
   }
 
-  private List<PostResponseDTO> getAccountFeed(boolean verifiedAuthority, String accountId) {
+  private List<Post> getAccountFeed(boolean verifiedAuthority, String accountId) {
     List<Post> visiblePosts = verifiedAuthority
         ? this.postRepository.findByAuthorId(accountId)
         : this.postRepository.findByAuthorIdAndPostVisibility(accountId, PostVisibility.PUBLIC);
@@ -68,6 +64,6 @@ public class FindAccountPostsService implements FindAccountPostsUseCase {
 
     List<Post> posts = new ArrayList<>(pinnedPosts);
     posts.addAll(regularPosts);
-    return posts.stream().map(postMapper::toResponse).toList();
+    return posts;
   }
 }

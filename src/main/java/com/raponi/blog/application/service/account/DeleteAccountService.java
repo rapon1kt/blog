@@ -5,11 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.account.DeleteAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.InvalidParamException;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.*;
-import com.raponi.blog.presentation.dto.DeleteAccountRequestDTO;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.InvalidParamException;
 
 @Service
 public class DeleteAccountService implements DeleteAccountUseCase {
@@ -41,12 +40,12 @@ public class DeleteAccountService implements DeleteAccountUseCase {
   }
 
   @Override
-  public String handle(String accountId, DeleteAccountRequestDTO request) {
+  public String handle(String accountId, String password) {
     boolean isValidAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
     if (!isValidAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
     Account account = this.accountRepository.findById(accountId).get();
-    verifyPasswordMatch(request.getPassword(), account.getPassword());
+    verifyPasswordMatch(password, account.getPassword());
     deleteInteractions(accountId);
     return "Account with id equals " + accountId + " deleted with success";
   }

@@ -7,40 +7,35 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.raponi.blog.application.usecase.account.UpdateAccountInfosUseCase;
+import com.raponi.blog.application.usecase.account.UpdateAccountCommand;
+import com.raponi.blog.application.usecase.account.UpdateAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.ImageValidationResponse;
 import com.raponi.blog.application.validators.ImageValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.InvalidParamException;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
-import com.raponi.blog.presentation.dto.AccountResponseDTO;
-import com.raponi.blog.presentation.dto.UpdateAccountInfosRequestDTO;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.InvalidParamException;
-import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
-public class UpdateAccountInfosService implements UpdateAccountInfosUseCase {
+public class UpdateAccountService implements UpdateAccountUseCase {
 
   private final AccountRepository accountRepository;
   private final AccountValidatorService accountValidatorService;
   private final ImageValidatorService imageValidatorService;
-  private final AccountMapper accountMapper;
   private final GridFsTemplate gridFsTemplate;
 
-  public UpdateAccountInfosService(AccountRepository accountRepository,
+  public UpdateAccountService(AccountRepository accountRepository,
       AccountValidatorService accountValidatorService,
-      ImageValidatorService imageValidatorService,
-      AccountMapper accountMapper, GridFsTemplate gridFsTemplate) {
+      ImageValidatorService imageValidatorService, GridFsTemplate gridFsTemplate) {
     this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
     this.imageValidatorService = imageValidatorService;
-    this.accountMapper = accountMapper;
     this.gridFsTemplate = gridFsTemplate;
   }
 
   @Override
-  public AccountResponseDTO handle(String accountId, UpdateAccountInfosRequestDTO requestDTO, MultipartFile image)
+  public Account handle(String accountId, UpdateAccountCommand command, MultipartFile image)
       throws IOException {
     boolean isAccountValid = this.accountValidatorService.verifyAccountWithAccountId(accountId);
 
@@ -58,18 +53,17 @@ public class UpdateAccountInfosService implements UpdateAccountInfosUseCase {
     }
 
     accountToUpdate.setPicture(imageId == "" ? accountToUpdate.getPicture() : validateImage(image, imageId));
-    if (requestDTO != null) {
-      accountToUpdate.setUsername(requestDTO.getUsername() == null ? accountToUpdate.getUsername()
-          : validateUsername(requestDTO.getUsername()));
+    if (command != null) {
+      accountToUpdate.setUsername(command.username() == null ? accountToUpdate.getUsername()
+          : validateUsername(command.username()));
 
-      accountToUpdate.setDescription(requestDTO.getProfileDescription() == null ? accountToUpdate.getDescription()
-          : requestDTO.getProfileDescription());
+      accountToUpdate.setDescription(command.description() == null ? accountToUpdate.getDescription()
+          : command.description());
     }
     accountToUpdate.setModifiedAt(Instant.now());
-    AccountResponseDTO responseAccount = this.accountMapper.toResponse(accountToUpdate);
-    this.accountRepository.save(accountToUpdate);
+    Account savedAccount = this.accountRepository.save(accountToUpdate);
 
-    return responseAccount;
+    return savedAccount;
   }
 
   private String validateUsername(String username) {
