@@ -1,15 +1,13 @@
 package com.raponi.blog.infrastructure.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.repository.FollowRepository;
 import com.raponi.blog.infrastructure.persistence.entity.FollowEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.FollowMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoFollowRepository;
-import com.raponi.blog.presentation.mapper.FollowMapper;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class FollowRepositoryImpl implements FollowRepository {
@@ -25,7 +23,6 @@ public class FollowRepositoryImpl implements FollowRepository {
   @Override
   public void deleteByFollowerIdAndFollowingId(String followerId, String followingId) {
     this.mongoRepository.deleteByFollowerIdAndFollowingId(followerId, followingId);
-
   }
 
   @Override
@@ -70,5 +67,4 @@ public class FollowRepositoryImpl implements FollowRepository {
     FollowEntity savedFollow = this.mongoRepository.save(followEntity);
     return this.followMapper.toDomain(savedFollow);
   }
-
 }

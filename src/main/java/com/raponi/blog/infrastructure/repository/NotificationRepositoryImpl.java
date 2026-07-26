@@ -1,16 +1,14 @@
 package com.raponi.blog.infrastructure.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import com.raponi.blog.domain.model.Notification;
 import com.raponi.blog.domain.model.NotificationType;
 import com.raponi.blog.domain.repository.NotificationRepository;
 import com.raponi.blog.infrastructure.persistence.entity.NotificationEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.NotificationMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoNotificationRepository;
-import com.raponi.blog.presentation.mapper.NotificationMapper;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class NotificationRepositoryImpl implements NotificationRepository {
@@ -18,11 +16,9 @@ public class NotificationRepositoryImpl implements NotificationRepository {
   private final MongoNotificationRepository mongoNotificationRepository;
   private final NotificationMapper notificationMapper;
 
-  public NotificationRepositoryImpl(MongoNotificationRepository mongoNotificationRepository,
-      NotificationMapper notificationMapper) {
+  public NotificationRepositoryImpl(MongoNotificationRepository mongoNotificationRepository, NotificationMapper notificationMapper) {
     this.mongoNotificationRepository = mongoNotificationRepository;
     this.notificationMapper = notificationMapper;
-
   }
 
   @Override
@@ -39,16 +35,16 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
   @Override
   public List<Notification> findByAuthorIdAndReadOrderByCreatedAtDesc(String authorId, boolean read) {
-    return this.mongoNotificationRepository.findByAuthorIdAndReadOrderByCreatedAtDesc(authorId, read).stream()
-        .map(notificationMapper::toDomain)
-        .toList();
+    return this.mongoNotificationRepository
+      .findByAuthorIdAndReadOrderByCreatedAtDesc(authorId, read)
+      .stream()
+      .map(notificationMapper::toDomain)
+      .toList();
   }
 
   @Override
-  public Optional<Notification> findByActorIdAndTargetIdAndType(String authorId, String targetId,
-      NotificationType type) {
-    Optional<NotificationEntity> notificationEntity = this.mongoNotificationRepository.findByActorIdAndTargetIdAndType(
-        authorId, targetId, type);
+  public Optional<Notification> findByActorIdAndTargetIdAndType(String authorId, String targetId, NotificationType type) {
+    Optional<NotificationEntity> notificationEntity = this.mongoNotificationRepository.findByActorIdAndTargetIdAndType(authorId, targetId, type);
     return notificationEntity.map(notificationMapper::toDomain);
   }
 
@@ -71,5 +67,4 @@ public class NotificationRepositoryImpl implements NotificationRepository {
   public void deleteByTargetId(String id) {
     this.mongoNotificationRepository.deleteByTargetId(id);
   }
-
 }

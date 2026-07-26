@@ -1,17 +1,15 @@
 package com.raponi.blog.infrastructure.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import com.raponi.blog.domain.model.Ban;
 import com.raponi.blog.domain.model.BanReason;
 import com.raponi.blog.domain.model.BanStatus;
 import com.raponi.blog.domain.repository.BanRepository;
 import com.raponi.blog.infrastructure.persistence.entity.BanEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.BanMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoBanRepository;
-import com.raponi.blog.presentation.mapper.BanMapper;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BanRepositoryImpl implements BanRepository {
@@ -31,8 +29,7 @@ public class BanRepositoryImpl implements BanRepository {
 
   @Override
   public List<Ban> findAllByBannedIdOrderByBannedAtDesc(String bannedId) {
-    return this.mongoRepository.findAllByBannedIdOrderByBannedAtDesc(bannedId).stream().map(banMapper::toDomain)
-        .toList();
+    return this.mongoRepository.findAllByBannedIdOrderByBannedAtDesc(bannedId).stream().map(banMapper::toDomain).toList();
   }
 
   @Override
@@ -68,5 +65,4 @@ public class BanRepositoryImpl implements BanRepository {
     BanEntity savedEntity = this.mongoRepository.save(entity);
     return this.banMapper.toDomain(savedEntity);
   }
-
 }

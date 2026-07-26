@@ -1,14 +1,12 @@
 package com.raponi.blog.infrastructure.repository;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import com.raponi.blog.domain.model.Block;
 import com.raponi.blog.domain.repository.BlockRepository;
 import com.raponi.blog.infrastructure.persistence.entity.BlockEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.BlockMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoBlockRepository;
-import com.raponi.blog.presentation.mapper.BlockMapper;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BlockRepositoryImpl implements BlockRepository {
@@ -48,5 +46,4 @@ public class BlockRepositoryImpl implements BlockRepository {
     BlockEntity savedBlockEntity = this.mongoRepository.save(blockEntity);
     return this.blockMapper.toDomain(savedBlockEntity);
   }
-
 }
