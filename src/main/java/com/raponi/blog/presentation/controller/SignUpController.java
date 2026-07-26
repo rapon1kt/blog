@@ -23,7 +23,7 @@ public class SignUpController {
     this.mapper = mapper;
   }
 
-  @PostMapping(value = "/req/signup", consumes = "application/json")
+  @PostMapping(value = "/req/sign-up", consumes = "application/json")
   public ResponseEntity<CreatedAccountResponseDTO> signUp(@RequestBody @Valid CreateAccountRequestDTO requestDTO) {
     var command = mapper.toCreateCommand(requestDTO);
     var account = createAccountService.handle(command);
