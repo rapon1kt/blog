@@ -1,40 +1,38 @@
-package com.raponi.blog.application.service;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
-import javax.crypto.SecretKey;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+package com.raponi.blog.infrastructure.security;
 
 import com.raponi.blog.domain.model.Account;
-
+import com.raponi.blog.domain.port.TokenGeneratorService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
-public class JWTService {
+public class JWTService implements TokenGeneratorService {
 
   @Value("${jwt.secret}")
   private String secretKey;
 
-  public String generateToken(String username, Account account) {
+  @Override
+  public String generateToken(Account account) {
     Map<String, Object> claims = new HashMap<>();
 
-    return Jwts.builder().claims().add(claims).subject(account.getId())
-        .add("username", username)
-        .add("role", account.getRole())
-        .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
-        .and()
-        .signWith(this.getKey())
-        .compact();
-
+    return Jwts.builder()
+      .claims(claims)
+      .subject(account.getId())
+      .claim("username", account.getUsername())
+      .claim("role", account.getRole())
+      .issuedAt(new Date(System.currentTimeMillis()))
+      .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+      .signWith(this.getKey())
+      .compact();
   }
 
   public SecretKey getKey() {
@@ -44,7 +42,7 @@ public class JWTService {
 
   public boolean validateToken(String token, String accountId) {
     String tokenId = extractAccountId(token);
-    return (tokenId.equals(accountId) && !isTokenExpired(token));
+    return tokenId.equals(accountId) && !isTokenExpired(token);
   }
 
   public String extractUsername(String token) {
@@ -75,5 +73,4 @@ public class JWTService {
   private Date extractExpiration(String token) {
     return extractClaim(token, Claims::getExpiration);
   }
-
 }

@@ -1,5 +1,7 @@
 package com.raponi.blog.presentation.errors;
 
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.InvalidCredentialsException;
 import com.raponi.blog.presentation.dto.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -104,5 +106,10 @@ public class GlobalExceptionHandler {
   @ExceptionHandler({ ExpiredJwtException.class, MalformedJwtException.class })
   public ResponseEntity<ErrorResponse> handleJwtExceptions(Exception ex, WebRequest request) {
     return buildResponse(HttpStatus.UNAUTHORIZED, "Token inválido ou expirado: " + ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidCredentials(Exception ex, WebRequest request) {
+    return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 }
