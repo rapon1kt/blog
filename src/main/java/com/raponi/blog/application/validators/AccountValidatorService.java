@@ -5,7 +5,7 @@ import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
 import com.raponi.blog.infrastructure.persistence.entity.BlockEntity;
-import com.raponi.blog.presentation.mapper.AccountMapper;
+import com.raponi.blog.infrastructure.persistence.mapper.AccountMapper;
 import java.util.Optional;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -69,19 +69,13 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   }
 
   public boolean isAdmin() {
-    String role = this.getAuth()
-      .getAuthorities()
-      .iterator()
-      .next()
-      .getAuthority();
+    String role = this.getAuth().getAuthorities().iterator().next().getAuthority();
     return role.equals("ROLE_ADMIN");
   }
 
   public boolean verifyAuthority(String key, String value) {
     Query query = new Query(Criteria.where(key).is(value));
-    Account account = accountMapper.toDomain(
-      mongoTemplate.findOne(query, AccountEntity.class)
-    );
+    Account account = accountMapper.toDomain(mongoTemplate.findOne(query, AccountEntity.class));
     if (!account.getId().equals(this.getAuth().getName())) {
       if (!isAdmin()) {
         return false;
@@ -94,9 +88,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   public boolean verifyPresenceAndActive(String key, String value) {
     Query query = new Query(Criteria.where(key).is(value));
 
-    return Optional.ofNullable(
-      mongoTemplate.findOne(query, AccountEntity.class)
-    )
+    return Optional.ofNullable(mongoTemplate.findOne(query, AccountEntity.class))
       .map(accountMapper::toDomain)
       .map(account -> isAdmin() || account.isActive())
       .orElse(false);
@@ -105,15 +97,9 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   public boolean isBlocked(String accountId) {
     if (!this.getAuth().isAuthenticated()) return false;
     Query query = new Query(
-      Criteria.where("blockedId")
-        .is(getAuth().getName())
-        .and("blockerId")
-        .is(accountId)
+      Criteria.where("blockedId").is(getAuth().getName()).and("blockerId").is(accountId)
     );
-    boolean isViwerBlocked = this.mongoTemplate.exists(
-      query,
-      BlockEntity.class
-    );
+    boolean isViwerBlocked = this.mongoTemplate.exists(query, BlockEntity.class);
     return isViwerBlocked;
   }
 
@@ -128,9 +114,7 @@ public class AccountValidatorService implements AccountValidatorUseCase {
   public String verifyAccountWithUsernameAndReturnId(String username) {
     if (verifyPresenceAndActive("username", username)) {
       Query query = new Query(Criteria.where("username").is(username));
-      Account account = accountMapper.toDomain(
-        mongoTemplate.findOne(query, AccountEntity.class)
-      );
+      Account account = accountMapper.toDomain(mongoTemplate.findOne(query, AccountEntity.class));
       return account.getId();
     }
     return null;
