@@ -14,8 +14,7 @@ import com.raponi.blog.application.service.report.*;
 import com.raponi.blog.domain.model.Report;
 import com.raponi.blog.domain.model.ReportStatus;
 import com.raponi.blog.domain.model.ReportTargetType;
-import com.raponi.blog.presentation.dto.CreateReportRequestDTO;
-import com.raponi.blog.presentation.mapper.ReportMapper;
+import com.raponi.blog.presentation.dto.request.CreateReportRequestDTO;
 
 import jakarta.validation.Valid;
 
@@ -30,15 +29,14 @@ public class ReportController {
 
   private final CreateReportService createReportService;
   private final FindReportByIdService findReportByIdService;
-  private final FindReportsByReporterIdService findReportsByReporterIdService;
-  private final FindReportsByStatusService findReportsByStatusService;
-  private final FindReportsByTargetTypeService findReportsByTargetTypeService;
+  private final DeleteReportByIdService deleteReportByIdService;
   private final FindTargetReportsService findTargetReportsService;
   private final UpdateReportStatusService updateReportStatusService;
-  private final DeleteReportByIdService deleteReportByIdService;
+  private final FindReportsByStatusService findReportsByStatusService;
   private final DeleteReportsByStatusService deleteReportsByStatusService;
+  private final FindReportsByTargetTypeService findReportsByTargetTypeService;
+  private final FindReportsByReporterIdService findReportsByReporterIdService;
   private final DeleteReportsByTargetIdService deleteReportsByTargetIdService;
-  private final ReportMapper reportMapper;
 
   public ReportController(
       CreateReportService createReportService,
@@ -49,49 +47,48 @@ public class ReportController {
       UpdateReportStatusService updateReportStatusService,
       DeleteReportByIdService deleteReportByIdService,
       FindTargetReportsService findTargetReportsService,
-      ReportMapper reportMapper, DeleteReportsByStatusService deleteReportsByStatusService,
+      DeleteReportsByStatusService deleteReportsByStatusService,
       DeleteReportsByTargetIdService deleteReportsByTargetIdService) {
     this.createReportService = createReportService;
     this.findReportByIdService = findReportByIdService;
-    this.findReportsByReporterIdService = findReportsByReporterIdService;
-    this.findReportsByStatusService = findReportsByStatusService;
-    this.findReportsByTargetTypeService = findReportsByTargetTypeService;
-    this.updateReportStatusService = updateReportStatusService;
     this.deleteReportByIdService = deleteReportByIdService;
     this.findTargetReportsService = findTargetReportsService;
+    this.updateReportStatusService = updateReportStatusService;
+    this.findReportsByStatusService = findReportsByStatusService;
     this.deleteReportsByStatusService = deleteReportsByStatusService;
+    this.findReportsByReporterIdService = findReportsByReporterIdService;
+    this.findReportsByTargetTypeService = findReportsByTargetTypeService;
     this.deleteReportsByTargetIdService = deleteReportsByTargetIdService;
-    this.reportMapper = reportMapper;
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getReportById(@PathVariable("id") String id) {
     Report report = this.findReportByIdService.handle(id);
-    return ResponseEntity.ok(this.reportMapper.toResponseDTO(report));
+    return ResponseEntity.ok(report);
   }
 
   @GetMapping("/reporter")
   public ResponseEntity<?> getReportsByReporterId(@RequestParam("id") String id) {
     List<Report> reports = this.findReportsByReporterIdService.handle(id);
-    return ResponseEntity.ok(reports.stream().map(reportMapper::toResponseDTO).toList());
+    return ResponseEntity.ok(reports);
   }
 
   @GetMapping("/status")
   public ResponseEntity<?> getReportsByStatus(@RequestParam("status") ReportStatus status) {
     List<Report> reports = this.findReportsByStatusService.handle(status);
-    return ResponseEntity.ok(reports.stream().map(reportMapper::toResponseDTO).toList());
+    return ResponseEntity.ok(reports);
   }
 
   @GetMapping("/type")
   public ResponseEntity<?> getReportsByTargetType(@RequestParam("type") ReportTargetType type) {
     List<Report> reports = this.findReportsByTargetTypeService.handle(type);
-    return ResponseEntity.ok(reports.stream().map(reportMapper::toResponseDTO).toList());
+    return ResponseEntity.ok(reports);
   }
 
   @GetMapping("/target")
   public ResponseEntity<?> getTargetReports(@RequestParam("id") String id, Authentication auth) {
     List<Report> reports = this.findTargetReportsService.handle(auth.getName(), id);
-    return ResponseEntity.ok(reports.stream().map(reportMapper::toResponseDTO).toList());
+    return ResponseEntity.ok(reports);
   }
 
   @PostMapping("/{targetId}")
@@ -99,14 +96,14 @@ public class ReportController {
       @RequestBody @Valid CreateReportRequestDTO requestDTO, Authentication auth) {
     Report report = this.createReportService.handle(auth.getName(), targetId, requestDTO.getReason(),
         requestDTO.getReportType());
-    return ResponseEntity.status(201).body(this.reportMapper.toResponseDTO(report));
+    return ResponseEntity.status(201).body(report);
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<?> updateReportStatus(@PathVariable("id") String id,
       @RequestParam("status") ReportStatus status) {
     Report report = this.updateReportStatusService.handle(id, status);
-    return ResponseEntity.ok(this.reportMapper.toResponseDTO(report));
+    return ResponseEntity.ok(report);
   }
 
   @DeleteMapping("/{id}")
