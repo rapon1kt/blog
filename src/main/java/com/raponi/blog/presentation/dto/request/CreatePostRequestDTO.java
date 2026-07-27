@@ -1,4 +1,4 @@
-package com.raponi.blog.presentation.dto;
+package com.raponi.blog.presentation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,5 +28,4 @@ public class CreatePostRequestDTO {
   public void setContent(String content) {
     this.content = content;
   }
-
 }
