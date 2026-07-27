@@ -56,7 +56,7 @@ public class BanController {
     Authentication auth,
     @RequestBody @Valid BanAccountRequestDTO requestDTO
   ) {
-    var command = mapper.tCommand(requestDTO);
+    var command = mapper.toCommand(requestDTO);
     var response = this.banAccountService.handle(auth.getName(), bannedId, reason, command);
     return ResponseEntity.status(201).body(response);
   }

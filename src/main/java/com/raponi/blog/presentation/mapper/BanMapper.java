@@ -8,6 +8,6 @@ import com.raponi.blog.presentation.dto.request.BanAccountRequestDTO;
 @Mapper(componentModel = "spring")
 public interface BanMapper {
   
-  BanAccountCommand tCommand(BanAccountRequestDTO requestDTO);
+  BanAccountCommand toCommand(BanAccountRequestDTO requestDTO);
 
 }
