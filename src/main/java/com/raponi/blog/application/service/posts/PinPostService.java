@@ -1,15 +1,14 @@
 package com.raponi.blog.application.service.posts;
 
-import org.springframework.stereotype.Service;
-
 import com.raponi.blog.application.usecase.post.PinPostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.PostRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.BusinessRuleException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PinPostService implements PinPostUseCase {
@@ -47,5 +46,4 @@ public class PinPostService implements PinPostUseCase {
     this.postRepository.save(post);
     return "Post pinned with success!";
   }
-
 }

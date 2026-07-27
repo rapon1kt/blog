@@ -6,42 +6,39 @@ import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.PostRepository;
-import com.raponi.blog.presentation.dto.PostResponseDTO;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
-import com.raponi.blog.presentation.mapper.PostMapper;
 
 @Service
 public class FindPostByIdService implements FindPostByIdUseCase {
 
-  private final AccountValidatorService accountValidatorService;
-  private final PostValidatorService postValidatorService;
   private final PostRepository postRepository;
-  private final PostMapper postMapper;
+  private final PostValidatorService postValidatorService;
+  private final AccountValidatorService accountValidatorService;
 
   public FindPostByIdService(AccountValidatorService accountValidatorService, PostValidatorService postValidatorService,
-      PostRepository postRepository,
-      PostMapper postMapper) {
-    this.accountValidatorService = accountValidatorService;
-    this.postValidatorService = postValidatorService;
+      PostRepository postRepository) {
     this.postRepository = postRepository;
-    this.postMapper = postMapper;
+    this.postValidatorService = postValidatorService;
+    this.accountValidatorService = accountValidatorService;
   }
 
   @Override
-  public PostResponseDTO handle(String postId) {
+  public Post handle(String postId) {
     boolean verifiedPost = this.postValidatorService.validatePostPresenceAndPrivate(postId);
     if (!verifiedPost)
       throw new ResourceNotFoundException("This post cannot be found.");
 
     Post post = this.postRepository.findById(postId).get();
-    PostResponseDTO responsePost = this.postMapper.toResponse(post);
+
     if (this.accountValidatorService.isAdmin()) {
-      return responsePost;
-    } else {
-      if (!this.accountValidatorService.isBlocked(post.getAuthorId())
-          && !this.accountValidatorService.isBanned(post.getAuthorId()))
-        return responsePost;
-      return null;
+      return post;
     }
+
+    if (!this.accountValidatorService.isBlocked(post.getAuthorId())
+        && !this.accountValidatorService.isBanned(post.getAuthorId()))
+      return post;
+
+    return null;
+
   }
 }

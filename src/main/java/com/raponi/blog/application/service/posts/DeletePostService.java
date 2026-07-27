@@ -5,33 +5,33 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.post.DeletePostUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.InvalidParamException;
 import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.repository.NotificationRepository;
 import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.domain.repository.PostRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.InvalidParamException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class DeletePostService implements DeletePostUseCase {
 
   private final PostRepository postRepository;
-  private final NotificationRepository notificationRepository;
   private final LikeRepository likeRepository;
   private final CommentRepository commentRepository;
   private final PostValidatorService postValidatorService;
+  private final NotificationRepository notificationRepository;
   private final AccountValidatorService accountValidatorService;
 
   public DeletePostService(PostRepository postRepository, NotificationRepository notificationRepository,
       LikeRepository likeRepository, CommentRepository commentRepository,
       PostValidatorService postValidatorService, AccountValidatorService accountValidatorService) {
     this.postRepository = postRepository;
-    this.notificationRepository = notificationRepository;
     this.likeRepository = likeRepository;
     this.commentRepository = commentRepository;
     this.postValidatorService = postValidatorService;
+    this.notificationRepository = notificationRepository;
     this.accountValidatorService = accountValidatorService;
   }
 
