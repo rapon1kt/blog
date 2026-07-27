@@ -4,6 +4,7 @@ import com.raponi.blog.domain.exception.AccessDeniedException;
 import com.raponi.blog.domain.exception.AccountNotFoundException;
 import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.exception.InvalidCredentialsException;
+import com.raponi.blog.domain.exception.InvalidParamException;
 import com.raponi.blog.presentation.dto.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
