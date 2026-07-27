@@ -8,7 +8,7 @@ import com.raponi.blog.application.usecase.report.FindTargetReportsUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Report;
 import com.raponi.blog.domain.repository.ReportRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.domain.exception.AccessDeniedException;
 
 @Service
 public class FindTargetReportsService implements FindTargetReportsUseCase {

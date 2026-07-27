@@ -6,7 +6,7 @@ import com.raponi.blog.application.usecase.report.FindReportByIdUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.domain.model.Report;
 import com.raponi.blog.domain.repository.ReportRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.domain.exception.AccessDeniedException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service

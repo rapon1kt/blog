@@ -1,19 +1,17 @@
 package com.raponi.blog.application.service.report;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
 import com.raponi.blog.application.usecase.report.DeleteReportsByTargetIdUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.model.ReportStatus;
 import com.raponi.blog.domain.model.ReportTargetType;
 import com.raponi.blog.domain.model.Reportable;
 import com.raponi.blog.domain.repository.ReportRepository;
 import com.raponi.blog.domain.repository.ReportableRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.BusinessRuleException;
+import com.raponi.blog.domain.exception.AccessDeniedException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DeleteReportsByTargetIdService implements DeleteReportsByTargetIdUseCase {
@@ -22,7 +20,8 @@ public class DeleteReportsByTargetIdService implements DeleteReportsByTargetIdUs
   private final ReportableRepository reportableRepository;
   private final AccountValidatorService accountValidatorService;
 
-  public DeleteReportsByTargetIdService(ReportRepository reportRepository,
+  public DeleteReportsByTargetIdService(
+      ReportRepository reportRepository,
       ReportableRepository reportableRepository,
       AccountValidatorService accountValidatorService) {
     this.reportRepository = reportRepository;
@@ -48,5 +47,4 @@ public class DeleteReportsByTargetIdService implements DeleteReportsByTargetIdUs
     }
     throw new ResourceNotFoundException("The target of report was deleted.");
   }
-
 }

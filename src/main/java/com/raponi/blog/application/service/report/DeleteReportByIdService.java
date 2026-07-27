@@ -1,14 +1,13 @@
 package com.raponi.blog.application.service.report;
 
-import org.springframework.stereotype.Service;
-
 import com.raponi.blog.application.usecase.report.DeleteReportByIdUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.model.Report;
 import com.raponi.blog.domain.repository.ReportRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.BusinessRuleException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DeleteReportByIdService implements DeleteReportByIdUseCase {
@@ -38,5 +37,4 @@ public class DeleteReportByIdService implements DeleteReportByIdUseCase {
         return "Report " + id + " deleted with success!";
     }
   }
-
 }

@@ -1,13 +1,12 @@
 package com.raponi.blog.application.service.report;
 
-import org.springframework.stereotype.Service;
-
 import com.raponi.blog.application.usecase.report.DeleteReportsByStatusUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.model.ReportStatus;
 import com.raponi.blog.domain.repository.ReportRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.BusinessRuleException;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DeleteReportsByStatusService implements DeleteReportsByStatusUseCase {
@@ -35,5 +34,4 @@ public class DeleteReportsByStatusService implements DeleteReportsByStatusUseCas
         return "All reports with status " + status + " are deleted with success.";
     }
   }
-
 }
