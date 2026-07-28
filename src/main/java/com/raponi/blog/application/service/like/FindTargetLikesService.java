@@ -1,21 +1,19 @@
 package com.raponi.blog.application.service.like;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.raponi.blog.application.usecase.like.FindTargetLikesUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.CommentValidatorService;
 import com.raponi.blog.application.validators.PostValidatorService;
+import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.model.Likable;
 import com.raponi.blog.domain.model.Like;
 import com.raponi.blog.domain.model.LikeTargetType;
 import com.raponi.blog.domain.repository.LikableRepository;
 import com.raponi.blog.domain.repository.LikeRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.BusinessRuleException;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class FindTargetLikesService implements FindTargetLikesUseCase {
@@ -26,9 +24,12 @@ public class FindTargetLikesService implements FindTargetLikesUseCase {
   private final CommentValidatorService commentValidatorService;
   private final AccountValidatorService accountValidatorService;
 
-  public FindTargetLikesService(LikeRepository likeRepository, LikableRepository likableRepository,
+  public FindTargetLikesService(
+      LikeRepository likeRepository,
+      LikableRepository likableRepository,
       PostValidatorService postValidatorService,
-      CommentValidatorService commentValidatorService, AccountValidatorService accountValidatorService) {
+      CommentValidatorService commentValidatorService,
+      AccountValidatorService accountValidatorService) {
     this.likeRepository = likeRepository;
     this.likableRepository = likableRepository;
     this.postValidatorService = postValidatorService;
@@ -38,7 +39,6 @@ public class FindTargetLikesService implements FindTargetLikesUseCase {
 
   @Override
   public List<Like> handle(String targetId, LikeTargetType type) {
-
     switch (type) {
       case POST:
         boolean isValidPost = this.postValidatorService.validatePostPresenceAndPrivate(targetId);
@@ -61,12 +61,11 @@ public class FindTargetLikesService implements FindTargetLikesUseCase {
       List<Like> likes = this.likeRepository.findByTargetId(targetId);
       List<Like> likesOfNonBlockedAndNonBanned = new ArrayList<Like>();
       likes.forEach(like -> {
-        if (!this.accountValidatorService.isBlocked(like.getAccountId()) &&
-            !this.accountValidatorService.isBanned(like.getAccountId()))
+        if (!this.accountValidatorService.isBlocked(like.getAccountId())
+            && !this.accountValidatorService.isBanned(like.getAccountId()))
           likesOfNonBlockedAndNonBanned.add(like);
       });
       return likesOfNonBlockedAndNonBanned;
     }
   }
-
 }
