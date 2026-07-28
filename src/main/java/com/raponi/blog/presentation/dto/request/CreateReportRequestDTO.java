@@ -1,4 +1,4 @@
-package com.raponi.blog.presentation.dto;
+package com.raponi.blog.presentation.dto.request;
 
 import com.raponi.blog.domain.model.ReportTargetType;
 
@@ -9,10 +9,10 @@ import jakarta.validation.constraints.Size;
 public class CreateReportRequestDTO {
 
   @NotBlank(message = "Reason of report is required.")
-  @Size(min = 8, message = "Please, describe in details")
+  @Size(min = 8, message = "Please describe the reason of the report.")
   private String reason;
 
-  @NotNull(message = "Report target type is required")
+  @NotNull(message = "Report target type is required.")
   private ReportTargetType reportType;
 
   public String getReason() {
@@ -30,5 +30,4 @@ public class CreateReportRequestDTO {
   public void setReportType(ReportTargetType reportType) {
     this.reportType = reportType;
   }
-
 }
