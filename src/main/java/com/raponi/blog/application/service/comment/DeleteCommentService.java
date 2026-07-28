@@ -6,21 +6,21 @@ import org.springframework.stereotype.Service;
 import com.raponi.blog.application.usecase.comment.DeleteCommentUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
 import com.raponi.blog.application.validators.CommentValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.CommentNotFoundException;
 import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.domain.repository.NotificationRepository;
 import com.raponi.blog.domain.repository.PostRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service
 public class DeleteCommentService implements DeleteCommentUseCase {
 
-  private final CommentRepository commentRepository;
   private final LikeRepository likeRepository;
-  private final NotificationRepository notificationRepository;
   private final PostRepository postRepository;
+  private final CommentRepository commentRepository;
+  private final NotificationRepository notificationRepository;
   private final CommentValidatorService commentValidatorService;
   private final AccountValidatorService accountValidatorService;
 
@@ -44,7 +44,7 @@ public class DeleteCommentService implements DeleteCommentUseCase {
     if (isValidComment) {
       Comment comment = this.commentRepository.findById(commentId).get();
       String postAuthorId = this.postRepository.findById(comment.getPostId())
-          .orElseThrow(() -> new ResourceNotFoundException("This post cannot be found."))
+          .orElseThrow(() -> new CommentNotFoundException("This post cannot be found."))
           .getAuthorId();
       boolean isAuthorized = this.accountValidatorService.isAdmin()
           || accountId.equals(comment.getAuthorId())
@@ -55,7 +55,7 @@ public class DeleteCommentService implements DeleteCommentUseCase {
       }
       throw new AccessDeniedException("You don't have permission to do this.");
     }
-    throw new ResourceNotFoundException("This comment cannot be found.");
+    throw new CommentNotFoundException("This comment cannot be found.");
   }
 
   private void deleteInteractions(String commentId, String targetId) {
