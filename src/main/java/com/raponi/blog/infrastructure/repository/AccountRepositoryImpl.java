@@ -1,23 +1,21 @@
 package com.raponi.blog.infrastructure.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.AccountInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoAccountRepository;
-import com.raponi.blog.presentation.mapper.AccountMapper;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AccountRepositoryImpl implements AccountRepository {
 
   private final MongoAccountRepository mongoRepository;
-  private final AccountMapper accountMapper;
+  private final AccountInfraMapper accountMapper;
 
-  public AccountRepositoryImpl(MongoAccountRepository mongoRepository, AccountMapper accountMapper) {
+  public AccountRepositoryImpl(MongoAccountRepository mongoRepository, AccountInfraMapper accountMapper) {
     this.mongoRepository = mongoRepository;
     this.accountMapper = accountMapper;
   }
@@ -27,7 +25,6 @@ public class AccountRepositoryImpl implements AccountRepository {
     AccountEntity accountEntity = this.accountMapper.toEntity(account);
     AccountEntity savedEntity = this.mongoRepository.save(accountEntity);
     return this.accountMapper.toDomain(savedEntity);
-
   }
 
   @Override
@@ -69,14 +66,7 @@ public class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public Optional<Account> findByEmailOrId(String email, String id) {
-    Optional<AccountEntity> accountEntity = this.mongoRepository.findByEmailOrId(email, id);
-    return Optional.of(accountEntity.map(accountMapper::toDomain).orElse(null));
-  }
-
-  @Override
   public List<Account> findAllByActiveIsTrue() {
     return this.mongoRepository.findAllByActiveIsTrue().stream().map(accountMapper::toDomain).toList();
   }
-
 }

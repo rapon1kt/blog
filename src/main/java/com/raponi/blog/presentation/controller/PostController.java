@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.raponi.blog.application.service.posts.*;
 import com.raponi.blog.domain.model.PostVisibility;
-import com.raponi.blog.presentation.dto.CreatePostRequestDTO;
+import com.raponi.blog.presentation.dto.request.CreatePostRequestDTO;
+import com.raponi.blog.presentation.mapper.PostMapper;
 
 import jakarta.validation.Valid;
 
@@ -22,24 +23,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/posts")
 public class PostController {
 
+  private final PostMapper mapper;
   private final PinPostService pinPostService;
   private final CreatePostService createPostService;
-  private final UpdatePostStatusService updatePostStatusService;
   private final DeletePostService deletePostService;
+  private final UpdatePostStatusService updatePostStatusService;
 
-  public PostController(CreatePostService createPostService,
+  public PostController(PostMapper mapper, CreatePostService createPostService,
       DeletePostService deletePostService,
       UpdatePostStatusService updatePostStatusService,
       PinPostService pinPostService) {
+    this.mapper = mapper;
+    this.pinPostService = pinPostService;
     this.createPostService = createPostService;
     this.deletePostService = deletePostService;
     this.updatePostStatusService = updatePostStatusService;
-    this.pinPostService = pinPostService;
   }
 
   @PostMapping
   public ResponseEntity<?> createPost(@RequestBody @Valid CreatePostRequestDTO requestDTO, Authentication auth) {
-    return ResponseEntity.status(201).body(this.createPostService.handle(requestDTO, auth.getName()));
+    var command = mapper.toCommand(requestDTO);
+    var response = this.createPostService.handle(command, auth.getName());
+    return ResponseEntity.status(201).body(response);
   }
 
   @PatchMapping("/{postId}")

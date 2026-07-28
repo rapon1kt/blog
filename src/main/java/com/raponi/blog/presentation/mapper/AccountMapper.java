@@ -1,23 +1,34 @@
 package com.raponi.blog.presentation.mapper;
 
-import org.mapstruct.Mapper;
-
+import com.raponi.blog.application.usecase.account.ChangeAccountPasswordCommand;
+import com.raponi.blog.application.usecase.account.CreateAccountCommand;
+import com.raponi.blog.application.usecase.account.DeleteAccountCommand;
+import com.raponi.blog.application.usecase.account.LoginAccountCommand;
+import com.raponi.blog.application.usecase.account.UpdateAccountCommand;
 import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
-import com.raponi.blog.presentation.dto.AccountResponseDTO;
-import com.raponi.blog.presentation.dto.CreatedAccountResponseDTO;
-import com.raponi.blog.presentation.dto.PublicAccountResponseDTO;
+import com.raponi.blog.presentation.dto.request.ChangePasswordRequestDTO;
+import com.raponi.blog.presentation.dto.request.CreateAccountRequestDTO;
+import com.raponi.blog.presentation.dto.request.DeleteAccountRequestDTO;
+import com.raponi.blog.presentation.dto.request.LoginAccountRequestDTO;
+import com.raponi.blog.presentation.dto.request.UpdateAccountRequestDTO;
+import com.raponi.blog.presentation.dto.response.AccountResponseDTO;
+import com.raponi.blog.presentation.dto.response.CreatedAccountResponseDTO;
+import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
+  CreateAccountCommand toCreateCommand(CreateAccountRequestDTO requestDTO);
 
-  AccountEntity toEntity(Account account);
+  CreatedAccountResponseDTO toCreated(Account account);
 
-  Account toDomain(AccountEntity accountEntity);
+  LoginAccountCommand toLoginCommand(LoginAccountRequestDTO requestDTO);
+
+  ChangeAccountPasswordCommand toPasswordCommand(ChangePasswordRequestDTO requestDTO);
 
   AccountResponseDTO toResponse(Account account);
 
-  CreatedAccountResponseDTO toCreatedResponse(Account account);
+  UpdateAccountCommand toUpdateCommand(UpdateAccountRequestDTO requestDTO);
 
-  PublicAccountResponseDTO toPublicAccountResponseDTO(Account account);
+  DeleteAccountCommand toDeleteCommand(DeleteAccountRequestDTO requestDTO);
+
 }

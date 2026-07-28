@@ -10,16 +10,16 @@ import com.raponi.blog.domain.model.ReportStatus;
 import com.raponi.blog.domain.model.ReportTargetType;
 import com.raponi.blog.domain.repository.ReportRepository;
 import com.raponi.blog.infrastructure.persistence.entity.ReportEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.ReportInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoReportRepository;
-import com.raponi.blog.presentation.mapper.ReportMapper;
 
 @Component
 public class ReportRepositoryImpl implements ReportRepository {
 
   private final MongoReportRepository mongoRepository;
-  private final ReportMapper reportMapper;
+  private final ReportInfraMapper reportMapper;
 
-  public ReportRepositoryImpl(MongoReportRepository mongoRepository, ReportMapper reportMapper) {
+  public ReportRepositoryImpl(MongoReportRepository mongoRepository, ReportInfraMapper reportMapper) {
     this.mongoRepository = mongoRepository;
     this.reportMapper = reportMapper;
   }

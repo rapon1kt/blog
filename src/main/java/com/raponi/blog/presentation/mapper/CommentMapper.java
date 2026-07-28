@@ -2,16 +2,10 @@ package com.raponi.blog.presentation.mapper;
 
 import org.mapstruct.Mapper;
 
-import com.raponi.blog.domain.model.Comment;
-import com.raponi.blog.infrastructure.persistence.entity.CommentEntity;
-import com.raponi.blog.presentation.dto.CommentResponseDTO;
+import com.raponi.blog.application.usecase.comment.CreateCommentCommand;
+import com.raponi.blog.presentation.dto.request.CreateCommentRequestDTO;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
-
-  CommentEntity toEntity(Comment comment);
-
-  Comment toDomain(CommentEntity commentEntity);
-
-  CommentResponseDTO toResponse(Comment comment);
+  CreateCommentCommand toCommand(CreateCommentRequestDTO requestDTO);
 }

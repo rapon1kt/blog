@@ -4,38 +4,33 @@ import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
-import com.raponi.blog.application.usecase.account.ChangeStatusUseCase;
+import com.raponi.blog.application.usecase.account.UpdateAccountStatusUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
-import com.raponi.blog.presentation.dto.AccountResponseDTO;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.mapper.AccountMapper;
 
 @Service
-public class UpdateAccountStatusService implements ChangeStatusUseCase {
+public class UpdateAccountStatusService implements UpdateAccountStatusUseCase {
 
   private AccountRepository accountRepository;
   private AccountValidatorService accountValidatorService;
-  private AccountMapper accountMapper;
 
   public UpdateAccountStatusService(AccountRepository accountRepository,
-      AccountValidatorService accountValidatorService, AccountMapper accountMapper) {
+      AccountValidatorService accountValidatorService) {
     this.accountRepository = accountRepository;
     this.accountValidatorService = accountValidatorService;
-    this.accountMapper = accountMapper;
   }
 
   @Override
-  public AccountResponseDTO handle(String accountId) {
+  public Account handle(String accountId) {
     Boolean isValidAccount = this.accountValidatorService.verifyAccountWithAccountId(accountId);
     if (!isValidAccount)
       throw new AccessDeniedException("You don't have permission to do this.");
     Account account = this.accountRepository.findById(accountId).get();
     account.setActive(account.isActive() ? false : true);
     account.setModifiedAt(Instant.now());
-    AccountResponseDTO responseAccount = this.accountMapper.toResponse(account);
-    this.accountRepository.save(account);
-    return responseAccount;
+    Account savedAccount = this.accountRepository.save(account);
+    return savedAccount;
   }
 }

@@ -1,7 +1,7 @@
 package com.raponi.blog.application.usecase.post;
 
-import com.raponi.blog.presentation.dto.PostResponseDTO;
+import com.raponi.blog.domain.model.Post;
 
 public interface FindPostByIdUseCase {
-  public PostResponseDTO handle(String postId);
+  public Post handle(String postId);
 }

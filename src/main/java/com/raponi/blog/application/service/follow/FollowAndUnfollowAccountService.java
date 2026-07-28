@@ -1,11 +1,9 @@
 package com.raponi.blog.application.service.follow;
 
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
 import com.raponi.blog.application.usecase.follow.FollowAndUnfollowAccountUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.BusinessRuleException;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.model.Notification;
@@ -13,8 +11,8 @@ import com.raponi.blog.domain.model.NotificationType;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.domain.repository.FollowRepository;
 import com.raponi.blog.domain.repository.NotificationRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
-import com.raponi.blog.presentation.errors.BusinessRuleException;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccountUseCase {
@@ -24,8 +22,11 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
   private final NotificationRepository notificationRepository;
   private final AccountValidatorService accountValidatorService;
 
-  public FollowAndUnfollowAccountService(FollowRepository followRepository, AccountRepository accountRepository,
-      NotificationRepository notificationRepository, AccountValidatorService accountValidatorService) {
+  public FollowAndUnfollowAccountService(
+      FollowRepository followRepository,
+      AccountRepository accountRepository,
+      NotificationRepository notificationRepository,
+      AccountValidatorService accountValidatorService) {
     this.followRepository = followRepository;
     this.accountRepository = accountRepository;
     this.notificationRepository = notificationRepository;
@@ -55,13 +56,12 @@ public class FollowAndUnfollowAccountService implements FollowAndUnfollowAccount
       if (opt.isPresent()) {
         this.notificationRepository.deleteById(opt.get().getId());
       }
-      return ("Unfollowed " + destinyAcc.getUsername());
+      return "Unfollowed " + destinyAcc.getUsername();
     }
     Follow follow = Follow.create(followerId, followingId);
     this.followRepository.save(follow);
     Notification notification = Notification.create(followingId, followerId, NotificationType.FOLLOW, followingId);
     this.notificationRepository.save(notification);
-    return ("Followed " + destinyAcc.getUsername());
+    return "Followed " + destinyAcc.getUsername();
   }
-
 }

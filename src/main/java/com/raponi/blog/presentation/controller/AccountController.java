@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.raponi.blog.application.service.account.*;
-import com.raponi.blog.presentation.dto.UpdateAccountPasswordRequestDTO;
-import com.raponi.blog.presentation.dto.DeleteAccountRequestDTO;
-import com.raponi.blog.presentation.dto.UpdateAccountInfosRequestDTO;
+import com.raponi.blog.presentation.dto.request.ChangePasswordRequestDTO;
+import com.raponi.blog.presentation.dto.request.DeleteAccountRequestDTO;
+import com.raponi.blog.presentation.dto.request.UpdateAccountRequestDTO;
+import com.raponi.blog.presentation.dto.response.AccountResponseDTO;
+import com.raponi.blog.presentation.mapper.AccountMapper;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,53 +31,64 @@ public class AccountController {
 
   private BlockAndUnblockAccountService blockAccountService;
   private FindAccountByIdService findAccountByIdService;
-  private UpdateAccountInfosService updateAccountInfosService;
+  private UpdateAccountService updateAccountService;
   private DeleteAccountService deleteAccountService;
   private ChangeAccountPasswordService changeAccountPasswordService;
   private UpdateAccountStatusService updateAccountStatusService;
   private FindAccountLikesService findAccountLikesService;
+  private AccountMapper mapper;
 
   public AccountController(FindAccountByIdService findAccountByIdService,
-      UpdateAccountInfosService updateAccountInfosService, DeleteAccountService deleteAccountService,
+      UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
       ChangeAccountPasswordService changeAccountPasswordService,
       UpdateAccountStatusService updateAccountStatusService,
-      FindAccountLikesService findAccountLikesService, BlockAndUnblockAccountService blockAccountService) {
+      FindAccountLikesService findAccountLikesService, BlockAndUnblockAccountService blockAccountService,
+      AccountMapper mapper) {
     this.findAccountByIdService = findAccountByIdService;
-    this.updateAccountInfosService = updateAccountInfosService;
+    this.updateAccountService = updateAccountService;
     this.deleteAccountService = deleteAccountService;
     this.changeAccountPasswordService = changeAccountPasswordService;
     this.updateAccountStatusService = updateAccountStatusService;
     this.findAccountLikesService = findAccountLikesService;
     this.blockAccountService = blockAccountService;
+    this.mapper = mapper;
   }
 
   @GetMapping("/{accountId}")
-  public ResponseEntity<?> getAccountById(@PathVariable("accountId") String accountId) {
-    return ResponseEntity.ok(this.findAccountByIdService.handle(accountId));
+  public ResponseEntity<AccountResponseDTO> getAccountById(@PathVariable("accountId") String accountId) {
+    var account = this.findAccountByIdService.handle(accountId);
+    var response = mapper.toResponse(account);
+    return ResponseEntity.ok(response);
   }
 
   @PutMapping(path = "/{accountId}", consumes = "multipart/form-data")
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
-      @RequestPart(required = false, value = "requestDTO") @Valid UpdateAccountInfosRequestDTO requestDTO,
+      @RequestPart(required = false, value = "requestDTO") @Valid UpdateAccountRequestDTO requestDTO,
       @RequestPart(required = false, value = "image") MultipartFile image) throws IOException {
-    return ResponseEntity.ok(this.updateAccountInfosService.handle(accountId, requestDTO, image));
+        var command = mapper.toUpdateCommand(requestDTO);
+        var response = this.updateAccountService.handle(accountId, command, image);
+    return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{accountId}")
   public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId,
       @RequestBody @Valid DeleteAccountRequestDTO requestDTO) {
-    return ResponseEntity.ok(this.deleteAccountService.handle(accountId, requestDTO));
+    return ResponseEntity.ok(this.deleteAccountService.handle(accountId, requestDTO.getPassword()));
   }
 
   @PatchMapping("/{accountId}/newpassword")
-  public ResponseEntity<?> changeAccountPassword(@PathVariable("accountId") String accountId,
-      @RequestBody @Valid UpdateAccountPasswordRequestDTO requestDTO) {
-    return ResponseEntity.ok(this.changeAccountPasswordService.handle(accountId, requestDTO));
+  public ResponseEntity<String> changeAccountPassword(@PathVariable("accountId") String accountId,
+      @RequestBody @Valid ChangePasswordRequestDTO requestDTO) {
+    var command = mapper.toPasswordCommand(requestDTO);
+    var response = this.changeAccountPasswordService.handle(accountId, command);
+    return ResponseEntity.ok(response);
   }
 
   @PatchMapping("/{accountId}/status")
-  public ResponseEntity<?> updateStatus(@PathVariable("accountId") String accountId) {
-    return ResponseEntity.ok(this.updateAccountStatusService.handle(accountId));
+  public ResponseEntity<AccountResponseDTO> updateStatus(@PathVariable("accountId") String accountId) {
+    var account = this.updateAccountStatusService.handle(accountId);
+    var response = mapper.toResponse(account);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{accountId}/likes")

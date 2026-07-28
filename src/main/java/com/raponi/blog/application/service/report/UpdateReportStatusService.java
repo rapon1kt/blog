@@ -11,7 +11,7 @@ import com.raponi.blog.domain.model.ReportStatus;
 import com.raponi.blog.domain.model.Reportable;
 import com.raponi.blog.domain.repository.ReportRepository;
 import com.raponi.blog.domain.repository.ReportableRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
+import com.raponi.blog.domain.exception.AccessDeniedException;
 import com.raponi.blog.presentation.errors.ResourceNotFoundException;
 
 @Service

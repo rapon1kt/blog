@@ -5,11 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
 
-@Repository
 public interface MongoAccountRepository extends MongoRepository<AccountEntity, String> {
 
   public Optional<AccountEntity> findByUsername(String username);

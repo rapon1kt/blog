@@ -1,23 +1,21 @@
 package com.raponi.blog.infrastructure.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Component;
-
 import com.raponi.blog.domain.model.Comment;
 import com.raponi.blog.domain.repository.CommentRepository;
 import com.raponi.blog.infrastructure.persistence.entity.CommentEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.CommentInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoCommentRepository;
-import com.raponi.blog.presentation.mapper.CommentMapper;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CommentRepositoryImpl implements CommentRepository {
 
   private final MongoCommentRepository mongoRepository;
-  private final CommentMapper commentMapper;
+  private final CommentInfraMapper commentMapper;
 
-  public CommentRepositoryImpl(MongoCommentRepository mongoRepository, CommentMapper commentMapper) {
+  public CommentRepositoryImpl(MongoCommentRepository mongoRepository, CommentInfraMapper commentMapper) {
     this.mongoRepository = mongoRepository;
     this.commentMapper = commentMapper;
   }
@@ -32,18 +30,12 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public Optional<Comment> findById(String id) {
     Optional<CommentEntity> commentEntity = this.mongoRepository.findById(id);
-    return Optional.of(commentEntity.map(commentMapper::toDomain).orElse(null));
+    return commentEntity.map(commentMapper::toDomain);
   }
 
   @Override
   public List<Comment> findByCommentIdAndAnswerTrue(String commentId) {
-    return this.mongoRepository.findByCommentIdAndAnswerTrue(commentId).stream().map(commentMapper::toDomain)
-        .toList();
-  }
-
-  @Override
-  public List<Comment> findAll() {
-    return this.mongoRepository.findAll().stream().map(commentMapper::toDomain).toList();
+    return this.mongoRepository.findByCommentIdAndAnswerTrue(commentId).stream().map(commentMapper::toDomain).toList();
   }
 
   @Override
@@ -62,6 +54,11 @@ public class CommentRepositoryImpl implements CommentRepository {
   }
 
   @Override
+  public void deleteByAuthorIdAndTargetAuthorId(String authorId, String targetAuthorId) {
+    this.mongoRepository.deleteByAuthorIdAndTargetAuthorId(authorId, targetAuthorId);
+  }
+
+  @Override
   public void deleteByPostId(String postId) {
     this.mongoRepository.deleteByPostId(postId);
   }
@@ -75,5 +72,4 @@ public class CommentRepositoryImpl implements CommentRepository {
   public void deleteByAuthorId(String authorId) {
     this.mongoRepository.deleteByAuthorId(authorId);
   }
-
 }

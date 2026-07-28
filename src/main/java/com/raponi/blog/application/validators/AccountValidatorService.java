@@ -1,7 +1,12 @@
 package com.raponi.blog.application.validators;
 
+import com.raponi.blog.application.usecase.AccountValidatorUseCase;
+import com.raponi.blog.domain.model.Account;
+import com.raponi.blog.domain.repository.AccountRepository;
+import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
+import com.raponi.blog.infrastructure.persistence.entity.BlockEntity;
+import com.raponi.blog.infrastructure.persistence.mapper.AccountInfraMapper;
 import java.util.Optional;
-
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -9,21 +14,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.raponi.blog.application.usecase.AccountValidatorUseCase;
-import com.raponi.blog.domain.model.Account;
-import com.raponi.blog.domain.repository.AccountRepository;
-import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
-import com.raponi.blog.infrastructure.persistence.entity.BlockEntity;
-import com.raponi.blog.presentation.mapper.AccountMapper;
-
 @Service
 public class AccountValidatorService implements AccountValidatorUseCase {
 
   private final MongoTemplate mongoTemplate;
-  private final AccountMapper accountMapper;
+  private final AccountInfraMapper accountMapper;
   private final AccountRepository accountRepository;
 
-  public AccountValidatorService(MongoTemplate mongoTemplate, AccountMapper accountMapper,
+  public AccountValidatorService(
+      MongoTemplate mongoTemplate,
+      AccountInfraMapper accountMapper,
       AccountRepository accountRepository) {
     this.mongoTemplate = mongoTemplate;
     this.accountMapper = accountMapper;
@@ -89,24 +89,18 @@ public class AccountValidatorService implements AccountValidatorUseCase {
 
   public boolean verifyPresenceAndActive(String key, String value) {
     Query query = new Query(Criteria.where(key).is(value));
-    Optional<Account> acc = Optional
-        .of(accountMapper.toDomain(mongoTemplate.findOne(query, AccountEntity.class)));
-    if (acc.isPresent()) {
-      if (isAdmin()) {
-        return true;
-      }
-      if (!acc.get().isActive()) {
-        return false;
-      }
-      return true;
-    }
-    return false;
+
+    return Optional.ofNullable(mongoTemplate.findOne(query, AccountEntity.class))
+        .map(accountMapper::toDomain)
+        .map(account -> isAdmin() || account.isActive())
+        .orElse(false);
   }
 
   public boolean isBlocked(String accountId) {
     if (!this.getAuth().isAuthenticated())
       return false;
-    Query query = new Query(Criteria.where("blockedId").is(getAuth().getName()).and("blockerId").is(accountId));
+    Query query = new Query(
+        Criteria.where("blockedId").is(getAuth().getName()).and("blockerId").is(accountId));
     boolean isViwerBlocked = this.mongoTemplate.exists(query, BlockEntity.class);
     return isViwerBlocked;
   }
@@ -127,5 +121,4 @@ public class AccountValidatorService implements AccountValidatorUseCase {
     }
     return null;
   }
-
 }

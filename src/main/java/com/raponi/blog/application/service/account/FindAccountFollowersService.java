@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 import com.raponi.blog.application.usecase.follow.FindAccountFollowersUseCase;
 import com.raponi.blog.application.validators.AccountValidatorService;
+import com.raponi.blog.domain.exception.AccessDeniedException;
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.repository.FollowRepository;
-import com.raponi.blog.presentation.errors.AccessDeniedException;
 
 @Service
 public class FindAccountFollowersService implements FindAccountFollowersUseCase {

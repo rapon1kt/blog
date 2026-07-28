@@ -1,9 +1,17 @@
 package com.raponi.blog.presentation.errors;
 
+import com.raponi.blog.domain.exception.AccessDeniedException;
+import com.raponi.blog.domain.exception.AccountNotFoundException;
+import com.raponi.blog.domain.exception.BusinessRuleException;
+import com.raponi.blog.domain.exception.InvalidCredentialsException;
+import com.raponi.blog.domain.exception.InvalidParamException;
+import com.raponi.blog.presentation.dto.ErrorResponse;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,32 +23,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.raponi.blog.presentation.dto.ErrorResponse;
-
-import jakarta.validation.ConstraintViolationException;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
   private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message, WebRequest request) {
     ErrorResponse errorResponse = new ErrorResponse(
-        LocalDateTime.now(),
-        status.value(),
-        status.getReasonPhrase(),
-        message,
-        request.getDescription(false).replace("uri=", ""));
+      LocalDateTime.now(),
+      status.value(),
+      status.getReasonPhrase(),
+      message,
+      request.getDescription(false).replace("uri=", "")
+    );
     return ResponseEntity.status(status).body(errorResponse);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex,
-      WebRequest request) {
+  public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
     Map<String, String> errors = new HashMap<>();
-    ex.getBindingResult().getAllErrors().forEach(err -> {
-      String field = ((FieldError) err).getField();
-      String defaultMessage = err.getDefaultMessage();
-      errors.put(field, defaultMessage);
-    });
+    ex.getBindingResult()
+      .getAllErrors()
+      .forEach(err -> {
+        String field = ((FieldError) err).getField();
+        String defaultMessage = err.getDefaultMessage();
+        errors.put(field, defaultMessage);
+      });
     return buildResponse(HttpStatus.BAD_REQUEST, errors.toString(), request);
   }
 
@@ -54,8 +60,13 @@ public class GlobalExceptionHandler {
     return buildResponse(HttpStatus.BAD_REQUEST, "JSON invalid or poorly formatted.", request);
   }
 
-  @ExceptionHandler({ ResourceNotFoundException.class, NoHandlerFoundException.class })
+  @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
+    return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(NoHandlerFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNoHandlerFound(NoHandlerFoundException ex, WebRequest request) {
     return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
   }
 
@@ -71,7 +82,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
-    return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+    return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request);
   }
 
   @ExceptionHandler(InternalServerException.class)
@@ -91,7 +102,22 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorResponse> handleGeneric(Exception ex, WebRequest request) {
-    return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
+    System.err.println(ex.getMessage());
+    return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Something unexpected happened; please contact support.", request);
   }
 
+  @ExceptionHandler({ ExpiredJwtException.class, MalformedJwtException.class })
+  public ResponseEntity<ErrorResponse> handleJwtExceptions(Exception ex, WebRequest request) {
+    return buildResponse(HttpStatus.UNAUTHORIZED, "Token inválido ou expirado: " + ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidCredentials(Exception ex, WebRequest request) {
+    return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(AccountNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleAccountNotFound(Exception ex, WebRequest request) {
+    return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+  }
 }

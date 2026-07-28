@@ -1,7 +1,7 @@
 package com.raponi.blog.application.usecase.account;
 
-import com.raponi.blog.presentation.dto.AccountResponseDTO;
+import com.raponi.blog.domain.model.Account;
 
 public interface FindAccountByIdUseCase {
-  public AccountResponseDTO handle(String accountId);
+  public Account handle(String accountId);
 }
