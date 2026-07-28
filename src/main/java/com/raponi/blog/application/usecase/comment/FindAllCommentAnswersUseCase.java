@@ -1,9 +1,8 @@
 package com.raponi.blog.application.usecase.comment;
 
+import com.raponi.blog.domain.model.Comment;
 import java.util.List;
 
-import com.raponi.blog.presentation.dto.CommentResponseDTO;
-
 public interface FindAllCommentAnswersUseCase {
-  List<CommentResponseDTO> handle(String commentId);
+  List<Comment> handle(String commentId);
 }
