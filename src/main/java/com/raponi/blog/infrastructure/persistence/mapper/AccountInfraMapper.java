@@ -5,7 +5,8 @@ import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface AccountMapper {
+public interface AccountInfraMapper {
   AccountEntity toEntity(Account account);
+
   Account toDomain(AccountEntity accountEntity);
 }

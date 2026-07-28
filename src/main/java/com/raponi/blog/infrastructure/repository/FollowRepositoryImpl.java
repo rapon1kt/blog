@@ -3,7 +3,7 @@ package com.raponi.blog.infrastructure.repository;
 import com.raponi.blog.domain.model.Follow;
 import com.raponi.blog.domain.repository.FollowRepository;
 import com.raponi.blog.infrastructure.persistence.entity.FollowEntity;
-import com.raponi.blog.infrastructure.persistence.mapper.FollowMapper;
+import com.raponi.blog.infrastructure.persistence.mapper.FollowInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoFollowRepository;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 public class FollowRepositoryImpl implements FollowRepository {
 
   private final MongoFollowRepository mongoRepository;
-  private final FollowMapper followMapper;
+  private final FollowInfraMapper followMapper;
 
-  public FollowRepositoryImpl(MongoFollowRepository mongoRepository, FollowMapper followMapper) {
+  public FollowRepositoryImpl(MongoFollowRepository mongoRepository, FollowInfraMapper followMapper) {
     this.mongoRepository = mongoRepository;
     this.followMapper = followMapper;
   }

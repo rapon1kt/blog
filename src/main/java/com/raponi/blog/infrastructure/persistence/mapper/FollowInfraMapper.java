@@ -5,7 +5,7 @@ import com.raponi.blog.infrastructure.persistence.entity.FollowEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface FollowMapper {
+public interface FollowInfraMapper {
   FollowEntity toEntity(Follow follow);
 
   Follow toDomain(FollowEntity followEntity);

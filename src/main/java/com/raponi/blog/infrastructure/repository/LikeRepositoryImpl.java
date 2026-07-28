@@ -3,7 +3,7 @@ package com.raponi.blog.infrastructure.repository;
 import com.raponi.blog.domain.model.Like;
 import com.raponi.blog.domain.repository.LikeRepository;
 import com.raponi.blog.infrastructure.persistence.entity.LikeEntity;
-import com.raponi.blog.infrastructure.persistence.mapper.LikeMapper;
+import com.raponi.blog.infrastructure.persistence.mapper.LikeInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoLikeRepository;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 public class LikeRepositoryImpl implements LikeRepository {
 
   private final MongoLikeRepository mongoRepository;
-  private final LikeMapper likeMapper;
+  private final LikeInfraMapper likeMapper;
 
-  public LikeRepositoryImpl(MongoLikeRepository mongoRepository, LikeMapper likeMapper) {
+  public LikeRepositoryImpl(MongoLikeRepository mongoRepository, LikeInfraMapper likeMapper) {
     this.mongoRepository = mongoRepository;
     this.likeMapper = likeMapper;
   }

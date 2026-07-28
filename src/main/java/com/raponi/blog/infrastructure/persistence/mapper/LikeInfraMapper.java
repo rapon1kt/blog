@@ -5,7 +5,7 @@ import com.raponi.blog.infrastructure.persistence.entity.LikeEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface LikeMapper {
+public interface LikeInfraMapper {
   LikeEntity toEntity(Like like);
 
   Like toDomain(LikeEntity likeEntity);

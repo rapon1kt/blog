@@ -5,7 +5,8 @@ import com.raponi.blog.infrastructure.persistence.entity.CommentEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface CommentMapper {
+public interface CommentInfraMapper {
   CommentEntity toEntity(Comment comment);
+
   Comment toDomain(CommentEntity accountEntity);
 }

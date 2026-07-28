@@ -4,8 +4,9 @@ import com.raponi.blog.domain.model.Post;
 import com.raponi.blog.domain.model.PostVisibility;
 import com.raponi.blog.domain.repository.PostRepository;
 import com.raponi.blog.infrastructure.persistence.entity.PostEntity;
-import com.raponi.blog.infrastructure.persistence.mapper.PostMapper;
+import com.raponi.blog.infrastructure.persistence.mapper.PostInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoPostRepository;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Component;
 public class PostRepositoryImpl implements PostRepository {
 
   private final MongoPostRepository mongoRepository;
-  private final PostMapper postMapper;
+  private final PostInfraMapper postMapper;
 
-  public PostRepositoryImpl(MongoPostRepository mongoRepository, PostMapper postMapper) {
+  public PostRepositoryImpl(MongoPostRepository mongoRepository, PostInfraMapper postMapper) {
     this.mongoRepository = mongoRepository;
     this.postMapper = postMapper;
   }

@@ -3,7 +3,7 @@ package com.raponi.blog.infrastructure.repository;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
-import com.raponi.blog.infrastructure.persistence.mapper.AccountMapper;
+import com.raponi.blog.infrastructure.persistence.mapper.AccountInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoAccountRepository;
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 public class AccountRepositoryImpl implements AccountRepository {
 
   private final MongoAccountRepository mongoRepository;
-  private final AccountMapper accountMapper;
+  private final AccountInfraMapper accountMapper;
 
-  public AccountRepositoryImpl(MongoAccountRepository mongoRepository, AccountMapper accountMapper) {
+  public AccountRepositoryImpl(MongoAccountRepository mongoRepository, AccountInfraMapper accountMapper) {
     this.mongoRepository = mongoRepository;
     this.accountMapper = accountMapper;
   }

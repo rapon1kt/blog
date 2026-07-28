@@ -5,7 +5,7 @@ import com.raponi.blog.infrastructure.persistence.entity.BanEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface BanMapper {
+public interface BanInfraMapper {
   BanEntity toEntity(Ban ban);
 
   Ban toDomain(BanEntity banEntity);

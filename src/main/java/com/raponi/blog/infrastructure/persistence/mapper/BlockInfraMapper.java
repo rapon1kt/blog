@@ -5,7 +5,7 @@ import com.raponi.blog.infrastructure.persistence.entity.BlockEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface BlockMapper {
+public interface BlockInfraMapper {
   BlockEntity toEntity(Block block);
 
   Block toDomain(BlockEntity blockEntity);
