@@ -10,7 +10,7 @@ import com.mongodb.client.MongoClients;
 @Configuration
 public class MongoConfig {
 
-  public @Bean MongoClient mongoClient(@Value("${spring.data.mongodb.uri}") String mongoUri) {
+  public @Bean MongoClient mongoClient(@Value("${spring.mongodb.uri}") String mongoUri) {
     return MongoClients.create(mongoUri);
   }
 
