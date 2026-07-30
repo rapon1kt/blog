@@ -7,8 +7,6 @@ import com.raponi.blog.application.service.like.FindTargetLikesService;
 import com.raponi.blog.application.service.posts.FindPostByIdService;
 import com.raponi.blog.domain.model.LikeTargetType;
 
-import java.io.IOException;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +22,6 @@ public class PublicController {
   private final FindAllCommentAnswersService findAllCommentAnswersService;
   private final FindTargetLikesService findTargetLikesService;
   private final FindPostByIdService findPostByIdService;
-  private final FindAccountPicturesService findAccountPicturesService;
   private final FindAccountFollowingService findAccountFollowingService;
   private final FindAccountFollowersService findAccountFollowersService;
   private final FindAccountPostsService findAccountPostsService;
@@ -32,7 +29,7 @@ public class PublicController {
 
   PublicController(FindAccountByUsernameService findAccountByUsernameService,
       FindAccountPostsService findAccountPostsService, FindAccountFollowersService findAccountFollowersService,
-      FindAccountFollowingService findAccountFollowingService, FindAccountPicturesService findAccountPicturesService,
+      FindAccountFollowingService findAccountFollowingService,
       FindPostByIdService findPostByIdService,
       FindTargetLikesService findTargetLikesService, FindAllCommentAnswersService findAllCommentAnswersService,
       FindPostCommentsService findPostCommentsService) {
@@ -40,7 +37,6 @@ public class PublicController {
     this.findAccountPostsService = findAccountPostsService;
     this.findAccountFollowersService = findAccountFollowersService;
     this.findAccountFollowingService = findAccountFollowingService;
-    this.findAccountPicturesService = findAccountPicturesService;
     this.findPostByIdService = findPostByIdService;
     this.findTargetLikesService = findTargetLikesService;
     this.findAllCommentAnswersService = findAllCommentAnswersService;
@@ -67,11 +63,6 @@ public class PublicController {
   @GetMapping("/account/{username}/following")
   public ResponseEntity<?> getAccountFollowing(@PathVariable("username") String username) {
     return ResponseEntity.ok(this.findAccountFollowingService.handle(username));
-  }
-
-  @GetMapping("/account/{username}/picture")
-  public ResponseEntity<?> getAccountPicture(@PathVariable("username") String username) throws IOException {
-    return ResponseEntity.ok(this.findAccountPicturesService.handle(username));
   }
 
   /* POST PUBLIC SERVICES */
