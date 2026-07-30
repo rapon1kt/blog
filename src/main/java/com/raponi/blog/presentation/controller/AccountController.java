@@ -34,22 +34,16 @@ public class AccountController {
   private UpdateAccountService updateAccountService;
   private DeleteAccountService deleteAccountService;
   private ChangeAccountPasswordService changeAccountPasswordService;
-  private UpdateAccountStatusService updateAccountStatusService;
-  private FindAccountLikesService findAccountLikesService;
   private AccountMapper mapper;
 
   public AccountController(FindAccountByIdService findAccountByIdService,
       UpdateAccountService updateAccountService, DeleteAccountService deleteAccountService,
-      ChangeAccountPasswordService changeAccountPasswordService,
-      UpdateAccountStatusService updateAccountStatusService,
-      FindAccountLikesService findAccountLikesService, BlockAndUnblockAccountService blockAccountService,
+      ChangeAccountPasswordService changeAccountPasswordService, BlockAndUnblockAccountService blockAccountService,
       AccountMapper mapper) {
     this.findAccountByIdService = findAccountByIdService;
     this.updateAccountService = updateAccountService;
     this.deleteAccountService = deleteAccountService;
     this.changeAccountPasswordService = changeAccountPasswordService;
-    this.updateAccountStatusService = updateAccountStatusService;
-    this.findAccountLikesService = findAccountLikesService;
     this.blockAccountService = blockAccountService;
     this.mapper = mapper;
   }
@@ -65,8 +59,8 @@ public class AccountController {
   public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
       @RequestPart(required = false, value = "requestDTO") @Valid UpdateAccountRequestDTO requestDTO,
       @RequestPart(required = false, value = "image") MultipartFile image) throws IOException {
-        var command = mapper.toUpdateCommand(requestDTO);
-        var response = this.updateAccountService.handle(accountId, command, image);
+    var command = mapper.toUpdateCommand(requestDTO);
+    var response = this.updateAccountService.handle(accountId, command, image);
     return ResponseEntity.ok(response);
   }
 
@@ -82,18 +76,6 @@ public class AccountController {
     var command = mapper.toPasswordCommand(requestDTO);
     var response = this.changeAccountPasswordService.handle(accountId, command);
     return ResponseEntity.ok(response);
-  }
-
-  @PatchMapping("/{accountId}/status")
-  public ResponseEntity<AccountResponseDTO> updateStatus(@PathVariable("accountId") String accountId) {
-    var account = this.updateAccountStatusService.handle(accountId);
-    var response = mapper.toResponse(account);
-    return ResponseEntity.ok(response);
-  }
-
-  @GetMapping("/{accountId}/likes")
-  public ResponseEntity<?> getAccountLikes(@PathVariable("accountId") String accountId) {
-    return ResponseEntity.ok(this.findAccountLikesService.handle(accountId));
   }
 
   @PostMapping("/{blockedId}/block")
