@@ -84,11 +84,41 @@ public class AccountController {
     this.followAndUnfollowAccountService = followAndUnfollowAccountService;
   }
 
-  @GetMapping("/{accountId}")
-  public ResponseEntity<AccountResponseDTO> getAccountById(@PathVariable("accountId") String accountId) {
+  @GetMapping("/me")
+  public ResponseEntity<AccountResponseDTO> getMyAccount(Authentication authentication) {
+    String accountId = authentication.getName();
     var account = this.findAccountByIdService.handle(accountId);
     var response = mapper.toResponse(account);
     return ResponseEntity.ok(response);
+  }
+
+  @PutMapping(path = "/me", consumes = "multipart/form-data")
+  public ResponseEntity<?> updateMyAccount(
+      Authentication authentication,
+      @RequestPart(required = false, value = "requestDTO") @Valid UpdateAccountRequestDTO requestDTO,
+      @RequestPart(required = false, value = "image") MultipartFile image) throws IOException {
+    String accountId = authentication.getName();
+    var command = mapper.toUpdateCommand(requestDTO);
+    var response = this.updateAccountService.handle(accountId, command, image);
+    return ResponseEntity.ok(response);
+  }
+
+  @PatchMapping("/me/new-password")
+  public ResponseEntity<String> changeMyPassword(
+      Authentication authentication,
+      @RequestBody @Valid ChangePasswordRequestDTO requestDTO) {
+    String accountId = authentication.getName();
+    var command = mapper.toPasswordCommand(requestDTO);
+    var response = this.changeAccountPasswordService.handle(accountId, command);
+    return ResponseEntity.ok(response);
+  }
+
+  @DeleteMapping("/me")
+  public ResponseEntity<?> deleteMyAccount(
+      Authentication authentication,
+      @RequestBody @Valid DeleteAccountRequestDTO requestDTO) {
+    String accountId = authentication.getName();
+    return ResponseEntity.ok(this.deleteAccountService.handle(accountId, requestDTO.getPassword()));
   }
 
   @GetMapping("/{username}")
@@ -135,28 +165,5 @@ public class AccountController {
   @PatchMapping("/{username}")
   public ResponseEntity<?> unBanAccount(@PathVariable("username") String username, Authentication auth) {
     return ResponseEntity.ok(this.unbanAccountService.handle(auth.getName(), username));
-  }
-
-  @PutMapping(path = "/{accountId}", consumes = "multipart/form-data")
-  public ResponseEntity<?> updateAccountById(@PathVariable("accountId") String accountId,
-      @RequestPart(required = false, value = "requestDTO") @Valid UpdateAccountRequestDTO requestDTO,
-      @RequestPart(required = false, value = "image") MultipartFile image) throws IOException {
-    var command = mapper.toUpdateCommand(requestDTO);
-    var response = this.updateAccountService.handle(accountId, command, image);
-    return ResponseEntity.ok(response);
-  }
-
-  @PatchMapping("/{accountId}/newpassword")
-  public ResponseEntity<String> changeAccountPassword(@PathVariable("accountId") String accountId,
-      @RequestBody @Valid ChangePasswordRequestDTO requestDTO) {
-    var command = mapper.toPasswordCommand(requestDTO);
-    var response = this.changeAccountPasswordService.handle(accountId, command);
-    return ResponseEntity.ok(response);
-  }
-
-  @DeleteMapping("/{accountId}")
-  public ResponseEntity<?> deleteAccountById(@PathVariable("accountId") String accountId,
-      @RequestBody @Valid DeleteAccountRequestDTO requestDTO) {
-    return ResponseEntity.ok(this.deleteAccountService.handle(accountId, requestDTO.getPassword()));
   }
 }
