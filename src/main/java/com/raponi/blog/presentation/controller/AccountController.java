@@ -93,13 +93,14 @@ public class AccountController {
   }
 
   @PutMapping(path = "/me", consumes = "multipart/form-data")
-  public ResponseEntity<?> updateMyAccount(
+  public ResponseEntity<AccountResponseDTO> updateMyAccount(
       Authentication authentication,
       @RequestPart(required = false, value = "requestDTO") @Valid UpdateAccountRequestDTO requestDTO,
       @RequestPart(required = false, value = "image") MultipartFile image) throws IOException {
     String accountId = authentication.getName();
     var command = mapper.toUpdateCommand(requestDTO);
-    var response = this.updateAccountService.handle(accountId, command, image);
+    var account = this.updateAccountService.handle(accountId, command, image);
+    var response = mapper.toResponse(account);
     return ResponseEntity.ok(response);
   }
 
@@ -114,7 +115,7 @@ public class AccountController {
   }
 
   @DeleteMapping("/me")
-  public ResponseEntity<?> deleteMyAccount(
+  public ResponseEntity<String> deleteMyAccount(
       Authentication authentication,
       @RequestBody @Valid DeleteAccountRequestDTO requestDTO) {
     String accountId = authentication.getName();
