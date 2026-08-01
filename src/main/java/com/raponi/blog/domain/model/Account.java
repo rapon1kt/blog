@@ -3,30 +3,38 @@ package com.raponi.blog.domain.model;
 import java.time.Instant;
 
 public class Account {
+
   private String id;
   private String email;
   private String username;
   private String picture;
   private String description;
   private String password;
-  private boolean active;
   private boolean banned;
   private String role;
   private Instant createdAt;
   private Instant modifiedAt;
 
-
   public Account() {}
 
-  public Account(String id, String email, String username, String picture, String description, String password,
-      boolean active, boolean banned, String role, Instant createdAt, Instant modifiedAt) {
+  public Account(
+    String id,
+    String email,
+    String username,
+    String picture,
+    String description,
+    String password,
+    boolean banned,
+    String role,
+    Instant createdAt,
+    Instant modifiedAt
+  ) {
     this.id = id;
     this.email = email;
     this.username = username;
     this.picture = picture;
     this.description = description;
     this.password = password;
-    this.active = active;
     this.banned = banned;
     this.role = role;
     this.createdAt = createdAt;
@@ -34,7 +42,7 @@ public class Account {
   }
 
   public static Account create(String email, String username, String password) {
-    return new Account(null, email, username, null, null, password, true, false, "USER", Instant.now(), Instant.now());
+    return new Account(null, email, username, null, null, password, false, "USER", Instant.now(), Instant.now());
   }
 
   public String getId() {
@@ -85,14 +93,6 @@ public class Account {
     this.password = password;
   }
 
-  public boolean isActive() {
-    return active;
-  }
-
-  public void setActive(boolean active) {
-    this.active = active;
-  }
-
   public boolean isBanned() {
     return banned;
   }
@@ -124,5 +124,4 @@ public class Account {
   public void setModifiedAt(Instant modifiedAt) {
     this.modifiedAt = modifiedAt;
   }
-
 }
