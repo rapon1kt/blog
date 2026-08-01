@@ -32,9 +32,7 @@ public class SecurityConfig {
     http
       .csrf(AbstractHttpConfigurer::disable)
       .cors(Customizer.withDefaults())
-      .authorizeHttpRequests(registry ->
-        registry.requestMatchers("/req/**", "/public/**").permitAll().anyRequest().authenticated()
-      )
+      .authorizeHttpRequests(registry -> registry.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .addFilterBefore(this.jwtConfig, UsernamePasswordAuthenticationFilter.class);
 
