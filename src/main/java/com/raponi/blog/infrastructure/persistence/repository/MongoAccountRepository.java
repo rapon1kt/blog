@@ -1,15 +1,10 @@
 package com.raponi.blog.infrastructure.persistence.repository;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
+import java.util.Optional;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface MongoAccountRepository extends MongoRepository<AccountEntity, String> {
-
   public Optional<AccountEntity> findByUsername(String username);
 
   public boolean existsByUsername(String username);
@@ -17,10 +12,4 @@ public interface MongoAccountRepository extends MongoRepository<AccountEntity, S
   public Optional<AccountEntity> findByEmail(String email);
 
   public boolean existsByEmail(String email);
-
-  @Query("{ '$or': [{ 'email': ?0 }, { '_id': ?1 }]}")
-  public Optional<AccountEntity> findByEmailOrId(String email, String id);
-
-  public List<AccountEntity> findAllByActiveIsTrue();
-
 }

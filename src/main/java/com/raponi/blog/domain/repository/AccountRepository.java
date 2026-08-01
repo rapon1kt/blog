@@ -1,15 +1,12 @@
 package com.raponi.blog.domain.repository;
 
 import com.raponi.blog.domain.model.Account;
-import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository {
   public Account save(Account account);
 
   public Optional<Account> findById(String id);
-
-  public List<Account> findAll();
 
   public void deleteById(String id);
 
@@ -20,6 +17,4 @@ public interface AccountRepository {
   public Optional<Account> findByEmail(String email);
 
   public boolean existsByEmail(String email);
-
-  public List<Account> findAllByActiveIsTrue();
 }

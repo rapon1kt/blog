@@ -5,7 +5,6 @@ import com.raponi.blog.domain.repository.AccountRepository;
 import com.raponi.blog.infrastructure.persistence.entity.AccountEntity;
 import com.raponi.blog.infrastructure.persistence.mapper.AccountInfraMapper;
 import com.raponi.blog.infrastructure.persistence.repository.MongoAccountRepository;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
@@ -34,11 +33,6 @@ public class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
-  public List<Account> findAll() {
-    return this.mongoRepository.findAll().stream().map(accountMapper::toDomain).toList();
-  }
-
-  @Override
   public void deleteById(String id) {
     this.mongoRepository.deleteById(id);
   }
@@ -63,10 +57,5 @@ public class AccountRepositoryImpl implements AccountRepository {
   @Override
   public boolean existsByEmail(String email) {
     return this.mongoRepository.existsByEmail(email);
-  }
-
-  @Override
-  public List<Account> findAllByActiveIsTrue() {
-    return this.mongoRepository.findAllByActiveIsTrue().stream().map(accountMapper::toDomain).toList();
   }
 }
