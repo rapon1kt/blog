@@ -10,6 +10,8 @@ public interface MongoAccountRepository extends MongoRepository<AccountDocument,
 
   public Optional<AccountDocument> findByUsername(String username);
 
+  public Optional<AccountDocument> findByEmail(String email);
+
   public boolean existsByUsername(String username);
 
   public boolean existsByEmail(String email);

@@ -38,6 +38,11 @@ public class AccountRepositoryImpl implements AccountRepository {
   }
 
   @Override
+  public Optional<Account> findByEmail(String email) {
+    return mongoAccountRepository.findByEmail(email).map(mapper::toDomain);
+  }
+
+  @Override
   public boolean existsByEmail(String email) {
     return mongoAccountRepository.existsByEmail(email);
   }

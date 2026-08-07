@@ -9,6 +9,8 @@ public interface AccountRepository {
 
   public Optional<Account> findById(String id);
 
+  public Optional<Account> findByEmail(String email);
+
   public Optional<Account> findByUsername(String username);
 
   public boolean existsByEmail(String email);
