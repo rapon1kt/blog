@@ -32,9 +32,9 @@ public class AuthController {
 
   @PostMapping("/sign-up")
   public ResponseEntity<SignUpAccountResponseDTO> signUp(@RequestBody @Valid SignUpAccountRequestDTO requestDTO) {
-    var command = mapper.toCommand(requestDTO);
+    var command = mapper.toSignUpCommand(requestDTO);
     var account = signUpService.handle(command);
-    var response = mapper.toResponse(account);
+    var response = mapper.toSignUpResponse(account);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 

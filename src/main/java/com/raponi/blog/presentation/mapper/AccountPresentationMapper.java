@@ -10,8 +10,8 @@ import com.raponi.blog.presentation.dto.response.SignUpAccountResponseDTO;
 @Mapper(componentModel = "spring")
 public interface AccountPresentationMapper {
 
-  SignUpAccountCommand toCommand(SignUpAccountRequestDTO requestDTO);
+  SignUpAccountCommand toSignUpCommand(SignUpAccountRequestDTO requestDTO);
 
-  SignUpAccountResponseDTO toResponse(Account account);
+  SignUpAccountResponseDTO toSignUpResponse(Account account);
 
 }
