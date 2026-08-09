@@ -88,4 +88,21 @@ public class SignInAccountServiceTest {
         .hasMessage("Invalid credentials.");
   }
 
+  @Test
+  void mustThrowIfPasswordIsInvalid() {
+    // Creating command
+    SignInAccountCommand command = new SignInAccountCommand(
+        "test_email@test.com",
+        "invalid_password");
+
+    // Defining expected responses
+    when(repository.findByEmail(any())).thenReturn(Optional.empty());
+    when(encoder.matches(any(), any())).thenReturn(false);
+
+    // Executing service with invalid password
+    assertThatThrownBy(() -> service.handle(command))
+        .isInstanceOf(InvalidCredentialsException.class)
+        .hasMessage("Invalid credentials.");
+  }
+
 }
