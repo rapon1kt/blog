@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import com.raponi.blog.application.command.SignUpAccountCommand;
+import com.raponi.blog.domain.exception.InvalidCredentialsException;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.port.AccountRepository;
 import com.raponi.blog.domain.port.PasswordEncoderPort;
@@ -57,6 +58,22 @@ public class SignUpAccountServiceTest {
     assertThat(serviceAccount).isNotNull();
     assertThat(serviceAccount.getUsername()).isEqualTo("test_username");
 
+  }
+
+  @Test
+  void mustThrowIfEmailIsAlreadyInUse() {
+    // Creating command
+    SignUpAccountCommand command = new SignUpAccountCommand(
+        "in_use_email@test.com",
+        "test_username",
+        "test_password");
+
+    // Defining expected response from account repository
+    when(repository.existsByEmail("in_use_email@test.com")).thenReturn(true);
+
+    assertThatThrownBy(() -> service.handle(command))
+        .isInstanceOf(InvalidCredentialsException.class)
+        .hasMessage("Email and/or Username already in use.");
   }
 
 }
