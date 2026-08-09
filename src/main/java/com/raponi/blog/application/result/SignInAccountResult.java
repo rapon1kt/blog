@@ -16,16 +16,8 @@ public class SignInAccountResult {
     return token;
   }
 
-  public void setToken(String token) {
-    this.token = token;
-  }
-
   public Account getAccount() {
     return account;
-  }
-
-  public void setAccount(Account account) {
-    this.account = account;
   }
 
 }
