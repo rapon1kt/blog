@@ -71,6 +71,24 @@ public class SignUpAccountServiceTest {
     // Defining expected response from account repository
     when(repository.existsByEmail("in_use_email@test.com")).thenReturn(true);
 
+    // Asserting that service throws the right exception
+    assertThatThrownBy(() -> service.handle(command))
+        .isInstanceOf(InvalidCredentialsException.class)
+        .hasMessage("Email and/or Username already in use.");
+  }
+
+  @Test
+  void mustThrowIfUsernameIsAlreadyInUse() {
+    // Creating command
+    SignUpAccountCommand command = new SignUpAccountCommand(
+        "test_email@test.com",
+        "in_use_username",
+        "test_password");
+
+    // Defining expected response from account repository
+    when(repository.existsByUsername("in_use_username")).thenReturn(true);
+
+    // Asserting that service throws the right exception
     assertThatThrownBy(() -> service.handle(command))
         .isInstanceOf(InvalidCredentialsException.class)
         .hasMessage("Email and/or Username already in use.");
