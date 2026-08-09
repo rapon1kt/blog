@@ -14,9 +14,9 @@ import com.raponi.blog.domain.port.TokenGeneratorPort;
 @Service
 public class SignInAccountService implements SignInAccountUseCase {
 
-  public AccountRepository accountRepository;
-  public TokenGeneratorPort tokenGeneratorPort;
-  public PasswordEncoderPort passwordEncoderPort;
+  private AccountRepository accountRepository;
+  private TokenGeneratorPort tokenGeneratorPort;
+  private PasswordEncoderPort passwordEncoderPort;
 
   public SignInAccountService(AccountRepository accountRepository, TokenGeneratorPort tokenGeneratorPort,
       PasswordEncoderPort passwordEncoderPort) {
