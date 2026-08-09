@@ -1,5 +1,6 @@
 package com.raponi.blog.application.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import com.raponi.blog.application.command.SignInAccountCommand;
 import com.raponi.blog.application.result.SignInAccountResult;
+import com.raponi.blog.domain.exception.InvalidCredentialsException;
 import com.raponi.blog.domain.model.Account;
 import com.raponi.blog.domain.port.AccountRepository;
 import com.raponi.blog.domain.port.PasswordEncoderPort;
@@ -68,6 +70,22 @@ public class SignInAccountServiceTest {
 
     // Ensure token generator was called once with db account
     verify(tokenGenerator, times(1)).generateToken(mockedAccount);
+  }
+
+  @Test
+  void mustThrowIfAccountIsNotFound() {
+    // Creating command
+    SignInAccountCommand command = new SignInAccountCommand(
+        "not_found_email@test.com",
+        "test_password");
+
+    // Defining expected responses
+    when(repository.findByEmail(command.email())).thenReturn(Optional.empty());
+
+    // Executing service with invalid email
+    assertThatThrownBy(() -> service.handle(command))
+        .isInstanceOf(InvalidCredentialsException.class)
+        .hasMessage("Invalid credentials.");
   }
 
 }
