@@ -7,8 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.raponi.blog.application.service.SignInAccountService;
-import com.raponi.blog.application.service.SignUpAccountService;
+import com.raponi.blog.application.usecase.SignInAccountUseCase;
+import com.raponi.blog.application.usecase.SignUpAccountUseCase;
 import com.raponi.blog.presentation.dto.request.SignInAccountRequestDTO;
 import com.raponi.blog.presentation.dto.request.SignUpAccountRequestDTO;
 import com.raponi.blog.presentation.dto.response.SignInAccountResponseDTO;
@@ -26,22 +26,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
 
   private final AccountPresentationMapper mapper;
-  private final SignUpAccountService signUpService;
-  private final SignInAccountService signInService;
+  private final SignUpAccountUseCase signUpUseCase;
+  private final SignInAccountUseCase signInUseCase;
 
   public AuthController(
       AccountPresentationMapper mapper,
-      SignUpAccountService signUpService,
-      SignInAccountService signInService) {
+      SignUpAccountUseCase signUpUseCase,
+      SignInAccountUseCase signInUseCase) {
     this.mapper = mapper;
-    this.signUpService = signUpService;
-    this.signInService = signInService;
+    this.signUpUseCase = signUpUseCase;
+    this.signInUseCase = signInUseCase;
   }
 
   @PostMapping("/sign-up")
   public ResponseEntity<SignUpAccountResponseDTO> signUp(@RequestBody @Valid SignUpAccountRequestDTO requestDTO) {
     var command = mapper.toSignUpCommand(requestDTO);
-    var account = signUpService.handle(command);
+    var account = signUpUseCase.handle(command);
     var response = mapper.toSignUpResponse(account);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
@@ -49,7 +49,7 @@ public class AuthController {
   @PostMapping("/sign-in")
   public ResponseEntity<SignInAccountResponseDTO> signIn(@RequestBody @Valid SignInAccountRequestDTO requestDTO) {
     var command = mapper.toSignInCommand(requestDTO);
-    var result = signInService.handle(command);
+    var result = signInUseCase.handle(command);
     var response = new SignInAccountResponseDTO(result);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
