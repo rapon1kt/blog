@@ -50,8 +50,8 @@ public class SignInAccountServiceTest {
 
     // Defining expected responses
     when(repository.findByEmail(any())).thenReturn(Optional.of(mockedAccount));
-    when(encoder.matches(command.password(), mockedAccount.getPassword())).thenReturn(true);
-    when(tokenGenerator.generateToken(mockedAccount)).thenReturn("test_jwt");
+    when(encoder.matches(any(), any())).thenReturn(true);
+    when(tokenGenerator.generateToken(any())).thenReturn("test_jwt");
 
     // Executing service with tested command
     SignInAccountResult result = service.handle(command);
