@@ -73,10 +73,10 @@ public class SignInAccountServiceTest {
   }
 
   @Test
-  void mustThrowIfAccountIsNotFound() {
+  void mustThrowIfEmailIsNotRegistered() {
     // Creating command
     SignInAccountCommand command = new SignInAccountCommand(
-        "not_found_email@test.com",
+        "not_registered_email@test.com",
         "test_password");
 
     // Defining expected responses
