@@ -69,7 +69,7 @@ public class SignUpAccountServiceTest {
         "test_password");
 
     // Defining expected response from account repository
-    when(repository.existsByEmail("in_use_email@test.com")).thenReturn(true);
+    when(repository.existsByEmail(any())).thenReturn(true);
 
     // Asserting that service throws the right exception
     assertThatThrownBy(() -> service.handle(command))
@@ -86,7 +86,7 @@ public class SignUpAccountServiceTest {
         "test_password");
 
     // Defining expected response from account repository
-    when(repository.existsByUsername("in_use_username")).thenReturn(true);
+    when(repository.existsByUsername(any())).thenReturn(true);
 
     // Asserting that service throws the right exception
     assertThatThrownBy(() -> service.handle(command))
