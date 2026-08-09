@@ -17,6 +17,12 @@ public class SignUpAccountRequestDTO {
   @Size(min = 8, max = 20, message = "The password must be between 8 and 20 characteres long.")
   private String password;
 
+  public SignUpAccountRequestDTO(String email, String username, String password) {
+    this.email = email;
+    this.username = username;
+    this.password = password;
+  }
+
   public String getEmail() {
     return email;
   }

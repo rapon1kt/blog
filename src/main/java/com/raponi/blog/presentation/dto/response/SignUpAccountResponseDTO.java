@@ -9,6 +9,17 @@ public class SignUpAccountResponseDTO {
   private String username;
   private Instant createdAt;
 
+  public SignUpAccountResponseDTO(
+      String id,
+      String email,
+      String username,
+      Instant createdAt) {
+    this.id = id;
+    this.email = email;
+    this.username = username;
+    this.createdAt = createdAt;
+  }
+
   public String getId() {
     return id;
   }
