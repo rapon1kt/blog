@@ -20,16 +20,8 @@ public class SignInAccountResponseDTO {
     return token;
   }
 
-  public void setToken(String token) {
-    this.token = token;
-  }
-
   public SignedAccount getSignedAccount() {
     return account;
-  }
-
-  public void setSignedAccount(SignedAccount account) {
-    this.account = account;
   }
 
 }
